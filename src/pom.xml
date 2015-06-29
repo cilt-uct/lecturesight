@@ -23,7 +23,7 @@
     <profile>
       <id>full</id>
       <activation>
-        <activeByDefault>true</activeByDefault>
+        <activeByDefault>false</activeByDefault>
       </activation>
       <modules>
         <module>modules/lecturesight-cameraoperator-api</module>
@@ -77,18 +77,19 @@
     <profile>
       <id>production-with-gui</id>
       <activation>
-        <activeByDefault>false</activeByDefault>
+        <activeByDefault>true</activeByDefault>
       </activation>
       <modules>
         <module>modules/lecturesight-cameraoperator-api</module>
-        <module>modules/lecturesight-cameraoperator-scripted</module>
+        <module>modules/lecturesight-cameraoperator-simple</module>
+<!--        <module>modules/lecturesight-cameraoperator-scripted</module> -->
         <module>modules/lecturesight-connectedcomponent-api</module>
         <module>modules/lecturesight-connectedcomponent-impl</module>
         <module>modules/lecturesight-display-api</module>
         <module>modules/lecturesight-display-impl</module>
         <module>modules/lecturesight-framesource-api</module>
         <module>modules/lecturesight-framesource-impl</module>
-        <module>modules/lecturesight-framesource-v4l</module>
+<!--        <module>modules/lecturesight-framesource-v4l</module> -->
         <module>modules/lecturesight-gui-api</module>
         <module>modules/lecturesight-gui-impl</module>
         <module>modules/lecturesight-heartbeat</module>
@@ -278,19 +279,6 @@
       <id>opencast</id>
       <name>Opencast Repo</name>
       <url>http://repository.opencastproject.org/nexus/content/groups/public</url>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-    </repository>
-    
-    <!-- Manchesters own local Repo -->
-    <repository>
-      <id>man-mtt</id>
-      <name>manchester-mtt</name>
-      <url>http://garnier.rcs.manchester.ac.uk:9090/nexus/content/repositories/man-mtt</url>
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
