@@ -78,7 +78,14 @@ public class SimpleCameraOperator implements CameraOperator {
     if (executor == null) {
       executor = Executors.newScheduledThreadPool(1);
       worker = new CameraOperatorWorker();
+
+      log.debug("Startup set zoom");
       camera.setZoom(config.getFloat(Constants.PROPKEY_ZOOM));  
+
+      log.debug("Startup set position");
+      NormalizedPosition neutral = new NormalizedPosition(0.0f, 0.0f);
+      camera.setTargetPosition(neutral);
+
       executor.scheduleAtFixedRate(worker, 0, interval, TimeUnit.MILLISECONDS);
       log.info("Started");
     }
@@ -115,6 +122,7 @@ public class SimpleCameraOperator implements CameraOperator {
         }
       } else {
         if (System.currentTimeMillis() - target.lastSeen() < timeout) {
+          log.debug("Moving camera to track object lastSeen: " + target.lastSeen());
           Position obj_pos = (Position) target.getProperty(ObjectTracker.OBJ_PROPKEY_CENTROID);
           NormalizedPosition obj_posN = normalizer.toNormalized(obj_pos);
           NormalizedPosition target_pos = new NormalizedPosition(obj_posN.getX(), config.getFloat(Constants.PROPKEY_TILT));
