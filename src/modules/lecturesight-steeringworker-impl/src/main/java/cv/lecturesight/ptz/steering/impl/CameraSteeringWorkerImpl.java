@@ -218,7 +218,8 @@ public class CameraSteeringWorkerImpl implements CameraSteeringWorker {
     worker.camera_pos = camera.getPosition();
     camera.addCameraListener(worker);
     camera.clearLimits();
-    camera.moveHome();
+
+    idlePosition();
 
     log.info("Activated. Steering " + camera.getName());
     if (config.getBoolean(Constants.PROPKEY_AUTOSTART)) {
@@ -234,9 +235,17 @@ public class CameraSteeringWorkerImpl implements CameraSteeringWorker {
   }
 
   protected void deactivate(ComponentContext cc) throws Exception {
-    camera.moveHome();
+    idlePosition();
     camera.removeCameraListener(worker);
     log.info("Deactivated");
+  }
+
+  /*
+  ** Move the camera to its idle position when not being steered
+  */
+  private void idlePosition() {
+    //camera.moveHome();
+    camera.movePreset(0);
   }
 
   private CameraPositionModel initModel() {
@@ -301,6 +310,7 @@ public class CameraSteeringWorkerImpl implements CameraSteeringWorker {
       log.info("Steering is now ON");
     } else {
       stopMoving();
+      idlePosition();
       log.info("Steering is now OFF");
     }
   }
