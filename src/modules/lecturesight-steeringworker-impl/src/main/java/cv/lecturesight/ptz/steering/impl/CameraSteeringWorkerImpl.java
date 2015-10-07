@@ -72,6 +72,8 @@ public class CameraSteeringWorkerImpl implements CameraSteeringWorker {
   boolean xflip = false;
   boolean yflip = false;
 
+  boolean pan_only = false;            // Optimize movement for panning only, same tilt value
+
   // lists of listeners
   List<UISlave> uiListeners = new LinkedList<UISlave>();
   List<MovementListener> moveListeners = new LinkedList<MovementListener>();
@@ -115,6 +117,11 @@ public class CameraSteeringWorkerImpl implements CameraSteeringWorker {
         int dx_abs = Math.abs(dx);
         int dy_abs = Math.abs(dy);
 
+	// ignore vertical differences below tolerance
+	if (dy_abs < 3) {
+		dy_abs = dy = 0;
+	}
+
         // compute pan speed
         int ps;
         if (dx_abs < alpha_x) {
@@ -154,29 +161,30 @@ public class CameraSteeringWorkerImpl implements CameraSteeringWorker {
           if (ps == 0 && ts == 0) {
             camera.stopMove();
 
-          } else if (dx < 0 && dy == 0) {
-            camera.moveRight(ps);
-
-          } else if (dx > 0 && dy == 0) {
-            camera.moveLeft(ps);
-
-          } else if (dx == 0 && dy < 0) {
-            camera.moveUp(ts);
-
-          } else if (dx == 0 && dy > 0) {
-            camera.moveDown(ts);
-
-          } else if (dx < 0 && dy < 0) {
-            camera.moveUpRight(ps, ts);
-
-          } else if (dx < 0 && dy > 0) {
-            camera.moveDownRight(ps, ts);
-
-          } else if (dx > 0 && dy < 0) {
-            camera.moveUpLeft(ps, ts);
-
-          } else if (dx > 0 && dy > 0) {
-            camera.moveDownLeft(ps, ts);
+          } else {
+		  if ((dy_abs > 0) && (dy_abs < 300) && pan_only) { 
+                          // Absolute move to position exactly on the y axis
+			  camera.moveAbsolute(ps, ts, target_pos.flip(xflip, yflip));
+		  } else {
+		          // Relative move
+			  if (dx < 0 && dy == 0) {
+			    camera.moveRight(ps);
+			  } else if (dx > 0 && dy == 0) {
+			    camera.moveLeft(ps);
+			  } else if (dx == 0 && dy < 0) {
+			    camera.moveUp(ts);
+			  } else if (dx == 0 && dy > 0) {
+			    camera.moveDown(ts);
+			  } else if (dx < 0 && dy < 0) {
+			    camera.moveUpRight(ps, ts);
+			  } else if (dx < 0 && dy > 0) {
+			    camera.moveDownRight(ps, ts);
+			  } else if (dx > 0 && dy < 0) {
+			    camera.moveUpLeft(ps, ts);
+			  } else if (dx > 0 && dy > 0) {
+			    camera.moveDownLeft(ps, ts);
+			  }
+		  }
           }
 
           last_ps = ps;
@@ -296,6 +304,11 @@ public class CameraSteeringWorkerImpl implements CameraSteeringWorker {
     } catch (Exception e) {
       log.warn("Unable to stop camera movement: " + e.getMessage());
     }
+  }
+
+  @Override
+  public void setPanOnly(boolean pan_only) {
+    this.pan_only = pan_only;
   }
 
   @Override

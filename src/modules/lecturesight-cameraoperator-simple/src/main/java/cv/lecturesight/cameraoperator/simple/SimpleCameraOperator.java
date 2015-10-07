@@ -60,13 +60,19 @@ public class SimpleCameraOperator implements CameraOperator {
   CoordinatesNormalization normalizer;
   ScheduledExecutorService executor;
   CameraOperatorWorker worker;
+ 
+  float start_zoom = 0;
+  float start_tilt = 0;
 
   protected void activate(ComponentContext cc) throws Exception {
     timeout = config.getInt(Constants.PROPKEY_TIMEOUT);
+    start_zoom = config.getFloat(Constants.PROPKEY_ZOOM);
+    start_tilt = config.getFloat(Constants.PROPKEY_TILT);
+
     fsrc = fsp.getFrameSource();
     normalizer = new CoordinatesNormalization(fsrc.getWidth(), fsrc.getHeight());
     start();    
-    log.info("Activated. Timeout is " + timeout + " ms");
+    log.info("Activated. Timeout is " + timeout + " ms, zoom is " + start_zoom + ", tilt is " + start_tilt);
   }
 
   protected void deactivate(ComponentContext cc) {
@@ -79,11 +85,13 @@ public class SimpleCameraOperator implements CameraOperator {
       executor = Executors.newScheduledThreadPool(1);
       worker = new CameraOperatorWorker();
 
+      camera.setPanOnly(true);
+
       log.debug("Startup set zoom");
-      camera.setZoom(config.getFloat(Constants.PROPKEY_ZOOM));  
+      camera.setZoom(start_zoom);  
 
       log.debug("Startup set position");
-      NormalizedPosition neutral = new NormalizedPosition(0.0f, 0.0f);
+      NormalizedPosition neutral = new NormalizedPosition(0.0f, start_tilt);
       camera.setTargetPosition(neutral);
 
       executor.scheduleAtFixedRate(worker, 0, interval, TimeUnit.MILLISECONDS);
