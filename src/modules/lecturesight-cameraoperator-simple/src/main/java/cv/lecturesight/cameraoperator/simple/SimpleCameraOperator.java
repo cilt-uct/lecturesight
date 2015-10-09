@@ -85,14 +85,7 @@ public class SimpleCameraOperator implements CameraOperator {
       executor = Executors.newScheduledThreadPool(1);
       worker = new CameraOperatorWorker();
 
-      camera.setPanOnly(true);
-
-      log.debug("Startup set zoom");
-      camera.setZoom(start_zoom);  
-
-      log.debug("Startup set position");
-      NormalizedPosition neutral = new NormalizedPosition(0.0f, start_tilt);
-      camera.setTargetPosition(neutral);
+      reset();
 
       executor.scheduleAtFixedRate(worker, 0, interval, TimeUnit.MILLISECONDS);
       log.info("Started");
@@ -112,9 +105,14 @@ public class SimpleCameraOperator implements CameraOperator {
 
   @Override
   public void reset() {
-    NormalizedPosition neutral = new NormalizedPosition(0.0f, 0.0f);
-    camera.setTargetPosition(neutral);
-    camera.setZoom(0.0f);  
+      log.debug("Reset camera zoom and position");
+
+      camera.setPanOnly(true);
+
+      camera.setZoom(start_zoom);  
+
+      NormalizedPosition neutral = new NormalizedPosition(0.0f, start_tilt);
+      camera.setTargetPosition(neutral);
   }
 
   private class CameraOperatorWorker implements Runnable {

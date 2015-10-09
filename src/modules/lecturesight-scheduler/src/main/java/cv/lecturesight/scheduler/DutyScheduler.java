@@ -1,6 +1,7 @@
 package cv.lecturesight.scheduler;
 
 import cv.lecturesight.heartbeat.api.HeartBeat;
+import cv.lecturesight.operator.CameraOperator;
 import cv.lecturesight.ptz.steering.api.CameraSteeringWorker;
 import cv.lecturesight.scheduler.ical.ICalendar;
 import cv.lecturesight.scheduler.ical.VEvent;
@@ -38,6 +39,9 @@ public class DutyScheduler implements ArtifactInstaller {
   Configuration config;
   @Reference
   HeartBeat heart;
+  @Reference
+  CameraOperator operator;
+
   @Reference(policy = ReferencePolicy.DYNAMIC)
   volatile CameraSteeringWorker camera;
   private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
@@ -174,6 +178,7 @@ public class DutyScheduler implements ArtifactInstaller {
     try {
       if (camera != null) {
         if (!camera.isSteering()) {
+	  operator.reset();
           camera.setSteering(true);
           log.info("Camera Control activated.");
         } else {

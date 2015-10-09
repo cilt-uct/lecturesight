@@ -143,7 +143,7 @@ public class HeartBeatImpl implements HeartBeat {
     }
     fsrc = null;
     ready = false;
-    log.info("Stopped");
+    log.info("Stopped from deinit()");
   }
 
   @Override
@@ -170,6 +170,7 @@ public class HeartBeatImpl implements HeartBeat {
   @Override
   public void stop() {
     iterationsToRun = 0;
+    log.debug("Stopped from stop()");
   }
 
   @Override
