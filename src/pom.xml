@@ -64,7 +64,7 @@
         <module>modules/lecturesight-script-utils</module>
         <module>modules/lecturesight-setup-ui</module>
         <module>modules/lecturesight-steeringworker-api</module>
-        <module>modules/lecturesight-steeringworker-gui</module>
+<!--        <module>modules/lecturesight-steeringworker-gui</module> -->
         <module>modules/lecturesight-steeringworker-impl</module>
         <module>modules/lecturesight-utils</module>
         <module>modules/lecturesight-videoanalysis-api</module>
@@ -89,7 +89,8 @@
         <module>modules/lecturesight-display-impl</module>
         <module>modules/lecturesight-framesource-api</module>
         <module>modules/lecturesight-framesource-impl</module>
-<!--        <module>modules/lecturesight-framesource-v4l</module> -->
+<!--        <module>modules/lecturesight-framesource-v4l</module>  -->
+        <module>modules/lecturesight-framesource-rtph264</module> 
         <module>modules/lecturesight-gui-api</module>
         <module>modules/lecturesight-gui-impl</module>
         <module>modules/lecturesight-heartbeat</module>
@@ -100,6 +101,7 @@
         <module>modules/lecturesight-profile-manager</module>
         <module>modules/lecturesight-profile-ui</module>
         <module>modules/lecturesight-ptzcontrol-api</module>
+        <module>modules/lecturesight-scheduler</module>
         <module>modules/lecturesight-scripting-api</module>
         <module>modules/lecturesight-script-utils</module>
         <module>modules/lecturesight-steeringworker-api</module>
@@ -108,6 +110,8 @@
         <module>modules/lecturesight-utils</module>
         <module>modules/lecturesight-videoanalysis-api</module>
         <module>modules/lecturesight-videoanalysis-templ</module>
+	<module>modules/visca-api</module>
+	<module>modules/visca-service</module>
       </modules>
     </profile>
     
@@ -251,7 +255,7 @@
   <!--____________________________ Repositories _____________________________-->
   <repositories>
     
-    <!--repository>
+    <!-- repository>
       <id>sonatype</id>
       <name>Sonatype OSS Snapshots Repository</name>
       <url>http://oss.sonatype.org/content/groups/public</url>
