@@ -62,6 +62,7 @@ public class CameraSteeringWorkerImpl implements CameraSteeringWorker {
   
   int pan_min, pan_max;               // pan limits
   int tilt_min, tilt_max;             // tilt limits
+  int frame_width;                    // frame width of the PTZ camera at the current zoom
   int zoom_min, zoom_max;             // zoom limits
   int maxspeed_zoom;                  // max zoom speed
   int maxspeed_pan, maxspeed_tilt;    // max pan and tilt speeds 
@@ -121,6 +122,22 @@ public class CameraSteeringWorkerImpl implements CameraSteeringWorker {
 	if (dy_abs < 3) {
 		dy_abs = dy = 0;
 	}
+
+        // Reduce pan activity - only start moving camera if the target is approaching the frame boundaries
+        if (pan_only && !moving && dx_abs > 0) {
+           int trigger_left  = (int) ( (float) camera_pos.getX() - (frame_width/2) * 0.7);
+           int trigger_right = (int) ( (float) camera_pos.getX() + (frame_width/2) * 0.7);
+
+           if ((dx < 0) && (target_pos.getX() < trigger_right)) {
+               log.debug("Not moving: camera=" + camera_pos + " target=" + target_pos + " dx=" + dx + " position is left of frame trigger limit " + trigger_right);
+               dx = 0;
+           }
+
+           if ((dx > 0) && (target_pos.getX() > trigger_left)) {
+               log.debug("Not moving: camera=" + camera_pos + " target=" + target_pos + " dx=" + dx + " position is right of frame trigger limit " + trigger_left);
+               dx = 0;
+           }
+        }
 
         // compute pan speed
         int ps;
@@ -211,6 +228,10 @@ public class CameraSteeringWorkerImpl implements CameraSteeringWorker {
     alpha_x = config.getInt(Constants.PROPKEY_ALPHAX);
     alpha_y = config.getInt(Constants.PROPKEY_ALPHAY);
     damp_pan = config.getFloat(Constants.PROPKEY_DAMP_PAN);
+
+    // TODO Needs some way to map zoom to frame_width
+    frame_width = alpha_x * 2;
+
     if (damp_pan > 1.0 || damp_pan < 0.0) {
       log.warn("Illegal value for configuration parameter " + Constants.PROPKEY_DAMP_PAN + ". Must be in range [0..1]. Using default value 1.0.");
       damp_pan = 1.0f;
