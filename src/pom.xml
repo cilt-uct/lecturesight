@@ -104,6 +104,7 @@
         <module>modules/lecturesight-scheduler</module>
         <module>modules/lecturesight-scripting-api</module>
         <module>modules/lecturesight-script-utils</module>
+        <module>modules/lecturesight-scripting-stub</module>
         <module>modules/lecturesight-steeringworker-api</module>
         <module>modules/lecturesight-steeringworker-gui</module>
         <module>modules/lecturesight-steeringworker-impl</module>
@@ -261,6 +262,19 @@
       <url>http://oss.sonatype.org/content/groups/public</url>
     </repository-->
     
+    <!-- Fraunhofer IAIS Repository -->
+    <repository>
+      <id>iais.fraunhofer.de</id>
+      <name>Fraunhofer IAIS</name>
+      <url>http://mp-devel.iais.fraunhofer.de:8081/nexus/content/repositories/lecturesight/</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+    </repository>
+
     <repository>
       <id>maven2-repository.dev.java.net</id>
       <name>Java.net Repository for Maven</name>
@@ -283,6 +297,19 @@
       <id>opencast</id>
       <name>Opencast Repo</name>
       <url>http://repository.opencastproject.org/nexus/content/groups/public</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+    </repository>
+    
+    <!-- Manchesters own local Repo -->
+    <repository>
+      <id>man-mtt</id>
+      <name>manchester-mtt</name>
+      <url>http://garnier.rcs.manchester.ac.uk:8081/nexus/content/repositories/man-mtt</url>
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
