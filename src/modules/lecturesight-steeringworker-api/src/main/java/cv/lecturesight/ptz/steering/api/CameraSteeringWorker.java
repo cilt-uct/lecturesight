@@ -28,6 +28,8 @@ public interface CameraSteeringWorker {
   public boolean isSteering();
   
   public void setSteering(boolean on);
+
+  public void setInitialPosition(NormalizedPosition pos);
   
   public void setTargetPosition(NormalizedPosition pos);
   
@@ -40,6 +42,10 @@ public interface CameraSteeringWorker {
   public void setZoom(float zoom);
   
   public float getZoom();
+
+  public void movePreset(int preset);
+
+  public void moveHome();
   
   public boolean isMoving();
   

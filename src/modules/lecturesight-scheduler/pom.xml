@@ -29,11 +29,6 @@
     </dependency>
     <dependency>
       <groupId>cv.lecturesight</groupId>
-      <artifactId>lecturesight-steeringworker-api</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>cv.lecturesight</groupId>
       <artifactId>lecturesight-util</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -58,6 +53,10 @@
       <artifactId>org.apache.felix.fileinstall</artifactId>
       <version>3.2.6</version>
       <type>jar</type>
+    </dependency>
+    <dependency>
+        <groupId>org.tinylog</groupId>
+        <artifactId>tinylog</artifactId>
     </dependency>
   </dependencies>
   

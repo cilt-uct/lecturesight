@@ -17,13 +17,13 @@
  */
 package cv.lecturesight.cameraoperator.simple;
 
+import org.pmw.tinylog.Logger;
 import cv.lecturesight.framesource.FrameSource;
 import cv.lecturesight.framesource.FrameSourceProvider;
 import cv.lecturesight.objecttracker.ObjectTracker;
 import cv.lecturesight.objecttracker.TrackerObject;
 import cv.lecturesight.operator.CameraOperator;
 import cv.lecturesight.ptz.steering.api.CameraSteeringWorker;
-import cv.lecturesight.util.Log;
 import cv.lecturesight.util.conf.Configuration;
 import cv.lecturesight.util.geometry.CoordinatesNormalization;
 import cv.lecturesight.util.geometry.NormalizedPosition;
@@ -41,7 +41,6 @@ import org.osgi.service.component.ComponentContext;
 @Service
 public class SimpleCameraOperator implements CameraOperator {
 
-  Log log = new Log("Pan-Only Camera Operator");
   @Reference
   Configuration config;
   
@@ -49,7 +48,7 @@ public class SimpleCameraOperator implements CameraOperator {
   ObjectTracker tracker;
   
   @Reference
-  CameraSteeringWorker camera;
+  CameraSteeringWorker steerer;
   
   @Reference
   FrameSourceProvider fsp;
@@ -57,26 +56,33 @@ public class SimpleCameraOperator implements CameraOperator {
   
   int interval = 200;
   int timeout;
+  int idle_preset = -1;
   CoordinatesNormalization normalizer;
   ScheduledExecutorService executor;
   CameraOperatorWorker worker;
  
-  float start_zoom = 0;
+  float start_pan = 0;
   float start_tilt = 0;
+  float start_zoom = 0;
+  float frame_width = 0;
 
   protected void activate(ComponentContext cc) throws Exception {
     timeout = config.getInt(Constants.PROPKEY_TIMEOUT);
-    start_zoom = config.getFloat(Constants.PROPKEY_ZOOM);
+    idle_preset = config.getInt(Constants.PROPKEY_IDLE_PRESET);
+    start_pan = config.getFloat(Constants.PROPKEY_PAN);
     start_tilt = config.getFloat(Constants.PROPKEY_TILT);
+    start_zoom = config.getFloat(Constants.PROPKEY_ZOOM);
+    frame_width = config.getFloat(Constants.PROPKEY_FRAME_WIDTH);
+
+    Logger.info("Activated. Timeout is " + timeout + " ms, pan is " + start_pan + ", tilt is " + start_tilt + ",  zoom is " + start_zoom);
 
     fsrc = fsp.getFrameSource();
     normalizer = new CoordinatesNormalization(fsrc.getWidth(), fsrc.getHeight());
-    start();    
-    log.info("Activated. Timeout is " + timeout + " ms, zoom is " + start_zoom + ", tilt is " + start_tilt);
+    start();
   }
 
   protected void deactivate(ComponentContext cc) {
-    log.info("Deactivated");
+    Logger.info("Deactivated");
   }
 
   @Override
@@ -85,10 +91,11 @@ public class SimpleCameraOperator implements CameraOperator {
       executor = Executors.newScheduledThreadPool(1);
       worker = new CameraOperatorWorker();
 
-      reset();
+      setInitialTrackingPosition();
+      steerer.setSteering(true);
 
       executor.scheduleAtFixedRate(worker, 0, interval, TimeUnit.MILLISECONDS);
-      log.info("Started");
+      Logger.info("Started");
     }
   }
 
@@ -97,22 +104,39 @@ public class SimpleCameraOperator implements CameraOperator {
     if (executor != null) {
       executor.shutdownNow();
       executor = null;
-      log.info("Stopped");
+      Logger.info("Stopped");
     } else {
-      log.warn("Nothing to stop");
+      Logger.warn("Nothing to stop");
     }
+
+    steerer.setSteering(false);
+    setIdlePosition();
   }
 
   @Override
   public void reset() {
-      log.debug("Reset camera zoom and position");
+      Logger.debug("Reset");
+      setInitialTrackingPosition();
+  }
 
-      camera.setPanOnly(true);
+  /* 
+   * Move the camera to the initial pan/tilt/zoom position for start of tracking
+   */
+  private void setInitialTrackingPosition() {
+      NormalizedPosition neutral = new NormalizedPosition(start_pan, start_tilt);
+      steerer.setZoom(start_zoom);  
+      steerer.setInitialPosition(neutral);
+  }
 
-      camera.setZoom(start_zoom);  
-
-      NormalizedPosition neutral = new NormalizedPosition(0.0f, start_tilt);
-      camera.setTargetPosition(neutral);
+  /* 
+   * Move the camera to the idle position (not tracking)
+   */
+  private void setIdlePosition() {
+    if (idle_preset >= 0) {
+       steerer.movePreset(idle_preset);
+    } else {
+       steerer.moveHome();
+    }
   }
 
   private class CameraOperatorWorker implements Runnable {
@@ -127,12 +151,39 @@ public class SimpleCameraOperator implements CameraOperator {
           target = findBiggestTrackedObject(objs);
         }
       } else {
+
         if (System.currentTimeMillis() - target.lastSeen() < timeout) {
-          log.debug("Moving camera to track object lastSeen: " + target.lastSeen());
-          Position obj_pos = (Position) target.getProperty(ObjectTracker.OBJ_PROPKEY_CENTROID);
-          NormalizedPosition obj_posN = normalizer.toNormalized(obj_pos);
-          NormalizedPosition target_pos = new NormalizedPosition(obj_posN.getX(), config.getFloat(Constants.PROPKEY_TILT));
-          camera.setTargetPosition(target_pos);
+
+	  boolean move = true;
+
+          // Target position
+	  Position obj_pos = (Position) target.getProperty(ObjectTracker.OBJ_PROPKEY_CENTROID);
+	  NormalizedPosition obj_posN = normalizer.toNormalized(obj_pos);
+	  NormalizedPosition target_pos = new NormalizedPosition(obj_posN.getX(), config.getFloat(Constants.PROPKEY_TILT));
+
+ 	  // Actual position
+          NormalizedPosition actual_pos = steerer.getActualPosition();
+
+          Logger.debug("Tracking object " + target + " currently at position " + target_pos);
+
+          // Reduce pan activity - only start moving camera if the target is approaching the frame boundaries
+          if ((frame_width > 0) && !steerer.isMoving()) {
+
+		  double trigger_left  = actual_pos.getX() - (frame_width/2);
+		  double trigger_right = actual_pos.getX() + (frame_width/2);
+
+		  if ((target_pos.getX() < trigger_right) && (target_pos.getX() > trigger_left)) {
+		       move = false;
+		       Logger.debug("Not moving: camera=" + actual_pos + " target=" + target_pos + 
+				 " position is inside frame trigger limits " + String.format("%.4f to %.4f", trigger_left, trigger_right));
+		  }
+          }
+
+          if (move) {
+		  Logger.debug("Moving steerer for object " + target + " to position " + target_pos);
+		  steerer.setTargetPosition(target_pos);
+          }
+
         } else {
           target = null;
         }

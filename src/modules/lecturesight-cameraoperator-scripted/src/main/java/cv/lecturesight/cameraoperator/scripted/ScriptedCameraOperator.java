@@ -1,9 +1,9 @@
 package cv.lecturesight.cameraoperator.scripted;
 
+import org.pmw.tinylog.Logger;
 import cv.lecturesight.operator.CameraOperator;
 import cv.lecturesight.scripting.api.ScriptBridge;
 import cv.lecturesight.scripting.api.ScriptingService;
-import cv.lecturesight.util.Log;
 import cv.lecturesight.util.conf.Configuration;
 import java.io.*;
 import java.util.LinkedList;
@@ -18,8 +18,6 @@ import org.osgi.service.component.ComponentContext;
 @Component(name = "lecturesight.cameraoperator.scripted", immediate = true)
 @Service
 public class ScriptedCameraOperator implements CameraOperator, ScriptingService, ArtifactInstaller {
-
-  Log log = new Log("Scripted Camera Operator");    // logger for this service
   
   @Reference
   Configuration config;               // service configuration
@@ -32,18 +30,20 @@ public class ScriptedCameraOperator implements CameraOperator, ScriptingService,
   
   List<BridgeRegistration> serviceObjects;  // collection of registetred service objects
                                             // that are made available in the script scope
+  
+  long lastStart = 0l;
     
   public ScriptedCameraOperator() {
     serviceObjects = new LinkedList<BridgeRegistration>();
   }
   
   protected void activate(ComponentContext cc) throws Exception {
-    log.info("Activated");
+    Logger.info("Activated");
   }
 
   protected void deactivate(ComponentContext cc) {
     stop();
-    log.info("Deactivated");
+    Logger.info("Deactivated");
   }
 
   /** Readies the script for execution if a script file is loaded.
@@ -54,7 +54,7 @@ public class ScriptedCameraOperator implements CameraOperator, ScriptingService,
     if (scriptFile == null) {
       throw new IllegalStateException("Cannot start, no script source present.");
     }
-    log.info("Attempting to start script worker.");
+    Logger.info("Attempting to start script worker.");
     try {
       scriptWorker = new ScriptWorker(scriptFile.getName());
       
@@ -84,8 +84,11 @@ public class ScriptedCameraOperator implements CameraOperator, ScriptingService,
       workerThread = new Thread(scriptWorker);
       workerThread.start();
       
+      // save timestamp of script launch
+      lastStart = System.currentTimeMillis();
+      
     } catch (Exception e) {
-      log.error("Failed to instantiate script worker.", e);
+      Logger.error("Failed to instantiate script worker.", e);
       throw new IllegalStateException(e);
     }
   }
@@ -98,7 +101,7 @@ public class ScriptedCameraOperator implements CameraOperator, ScriptingService,
   @Override
   public void stop() {
     if (scriptWorker != null) {
-      log.info("Attempting to stop script worker.");
+      Logger.info("Attempting to stop script worker.");
       
       // try to gracefully stop the interpreter thread
       scriptWorker.stop();
@@ -108,17 +111,17 @@ public class ScriptedCameraOperator implements CameraOperator, ScriptingService,
       try {
         Thread.sleep(config.getLong(Constants.PROPKEY_TIMEOUT));
       } catch (InterruptedException e) {
-        log.warn("Interruped while waiting for interpreter to exit.");
+        Logger.warn("Interruped while waiting for interpreter to exit.");
       }
       
       // if worker was not stopped, hard kill it. Using deprecated Thread.stop() 
       // here as there isn't really any other way.
       if (!scriptWorker.isStopped()) {
-        log.warn("Script worker did not stop, hard killing thread.");
+        Logger.warn("Script worker did not stop, hard killing thread.");
         workerThread.stop();
       }      
     } else {
-      log.warn("stop() called but nothing to stop.");
+      Logger.warn("stop() called but nothing to stop.");
     }
   }
   
@@ -177,7 +180,7 @@ public class ScriptedCameraOperator implements CameraOperator, ScriptingService,
     try {
       cfg.load(new FileReader(f));
     } catch (Exception e) {
-      log.error("Failed to load configuration file for script. ", e);
+      Logger.error("Failed to load configuration file for script. ", e);
     }
     return cfg;
   }
@@ -216,6 +219,11 @@ public class ScriptedCameraOperator implements CameraOperator, ScriptingService,
     filename = filename.replace(".js", ".conf");
     return scriptDir + File.separator + filename;
   }
+  
+  @Override
+  public long getTimeOfStart() {
+    return lastStart;
+  }
 
   // _____________________ Methods from ScriptingService _______________________
   @Override
@@ -228,20 +236,11 @@ public class ScriptedCameraOperator implements CameraOperator, ScriptingService,
   }
 
   @Override
-  public Log getLogger() {
-    if (scriptWorker != null) {
-      return scriptWorker.log;
-    } else {
-      return new Log("Script");
-    }
-  }
-
-  @Override
   public void invokeCallback(Object function, Object[] args) {
     if (scriptWorker != null && !scriptWorker.isStopped()) {
       scriptWorker.invokeCallback(function, args);
     } else {
-      log.warn("invokeCallback() called but no script running.");
+      Logger.warn("invokeCallback() called but no script running.");
     }
   }
 
@@ -250,7 +249,7 @@ public class ScriptedCameraOperator implements CameraOperator, ScriptingService,
     if (scriptWorker != null && !scriptWorker.isStopped()) {
       scriptWorker.invokeMethod(method, args);
     } else {
-      log.warn("invokeMethod() called but no script running.");
+      Logger.warn("invokeMethod() called but no script running.");
     }
   }
 
@@ -259,7 +258,7 @@ public class ScriptedCameraOperator implements CameraOperator, ScriptingService,
     if (scriptWorker != null && !scriptWorker.isStopped()) {
       scriptWorker.invokeCallback(method, args);
     } else {
-      log.warn("invokeMethod() called but no script running.");
+      Logger.warn("invokeMethod() called but no script running.");
     }
   }
 

@@ -8,6 +8,7 @@ import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 import org.osgi.service.component.ComponentContext;
+import org.pmw.tinylog.Logger;
 
 @Component(name = "lecturesight.script.bridge.time", immediate = true)
 @Service()
@@ -30,7 +31,7 @@ public class TimeBridge implements ScriptBridge {
   }
   
   public long start() {
-    return 0;             // TODO implement: return time of script start
+    return engine.getTimeOfStart();
   }
   
   public long currentFrame() {
@@ -42,11 +43,27 @@ public class TimeBridge implements ScriptBridge {
   }
 
   public void sleep(long time, Object callback) {
-    try {
-      Thread.sleep(time);
-    } catch (InterruptedException e) {
-      engine.getLogger().warn("Time.sleep interrupted.");
+    (new Thread(new SleepThread(time, callback))).start();
+  }
+  
+  class SleepThread implements Runnable {
+    
+    long millis;
+    Object callback;
+    
+    public SleepThread(long millis, Object callback) {
+      this.millis = millis;
+      this.callback = callback;
     }
-    engine.invokeCallback(callback, new Object[0]);
+    
+    @Override
+    public void run() {
+      try {
+        Thread.sleep(this.millis);
+      } catch (InterruptedException e) {
+        Logger.warn("Time.sleep thread interrupted.");
+      }
+      engine.invokeCallback(callback, new Object[0]);
+    }
   }
 }

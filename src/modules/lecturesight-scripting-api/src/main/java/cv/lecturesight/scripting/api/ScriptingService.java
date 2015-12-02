@@ -1,7 +1,5 @@
 package cv.lecturesight.scripting.api;
 
-import cv.lecturesight.util.Log;
-
 public interface ScriptingService {
 
   /** Registers <code>serviceObject</code> with the scripting engine, making it 
@@ -15,12 +13,11 @@ public interface ScriptingService {
    */
   public void registerSerivceObject(String identifier, ScriptBridge serviceObject, String[] requiredImports);
   
-  /** Return the script's logger so that the consumer can log messages in behalf 
-   * of the script instance.
+  /** Returns the timestamp of the last script launch.
    * 
-   * @return script's logger
+   * @return time of script launch
    */
-  public Log getLogger();
+  public long getTimeOfStart();
   
   /** Calls the specified <code>function</code> immediately with the specified
    * <code>args</code>. This method is only intended for calling a callback from
