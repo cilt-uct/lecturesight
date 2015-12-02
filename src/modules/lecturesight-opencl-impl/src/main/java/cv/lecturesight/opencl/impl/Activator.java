@@ -163,7 +163,7 @@ public final class Activator implements BundleActivator, ServiceFactory {
         
       } catch (Exception e) {
         Exception ex = new IllegalStateException("No suitable compute device found: " + type.name());
-        log.error("!! OPENCL INITIALIZATION FAILED !! ", ex);
+        Logger.error("!! OPENCL INITIALIZATION FAILED !! ", ex);
         // This is a fatal error, so exit immediately
         bundleContext.getBundle(0).stop();
         throw ex;

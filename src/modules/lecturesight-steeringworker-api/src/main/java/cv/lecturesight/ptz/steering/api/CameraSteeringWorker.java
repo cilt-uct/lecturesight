@@ -37,8 +37,6 @@ public interface CameraSteeringWorker {
   
   public NormalizedPosition getActualPosition();
   
-  public void setPanOnly(boolean pan_only);
-
   public void setZoom(float zoom);
   
   public float getZoom();

@@ -169,7 +169,7 @@ public class HeartBeatImpl implements HeartBeat {
   @Override
   public void stop() {
     iterationsToRun = 0;
-    log.debug("Stopped from stop()");
+    Logger.debug("Stopped from stop()");
   }
 
   @Override
