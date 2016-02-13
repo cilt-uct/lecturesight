@@ -289,6 +289,7 @@
     </repository>
     
     <!-- Fraunhofer IAIS Repository -->
+<!--
     <repository>
       <id>iais.fraunhofer.de</id>
       <name>Fraunhofer IAIS</name>
@@ -300,7 +301,7 @@
         <enabled>true</enabled>
       </releases>
     </repository>
-
+-->
     <repository>
       <id>maven2-repository.dev.java.net</id>
       <name>Java.net Repository for Maven</name>
