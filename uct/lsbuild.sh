@@ -39,9 +39,10 @@ ln -s $BUILDDIR/lsuct-$BUILDTIME-$LASTCOMMIT.tgz $BUILDDIR/lsuct-latest.tgz
 
 echo "\nLatest build: lsuct-$BUILDTIME-$LASTCOMMIT.tgz\n"
 
-git -C $LS/lsuct status --short
-echo
-
 # Backup this build script
 cp $LS/lsbuild.sh $LS/lsuct/uct/
+
+# Show any uncommitted changes
+git -C $LS/lsuct status
+echo
 
