@@ -108,6 +108,7 @@
         <module>modules/lecturesight-profile-manager</module>
         <module>modules/lecturesight-profile-ui</module>
         <module>modules/lecturesight-ptzcontrol-api</module>
+	<module>modules/lecturesight-ptzcontrol-vapix</module>
         <module>modules/lecturesight-scheduler</module>
         <module>modules/lecturesight-scripting-api</module>
         <module>modules/lecturesight-script-utils</module>

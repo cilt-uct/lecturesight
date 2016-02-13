@@ -6,6 +6,9 @@ BUILDDIR=$LS/build
 rm -rf $LS/deploy/*
 cp -R $LS/lsuct/runtime/* $LS/deploy/
 
+# Remove the lecturesight.properties to avoid overwriting local version
+rm $LS/deploy/conf/lecturesight.properties
+
 echo "Building UCT Lecturesight\n"
 java -version
 echo
@@ -26,13 +29,19 @@ cd $LS/deploy
 
 # Record version
 
-echo "Built: $BUILDTIME " > build-info
-echo "Last commit: $LASTCOMMIT" >> build-info
-echo "Commit date: $COMMITDATE" >> build-info
+echo "Build-date: $BUILDTIME " > build-info
+echo "Last-commit: $LASTCOMMIT on $COMMITDATE" >> build-info
+echo "Version: 0.3-UCT-$BUILDTIME-$LASTTCOMIT" >> build-info
 
 tar zcf $BUILDDIR/lsuct-$BUILDTIME-$LASTCOMMIT.tgz *
 rm $BUILDDIR/lsuct-latest.tgz
 ln -s $BUILDDIR/lsuct-$BUILDTIME-$LASTCOMMIT.tgz $BUILDDIR/lsuct-latest.tgz
 
-echo Latest build: lsuct-$BUILDTIME-$LASTCOMMIT.tgz
+echo "\nLatest build: lsuct-$BUILDTIME-$LASTCOMMIT.tgz\n"
+
+git -C $LS/lsuct status --short
 echo
+
+# Backup this build script
+cp $LS/lsbuild.sh $LS/lsuct/uct/
+
