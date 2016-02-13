@@ -10,11 +10,27 @@
 #
 # VISCA Configuration __________________________________________________________
 #
-com.wulff.lecturesight.visca.debug=false
 com.wulff.lecturesight.visca.port.device=/dev/ttyUSB0
 
 # Camera position update request interval
 com.wulff.lecturesight.visca.updater.interval=200
+
+#
+# VAPIX Configuration (Axis cameras)
+#
+#cv.lecturesight.vapix.camera.host=venue-cam01.uct.ac.za
+cv.lecturesight.vapix.camera.username=root
+cv.lecturesight.vapix.camera.password=root
+cv.lecturesight.vapix.camera.pan.min=-17000
+cv.lecturesight.vapix.camera.pan.max=17000
+cv.lecturesight.vapix.camera.pan.maxspeed=50
+cv.lecturesight.vapix.camera.tilt.min=-2000
+cv.lecturesight.vapix.camera.tilt.max=9000
+cv.lecturesight.vapix.camera.tilt.maxspeed=50
+cv.lecturesight.vapix.camera.zoom.min=1
+cv.lecturesight.vapix.camera.zoom.max=9999
+cv.lecturesight.vapix.camera.zoom.maxspeed=1
+cv.lecturesight.vapix.updater.interval=100
 
 #
 # Video Input __________________________________________________________________
@@ -24,8 +40,8 @@ com.wulff.lecturesight.visca.updater.interval=200
 #  - v4l      compatible Video4Linux devices (Logitech C930 webcam)
 #  - rtph264  h264 video stream via RTP (Raspberry Pi cameras)
 #
-cv.lecturesight.framesource.input.mrl=rtph264://hahn3-cam02:8554
-#cv.lecturesight.framesource.input.mrl=v4l:///dev/logitech[width=640;height=360]
+cv.lecturesight.framesource.input.mrl=v4l:///dev/logitech[width=640;height=360]
+#cv.lecturesight.framesource.input.mrl=rtph264://venue-cam02:8554
 
 #
 # Video Analysis _______________________________________________________________
@@ -86,9 +102,4 @@ cv.lecturesight.profile.manager.active.profile=blue01
 cv.lecturesight.scheduler.schedule.file=/usr/share/galicaster-repository/attach/calendar.ical
 cv.lecturesight.scheduler.timezone.offset=2
 cv.lecturesight.scheduler.tracker.leadtime=10
-
-# remote OSGI shell configuration
-osgi.shell.telnet.ip=127.0.0.1
-osgi.shell.telnet.port=2501
-osgi.shell.telnet.maxconn=2
 
