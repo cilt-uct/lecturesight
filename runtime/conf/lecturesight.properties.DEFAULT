@@ -89,6 +89,9 @@ cv.lecturesight.cameraoperator.panonly.pan=0.0
 cv.lecturesight.cameraoperator.panonly.tilt=-0.5
 cv.lecturesight.cameraoperator.panonly.zoom=0.6
 
+# Frame width (minimize panning movement when the target is inside the frame)
+cv.lecturesight.cameraoperator.panonly.frame.width=0.4
+
 # Time to continue tracking objects after they were last seen (milliseconds)
 cv.lecturesight.cameraoperator.panonly.timeout=500
 
@@ -96,7 +99,7 @@ cv.lecturesight.cameraoperator.panonly.timeout=500
 cv.lecturesight.cameraoperator.panonly.idle.preset=0
 
 # Profile manager - set profile for masking regions
-cv.lecturesight.profile.manager.active.profile=blue01
+cv.lecturesight.profile.manager.active.profile=overview
 
 # Scheduler - watch the Galicaster schedule file
 cv.lecturesight.scheduler.schedule.file=/usr/share/galicaster-repository/attach/calendar.ical

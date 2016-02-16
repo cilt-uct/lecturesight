@@ -31,7 +31,7 @@ cd $LS/deploy
 
 echo "Build-date: $BUILDTIME " > build-info
 echo "Last-commit: $LASTCOMMIT on $COMMITDATE" >> build-info
-echo "Version: 0.3-UCT-$BUILDTIME-$LASTTCOMIT" >> build-info
+echo "Version: 0.3-UCT-$BUILDTIME-$LASTCOMMIT" >> build-info
 
 tar zcf $BUILDDIR/lsuct-$BUILDTIME-$LASTCOMMIT.tgz *
 rm $BUILDDIR/lsuct-latest.tgz
