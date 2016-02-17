@@ -3,7 +3,8 @@
 echo -n "Stopping Lecturesight: "
 
 # Felix gosh shell
-echo "stop 0" | telnet localhost 2501
+MYIP=`hostname -i`
+echo "stop 0" | telnet $MYIP 2501
 
 LS_PID=`ps aux | grep java | awk '/lecturesight/ && !/awk/ {print $2}'`
 if [ -z "$LS_PID" ]; then
