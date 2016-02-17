@@ -2,6 +2,7 @@
 
 # set correct base dir for production and daemon operation
 BASE_DIR="/opt/ls"
+cd $BASE_DIR
 
 # OpenCL device type to be used. Default is GPU.
 # Available options: CPU, GPU, ACCELERATOR, DEFAULT, ALL
