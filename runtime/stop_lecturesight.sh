@@ -8,8 +8,8 @@ echo "stop 0" | telnet $MYIP 2501
 
 LS_PID=`ps aux | grep java | awk '/lecturesight/ && !/awk/ {print $2}'`
 if [ -z "$LS_PID" ]; then
-  echo "Lecturesight already stopped"
-  exit 1
+  echo "Lecturesight already stopped - nothing to do"
+  exit 0
 fi
 
 sleep 10
