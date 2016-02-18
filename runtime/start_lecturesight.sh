@@ -35,6 +35,18 @@ if [ "$VAPIX" == "1" ]; then
         rm -f $BASE_DIR/bundles/application/visca*jar
 fi
 
+# Check serial link type and set up socat if required
+RTP=`grep "^cv.lecturesight.framesource.input.mrl=rtph264://" $BASE_DIR/conf/lecturesight.properties`
+
+# Match RPi hostname without the port
+if [[ "$RTP" =~ rtph264://([a-z0-9.-]+) ]]; then
+        RPI=${BASH_REMATCH[1]}
+        echo RPi overview camera: $RPI
+        # Serial link
+        killall socat
+        /usr/bin/socat pty,link=/dev/ttyUSB0,waitslave tcp:$RPI:2000 &
+fi
+
 # start LectureSight
 java -Dlecturesight.basedir=$BASE_DIR $CONFIG_OPTS $LOG_OPTS $OPENCL_OPTS -jar $BASE_DIR/bin/felix.jar -b $BASE_DIR/bundles/system $FELIX_CACHE
 
