@@ -17,10 +17,6 @@ CONFIG_OPTS="-Dfelix.config.properties=file:$BASE_DIR/conf/config.properties -Df
 # erase felix cache
 rm -rf $FELIX_CACHE/*
 
-# Configure remote shell
-MYIP=`hostname -i`
-sed -i "s/^\(osgi.shell.telnet.ip=s*\).*$/\1$MYIP/" $BASE_DIR/conf/config.properties
-
 # Check camera config and remove bundles for other camera types
 VISCA=`grep -c ^com.wulff.lecturesight.visca.port.device $BASE_DIR/conf/lecturesight.properties`
 VAPIX=`grep -c ^cv.lecturesight.vapix.camera.host $BASE_DIR/conf/lecturesight.properties`
