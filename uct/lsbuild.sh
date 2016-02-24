@@ -25,6 +25,10 @@ COMMITDATE=`git log --pretty=format:"%cd" --max-count=1`
 cd $LS/lsuct/src
 mvn clean install -DdeployTo=$LS/deploy/bundles/application
 
+# Shutdown util
+cd $LS/lsuct/uct
+javac ShutdownOSGI.java -d $LS/deploy/bin/
+
 cd $LS/deploy
 
 # Record version
