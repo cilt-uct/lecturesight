@@ -70,6 +70,8 @@ public class VISCAServiceImpl implements VISCAService, SerialPortEventListener {
   protected void activate(ComponentContext cc) {
     this.cc = cc;
 
+    Logger.debug("Activated");
+
     // load device profiles
     loadProfiles(cc);
 
@@ -124,7 +126,15 @@ public class VISCAServiceImpl implements VISCAService, SerialPortEventListener {
    * @param cc
    */
   protected void deactivate(ComponentContext cc) {
+    try {
+      executor.shutdown();
+      executor.awaitTermination(1, TimeUnit.SECONDS);
+      Thread.sleep(1500);
+    } catch (Exception e) {
+      Logger.debug("Unable to terminate scheduled processes cleanly");
+    }
     deinitPort();
+    Logger.debug("Deactivated");
   }
 
   /**
@@ -175,7 +185,6 @@ public class VISCAServiceImpl implements VISCAService, SerialPortEventListener {
    *
    */
   void deinitPort() {
-    // TODO destroy camera objects
     port.close();
   }
 
