@@ -98,6 +98,9 @@ cv.lecturesight.cameraoperator.panonly.timeout=500
 # Reset the camera to this preset position when not tracking (because of scheduler)
 cv.lecturesight.cameraoperator.panonly.idle.preset=0
 
+# Do not acquire a new target if there are more than this number of targets being tracked
+cv.lecturesight.cameraoperator.panonly.target.limit=2
+
 # Profile manager - set profile for masking regions
 cv.lecturesight.profile.manager.active.profile=overview
 
