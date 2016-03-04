@@ -253,6 +253,10 @@ public class CameraSteeringWorkerRelativeMove implements CameraSteeringWorker {
 
   protected void deactivate(ComponentContext cc) throws Exception {
     camera.removeCameraListener(worker);
+
+    // Wait for any camera movements to complete (e.g. move to home / preset)  
+    Thread.sleep(1000);
+
     camera.stopMove();
     Logger.info("Deactivated");
   }
