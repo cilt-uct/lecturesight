@@ -108,13 +108,12 @@ public class SimpleCameraOperator implements CameraOperator {
     if (executor != null) {
       executor.shutdownNow();
       executor = null;
-      Logger.info("Stopped");
-    } else {
-      Logger.warn("Nothing to stop");
+      Logger.debug("Stopped worker thread");
     }
 
     steerer.setSteering(false);
     setIdlePosition();
+    Logger.info("Stopped");
   }
 
   @Override
