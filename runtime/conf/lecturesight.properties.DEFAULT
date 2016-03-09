@@ -23,14 +23,15 @@ cv.lecturesight.vapix.camera.username=root
 cv.lecturesight.vapix.camera.password=root
 cv.lecturesight.vapix.camera.pan.min=-17000
 cv.lecturesight.vapix.camera.pan.max=17000
-cv.lecturesight.vapix.camera.pan.maxspeed=50
 cv.lecturesight.vapix.camera.tilt.min=-2000
 cv.lecturesight.vapix.camera.tilt.max=9000
-cv.lecturesight.vapix.camera.tilt.maxspeed=50
 cv.lecturesight.vapix.camera.zoom.min=1
 cv.lecturesight.vapix.camera.zoom.max=9999
 cv.lecturesight.vapix.camera.zoom.maxspeed=1
 cv.lecturesight.vapix.updater.interval=100
+
+# Set this property to 1 if the camera is inverted
+#cv.lecturesight.vapix.camera.inverted=1
 
 #
 # Video Input __________________________________________________________________
@@ -40,7 +41,7 @@ cv.lecturesight.vapix.updater.interval=100
 #  - v4l      compatible Video4Linux devices (Logitech C930 webcam)
 #  - rtph264  h264 video stream via RTP (Raspberry Pi cameras)
 #
-cv.lecturesight.framesource.input.mrl=v4l2:///dev/logitech[width=640;height=360;Brightness=150;Power Line Frequency=50 Hz;Sharpness=0]
+cv.lecturesight.framesource.input.mrl=v4l2:///dev/logitech[width=640;height=360;Power Line Frequency=50 Hz;Focus, Auto=0;Focus (absolute)=0]
 #cv.lecturesight.framesource.input.mrl=rtph264://venue-cam02:8554
 
 # Webcam image format - change this to MJPEG for higher resolutions on longer USB connections (USB over CAT5)
