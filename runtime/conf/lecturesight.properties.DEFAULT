@@ -15,6 +15,9 @@ com.wulff.lecturesight.visca.port.device=/dev/ttyUSB0
 # Camera position update request interval
 com.wulff.lecturesight.visca.updater.interval=200
 
+# To report the camera focus position, enable this setting and adjust the update interval to 500ms
+#com.wulff.lecturesight.visca.updater.poll.focus=true
+
 #
 # VAPIX Configuration (Axis cameras)
 #
@@ -83,6 +86,9 @@ cv.lecturesight.ptz.steering.worker.relativemove.scene.limit.left=-4650
 cv.lecturesight.ptz.steering.worker.relativemove.scene.limit.right=3000
 cv.lecturesight.ptz.steering.worker.relativemove.scene.limit.top=-600
 cv.lecturesight.ptz.steering.worker.relativemove.scene.limit.bottom=-5000
+
+# Disable auto-focus when tracking
+#cv.lecturesight.ptz.steering.worker.relativemove.focus.fixed=true
 
 #
 # Configuration of pan-only (simple) Camera Operator
