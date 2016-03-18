@@ -43,6 +43,12 @@ if [[ "$RTP" =~ rtph264://([a-z0-9.-]+) ]]; then
         /usr/bin/socat pty,link=/dev/ttyUSB0,waitslave tcp:$RPI:2000 &
 fi
 
+# gstreamer debug logging
+# https://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gst-running.html
+export GST_DEBUG=3
+export GST_DEBUG_FILE=/opt/ls/log/gstreamer.log
+export GST_DEBUG_NO_COLOR=1
+
 # start LectureSight
 java -Dlecturesight.basedir=$BASE_DIR $CONFIG_OPTS $LOG_OPTS $OPENCL_OPTS -jar $BASE_DIR/bin/felix.jar -b $BASE_DIR/bundles/system $FELIX_CACHE
 
