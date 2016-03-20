@@ -1,8 +1,4 @@
-
-# Configurable GStreamer Frame Source
----
-
-__Bundle File:__ lecturesight-framesource-gst.jar
+# Module Overview
 
 This bundle provides a Frame Source implementation that uses a user-defined 
 GStreamer pipeline to capture frames. The pipeline definition is given in the 
