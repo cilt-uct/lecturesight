@@ -1,1 +1,2 @@
-# Connected Component Analysis Module Overview
+# Module Overview
+
