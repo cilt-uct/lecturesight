@@ -19,7 +19,7 @@ Example usage:
 The example MRL tells the system to create a FrameSource from the file
 `testvideos/sample.mpg`.
 
-## Requirments
+## Requirements
 
 The implementation is based on GStreamer4Java. The bundle does not
 provide the native libraries; they have to be installed in the host
