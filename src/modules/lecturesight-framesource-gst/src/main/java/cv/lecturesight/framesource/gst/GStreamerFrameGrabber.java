@@ -20,13 +20,16 @@ package cv.lecturesight.framesource.gst;
 import cv.lecturesight.framesource.FrameGrabber;
 import cv.lecturesight.framesource.FrameSourceException;
 import java.nio.ByteBuffer;
-import org.gstreamer.Caps;
-import org.gstreamer.Element;
-import org.gstreamer.ElementFactory;
-import org.gstreamer.Pipeline;
-import org.gstreamer.State;
-import org.gstreamer.Structure;
-import org.gstreamer.elements.AppSink;
+
+import org.freedesktop.gstreamer.Caps;
+import org.freedesktop.gstreamer.Element;
+import org.freedesktop.gstreamer.ElementFactory;
+import org.freedesktop.gstreamer.Pipeline;
+import org.freedesktop.gstreamer.State;
+import org.freedesktop.gstreamer.Structure;
+import org.freedesktop.gstreamer.elements.AppSink;
+
+import org.pmw.tinylog.Logger;
 
 public class GStreamerFrameGrabber implements FrameGrabber {
 
@@ -43,13 +46,17 @@ public class GStreamerFrameGrabber implements FrameGrabber {
     try {
       pipeline = createPipeline(definition);
     } catch (Exception e) {
+      Logger.error("Unable to create pipeline: " + definition);
       throw new FrameSourceException("Failed to create pipeline with definition: " + definition, e);
     }
+
     start();
     getVideoFrameSize();
   }
 
   private Pipeline createPipeline(String pipelineDef) throws IllegalStateException {
+
+    Logger.debug("Creating gstreamer pipeline: " + pipelineDef);
 
     // instantiate user provided pipeline segment
     Pipeline pipe = Pipeline.launch(pipelineDef);
@@ -57,15 +64,23 @@ public class GStreamerFrameGrabber implements FrameGrabber {
     // find most downstream element in user pipeline
     Element last = pipe.getElementsSorted().get(0);
 
+    Logger.debug("Attaching videoconvert");
+
     // attach colorspace, capsfilter and appsink
-    Element colorspace = createElement("ffmpegcolorspace", "ffmpegcolorspace");
+    Element colorspace = createElement("videoconvert", "videoconvert");
     addToPipeline(pipe, colorspace);
     linkElements(last, colorspace);
-    Caps caps = Caps.fromString("video/x-raw-rgb");
+
+    Logger.debug("Attaching caps");
+
+    Caps caps = Caps.fromString("video/x-raw,format=RGB");
     Element capsfilter = createElement("capsfilter", "capsfilter");
     capsfilter.set("caps", caps);
     addToPipeline(pipe, capsfilter);
     linkElements(colorspace, capsfilter);
+
+    Logger.debug("Attaching appsink");
+
     appsink = (AppSink) createElement("appsink", "appsink");
     appsink.setCaps(caps);
     appsink.set("async", "true");
@@ -74,6 +89,8 @@ public class GStreamerFrameGrabber implements FrameGrabber {
     appsink.set("max-buffers", "5");
     addToPipeline(pipe, appsink);
     linkElements(capsfilter, appsink);
+
+    Logger.debug("Finished creating pipeline");
 
     return pipe;
   }
@@ -99,6 +116,7 @@ public class GStreamerFrameGrabber implements FrameGrabber {
   }
 
   void start() {
+    Logger.debug("Pipeline start");
     pipeline.play();
   }
 
@@ -107,9 +125,9 @@ public class GStreamerFrameGrabber implements FrameGrabber {
   }
 
   private void getVideoFrameSize() throws FrameSourceException {
+    Logger.debug("getVideoFrameSize");
     try {
-      org.gstreamer.Buffer buf = appsink.pullPreroll();
-      Structure str = buf.getCaps().getStructure(0);
+      Structure str = appsink.pullPreroll().getCaps().getStructure(0);
       width = str.getInteger("width");
       height = str.getInteger("height");
     } catch (Exception e) {
@@ -120,14 +138,14 @@ public class GStreamerFrameGrabber implements FrameGrabber {
   @Override
   public ByteBuffer captureFrame() throws FrameSourceException {
     if (!appsink.isEOS()) {
-      org.gstreamer.Buffer buf = appsink.pullBuffer();
+      org.freedesktop.gstreamer.Buffer buf = appsink.pullSample().getBuffer();
       if (buf == null) {
         System.out.println("Buffer is NULL!!");
       }
-      lastFrame = buf.getByteBuffer();
+      lastFrame = buf.map(false);
     } else {
       if (lastFrame == null) {
-        throw new FrameSourceException("Stream is EOS and no previously captured frame availabel.");
+        throw new FrameSourceException("Stream is EOS and no previously captured frame available.");
       }
     }
     return lastFrame;
