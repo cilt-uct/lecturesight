@@ -24,12 +24,21 @@ VAPIX=`grep -c ^cv.lecturesight.vapix.camera.host $BASE_DIR/conf/lecturesight.pr
 if [ "$VISCA" == "1" ]; then
         echo VISCA camera
         rm -f $BASE_DIR/bundles/application/lecturesight-vapix-camera*jar
+        rm -f $BASE_DIR/bundles/application/ptzcontrol-dummy-*.jar
 fi
 
 if [ "$VAPIX" == "1" ]; then
         echo VAPIX camera
         rm -f $BASE_DIR/bundles/application/visca*jar
+        rm -f $BASE_DIR/bundles/application/ptzcontrol-dummy-*.jar
 fi
+
+if [ "$VAPIX$VISCA" == "00" ]; then
+	echo No camera configured - using PTZ Dummy
+        rm -f $BASE_DIR/bundles/application/visca*jar
+        rm -f $BASE_DIR/bundles/application/lecturesight-vapix-camera*jar
+fi
+
 
 # Check serial link type and set up socat if required
 RTP=`grep "^cv.lecturesight.framesource.input.mrl=rtph264://" $BASE_DIR/conf/lecturesight.properties`
