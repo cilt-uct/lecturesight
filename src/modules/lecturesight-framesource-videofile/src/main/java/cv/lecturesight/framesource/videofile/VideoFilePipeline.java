@@ -147,9 +147,6 @@ public class VideoFilePipeline implements FrameGrabber {
       throw new UnableToLinkElementsException(src, decodebin);
     }
 
-    // Pad p = new Pad(null, PadDirection.SRC);
-    // decodebin.addPad(p);
-
     if (!videoconvert.link(capsfilter)) {
       throw new UnableToLinkElementsException(videoconvert, capsfilter);
     }
