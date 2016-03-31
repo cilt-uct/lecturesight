@@ -99,7 +99,6 @@
         <module>modules/lecturesight-framesource-gst</module>
         <module>modules/lecturesight-framesource-v4l</module>
         <module>modules/lecturesight-framesource-rtph264</module> 
-        <!-- <module>modules/lecturesight-framesource-rtsp</module> -->
         <module>modules/lecturesight-framesource-videofile</module>
         <module>modules/lecturesight-gui-api</module>
         <module>modules/lecturesight-gui-impl</module>
@@ -118,7 +117,6 @@
         <module>modules/lecturesight-scripting-api</module>
         <module>modules/lecturesight-script-utils</module>
         <module>modules/lecturesight-scripting-stub</module>
-        <module>modules/lecturesight-setup-ui</module>
         <module>modules/lecturesight-steeringworker-api</module>
         <module>modules/lecturesight-steeringworker-gui</module>
         <module>modules/lecturesight-steeringworker-relativemove</module>
