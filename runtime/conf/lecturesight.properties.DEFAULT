@@ -95,6 +95,7 @@ cv.lecturesight.ptz.steering.worker.relativemove.scene.limit.bottom=-5000
 
 # Disable auto-focus when tracking
 #cv.lecturesight.ptz.steering.worker.relativemove.focus.fixed=true
+#cv.lecturesight.ptz.steering.worker.relativemove.move.initial.delay=5000
 
 #
 # Configuration of pan-only (simple) Camera Operator
