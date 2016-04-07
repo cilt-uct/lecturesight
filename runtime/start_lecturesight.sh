@@ -48,7 +48,7 @@ if [[ "$RTP" =~ rtph264://([a-z0-9.-]+) ]]; then
         RPI=${BASH_REMATCH[1]}
         echo RPi overview camera: $RPI
         # Serial link
-        killall socat
+        killall --quiet socat
         /usr/bin/socat pty,link=/dev/ttyUSB0,waitslave tcp:$RPI:2000 &
 fi
 
