@@ -187,20 +187,14 @@ public final class Activator implements BundleActivator, ServiceFactory {
         // FIXME provide ContextProperties?
         ctx = JavaCL.createContext(null, best);
         
-      } catch (Exception e) {
-        Exception ex = new IllegalStateException("No suitable compute device found: " + type.name());
-        Logger.error(ex, "!! OPENCL INITIALIZATION FAILED !! ");
+      } catch (Throwable t) {
+        Logger.error(t, "!! OPENCL INITIALIZATION FAILED !! ");
         // This is a fatal error, so exit immediately
         bundleContext.getBundle(0).stop();
+
+        Exception ex = new IllegalStateException("No suitable compute device found: " + type.name());
         throw ex;
       }
-      catch (NoClassDefFoundError e) {
-        Logger.error(e, "!! OPENCL INITIALIZATION FAILED !! ");
-        // This is a fatal error, so exit immediately
-        bundleContext.getBundle(0).stop();
-        throw e;
-      }
-
     }
 
     // testing if context is working by getting platform information 
