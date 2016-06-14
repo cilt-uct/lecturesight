@@ -125,6 +125,7 @@ cv.lecturesight.profile.manager.active.profile=overview
 #cv.lecturesight.profile.manager.active.profile=testvideo
 
 # Scheduler - watch the Galicaster schedule file
+cv.lecturesight.scheduler.enable=true
 cv.lecturesight.scheduler.schedule.file=/usr/share/galicaster-repository/attach/calendar.ical
 cv.lecturesight.scheduler.timezone.offset=2
 cv.lecturesight.scheduler.tracker.leadtime=10
