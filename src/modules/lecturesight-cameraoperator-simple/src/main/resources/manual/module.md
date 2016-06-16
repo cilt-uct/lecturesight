@@ -1,0 +1,1 @@
+# Pan-only Camera Operator
