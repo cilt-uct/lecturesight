@@ -587,17 +587,17 @@ public class VideoAnalysisTemplateMatching implements ObjectTracker, Configurati
     input_rgb_last = fsrc.getLastImage();
 
     // allocate working buffers
-    change = allocImage2D(Format.INTENSITY_UINT8, imageWorkDim);
-    cells = allocImage2D(Format.INTENSITY_UINT8, numCells);
-    visual = allocImage2D(Format.BGRA_UINT8, imageWorkDim);
+    change = allocImage2D(Format.LUMINANCE_UNINT8, imageWorkDim);
+    cells = allocImage2D(Format.LUMINANCE_UNINT8, numCells);
+    visual = allocImage2D(Format.RGBA_UINT8, imageWorkDim);
 
     targets = new Target[MAX_TARGETS];
     updateBuffer = new int[MAX_TARGETS * 4];
     updateBuffer_host = IntBuffer.wrap(updateBuffer);
     updateBuffer_gpu = ocl.context().createBuffer(CLMem.Usage.InputOutput, updateBuffer_host);
 
-    templates = allocImage2D(Format.BGRA_UINT8, templateBufferDim);
-    match = allocImage2D(Format.INTENSITY_UINT8, imageWorkDim);
+    templates = allocImage2D(Format.RGBA_UINT8, templateBufferDim);
+    match = allocImage2D(Format.LUMINANCE_UNINT8, imageWorkDim);
 
     // allocate buffers and arrays for object data
     weights_gpu = ocl.context().createIntBuffer(CLMem.Usage.InputOutput, MAX_REGIONS);
