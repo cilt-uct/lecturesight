@@ -277,7 +277,7 @@ public class VideoAnalysisTemplateMatching implements ObjectTracker, Configurati
         updateDim[0] = TARGET_SIZE * numTemplMatches;
         CLEvent uploaded = updateBuffer_gpu.write(queue, updateBuffer_host, true);
         match_templates_K.setArgs(input_rgb, templates, updateBuffer_gpu);
-        CLEvent matched = match_templates_K.enqueueNDRange(queue, updateDim, templateDim, uploaded);
+        CLEvent matched = match_templates_K.enqueueNDRange(queue, updateDim, uploaded);
         output_host = updateBuffer_gpu.read(queue, matched);
       }
 
@@ -287,7 +287,7 @@ public class VideoAnalysisTemplateMatching implements ObjectTracker, Configurati
         updateDim[0] = TARGET_SIZE * numTemplUpdates;
         CLEvent uploaded = updateBuffer_gpu.write(queue, updateBuffer_host, false);
         update_templates_K.setArgs(input_rgb, cells, templates, updateBuffer_gpu);
-        update_templates_K.enqueueNDRange(queue, updateDim, templateDim, uploaded);
+        update_templates_K.enqueueNDRange(queue, updateDim, uploaded);
       }
     }
 
@@ -587,8 +587,8 @@ public class VideoAnalysisTemplateMatching implements ObjectTracker, Configurati
     input_rgb_last = fsrc.getLastImage();
 
     // allocate working buffers
-    change = allocImage2D(Format.LUMINANCE_UNINT8, imageWorkDim);
-    cells = allocImage2D(Format.LUMINANCE_UNINT8, numCells);
+    change = allocImage2D(Format.RGBA_UINT8, imageWorkDim);
+    cells = allocImage2D(Format.RGBA_UINT8, numCells);
     visual = allocImage2D(Format.RGBA_UINT8, imageWorkDim);
 
     targets = new Target[MAX_TARGETS];
@@ -597,7 +597,7 @@ public class VideoAnalysisTemplateMatching implements ObjectTracker, Configurati
     updateBuffer_gpu = ocl.context().createBuffer(CLMem.Usage.InputOutput, updateBuffer_host);
 
     templates = allocImage2D(Format.RGBA_UINT8, templateBufferDim);
-    match = allocImage2D(Format.LUMINANCE_UNINT8, imageWorkDim);
+    match = allocImage2D(Format.RGBA_UINT8, imageWorkDim);
 
     // allocate buffers and arrays for object data
     weights_gpu = ocl.context().createIntBuffer(CLMem.Usage.InputOutput, MAX_REGIONS);
