@@ -33,8 +33,8 @@ cv.lecturesight.vapix.camera.zoom.max=9999
 cv.lecturesight.vapix.camera.zoom.maxspeed=1
 cv.lecturesight.vapix.updater.interval=100
 
-# Set this property to 1 if the camera is inverted
-#cv.lecturesight.vapix.camera.inverted=1
+# Set this property to true if the camera is inverted
+#cv.lecturesight.vapix.camera.inverted=true
 
 #
 # Video Input __________________________________________________________________
