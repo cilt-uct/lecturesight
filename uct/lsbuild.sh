@@ -37,6 +37,9 @@ echo "Build-date: $BUILDTIME " > build-info
 echo "Last-commit: $LASTCOMMIT on $COMMITDATE" >> build-info
 echo "Version: 0.3-UCT-$BUILDTIME-$LASTCOMMIT" >> build-info
 
+echo "cv.lecturesight.version=0.3-UCT" > conf/build.properties
+echo "cv.lecturesight.buildinfo=$BUILDTIME:$LASTCOMMIT" >> conf/build.properties
+
 tar zcf $BUILDDIR/lsuct-$BUILDTIME-$LASTCOMMIT.tgz *
 rm $BUILDDIR/lsuct-latest.tgz
 ln -s $BUILDDIR/lsuct-$BUILDTIME-$LASTCOMMIT.tgz $BUILDDIR/lsuct-latest.tgz
