@@ -19,6 +19,7 @@ git status --short
 echo
 
 BUILDTIME=`date +%y%m%d-%H%M`
+BUILDDATE=`date +%d%b%y`
 LASTCOMMIT=`git log --pretty=format:"%h" --max-count=1`
 COMMITDATE=`git log --pretty=format:"%cd" --max-count=1`
 
@@ -38,7 +39,7 @@ echo "Last-commit: $LASTCOMMIT on $COMMITDATE" >> build-info
 echo "Version: 0.3-UCT-$BUILDTIME-$LASTCOMMIT" >> build-info
 
 echo "cv.lecturesight.version=0.3-UCT" > conf/build.properties
-echo "cv.lecturesight.buildinfo=$BUILDTIME:$LASTCOMMIT" >> conf/build.properties
+echo "cv.lecturesight.buildinfo=$BUILDDATE rev $LASTCOMMIT" >> conf/build.properties
 
 tar zcf $BUILDDIR/lsuct-$BUILDTIME-$LASTCOMMIT.tgz *
 rm $BUILDDIR/lsuct-latest.tgz
