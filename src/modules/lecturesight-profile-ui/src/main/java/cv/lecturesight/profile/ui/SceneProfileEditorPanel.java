@@ -50,7 +50,7 @@ public class SceneProfileEditorPanel extends javax.swing.JPanel implements Custo
 
   final static int NEW_AREA_SIZE = 5;
   final static int NEW_MARKER_SIZE = 15;
-  
+
   private SceneProfileUI parent;
   private Display cameraDisplay;
   private DisplayPanel cameraDisplayPanel;
@@ -154,12 +154,12 @@ public class SceneProfileEditorPanel extends javax.swing.JPanel implements Custo
       }
     }
     profile = next_profile;
-    setProfileSelection(profile);  
+    setProfileSelection(profile);
   }
-  
+
   /** make sure profile selector is in correct state
-   * 
-   * @param profile 
+   *
+   * @param profile
    */
   void setProfileSelection(SceneProfile profile) {
     ComboBoxModel model = profileChooser.getModel();
@@ -295,7 +295,7 @@ public class SceneProfileEditorPanel extends javax.swing.JPanel implements Custo
     g.setColor(lineColor);
     g.fillRect(a.x + a.width/2, a.y+1, 2, a.height-1);
     g.fillRect(a.x + 1, a.y + a.height/2, a.width-1, 2);
-    
+
     // draw area name if existing
     if (!a.name.trim().isEmpty()) {
       g.setColor(borderColor);
@@ -313,7 +313,7 @@ public class SceneProfileEditorPanel extends javax.swing.JPanel implements Custo
     }
   }
 
- 
+
   /**
    * Returns true if <code>p</code> is inside a given rectangle
    *
@@ -386,9 +386,9 @@ public class SceneProfileEditorPanel extends javax.swing.JPanel implements Custo
                 isInside(pos, ax-5, ay-5, aw+10, ah+10)){
           selection.dragging = DraggingType.WHOLE;
           setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
-          return;        
+          return;
         }
-        
+
         if (isInside(pos, ax - 3, ay - 3, 5, 5)) {                  // upper left handle
           selection.dragging = DraggingType.UP_LEFT;
           setCursor(Cursor.getPredefinedCursor(Cursor.NW_RESIZE_CURSOR));
@@ -450,82 +450,119 @@ public class SceneProfileEditorPanel extends javax.swing.JPanel implements Custo
 
     @Override
     public void mouseDragged(MouseEvent e) {
-      Point pos = cameraDisplayPanel.getPositionInImage(e.getPoint());
+      if (selection == null ) {
+        return;
+      }
 
+      Point pos = cameraDisplayPanel.getPositionInImage(e.getPoint());
       int dx = pos.x - lastPos.x;
       int dy = pos.y - lastPos.y;
 
-      int new_x, new_y, new_width, new_height;
-      if (selection != null) {
-        switch (selection.dragging) {
+      // Change dragging action based on deltas and dimensions
+      if (selection.dragging != DraggingType.WHOLE) {
 
-          case WHOLE:
-            new_x = selection.zone.x + dx;
-            new_y = selection.zone.y + dy;
-
-            if (new_x >= 0 && new_y >= 0
-                    && new_x + selection.zone.width <= imageDim.width
-                    && new_y + selection.zone.height <= imageDim.height) {
-              selection.zone.x = new_x;
-              selection.zone.y = new_y;
-            }
-            break;
-
-          case UP_LEFT:
-            new_x = selection.zone.x + dx;
-            new_y = selection.zone.y + dy;
-            new_width = selection.zone.width - dx;
-            new_height = selection.zone.height - dy;
-
-            if (new_x >= 0 && new_y >= 0
-                    && new_width > 3 && new_height > 3) {
-              selection.zone.x = new_x;
-              selection.zone.y = new_y;
-              selection.zone.width = new_width;
-              selection.zone.height = new_height;
-            }
-            break;
-
-          case UP_RIGHT:
-            new_y = selection.zone.y + dy;
-            new_width = selection.zone.width + dx;
-            new_height = selection.zone.height - dy;
-
-            if (new_y >= 0
-                    && new_width > 3 && new_height > 3
-                    && selection.zone.x + new_width <= imageDim.width) {
-              selection.zone.y = new_y;
-              selection.zone.width = new_width;
-              selection.zone.height = new_height;
-            }
-            break;
-
-          case DOWN_LEFT:
-            new_x = selection.zone.x + dx;
-            new_width = selection.zone.width - dx;
-            new_height = selection.zone.height + dy;
-
-            if (new_x >= 0
-                    && new_width > 3 && new_height > 3
-                    && selection.zone.y + new_height <= imageDim.height) {
-              selection.zone.x = new_x;
-              selection.zone.width = new_width;
-              selection.zone.height = new_height;
-            }
-            break;
-
-          case DOWN_RIGHT:
-            new_width = selection.zone.width + dx;
-            new_height = selection.zone.height + dy;
-
-            if (new_width > 3 && new_height > 3
-                    && selection.zone.x + new_width <= imageDim.width
-                    && selection.zone.y + new_height <= imageDim.height) {
-              selection.zone.width = new_width;
-              selection.zone.height = new_height;
-            }
-            break;
+        if (dx < 0 && (-dx > selection.zone.width || selection.zone.width < 5)) {
+          // change right to left
+          if (selection.dragging == DraggingType.DOWN_RIGHT) {
+            selection.dragging = DraggingType.DOWN_LEFT;
+          } else {
+            selection.dragging = DraggingType.UP_LEFT;
+          }
+        } else if (dx >= 0 && (dx > selection.zone.width || selection.zone.width < 5)) {
+          // change left to right
+          if (selection.dragging == DraggingType.DOWN_LEFT) {
+            selection.dragging = DraggingType.DOWN_RIGHT;
+          } else {
+            selection.dragging = DraggingType.UP_RIGHT;
+          }
         }
+
+        if (dy < 0 && (-dy > selection.zone.height || selection.zone.height < 5)) {
+          // change down to up
+          if (selection.dragging == DraggingType.DOWN_RIGHT) {
+            selection.dragging = DraggingType.UP_RIGHT;
+          } else {
+            selection.dragging = DraggingType.UP_LEFT;
+          }
+        } else if (dy >= 0 && (dy > selection.zone.height || selection.zone.height < 5)) {
+          // change up to down
+          if (selection.dragging == DraggingType.UP_RIGHT) {
+            selection.dragging = DraggingType.DOWN_RIGHT;
+          } else {
+            selection.dragging = DraggingType.DOWN_LEFT;
+          }
+        }
+      }
+
+      int new_x, new_y, new_width, new_height;
+      switch (selection.dragging) {
+
+        case WHOLE:
+          new_x = selection.zone.x + dx;
+          new_y = selection.zone.y + dy;
+
+          if (new_x >= 0 && new_y >= 0
+                  && new_x + selection.zone.width <= imageDim.width
+                  && new_y + selection.zone.height <= imageDim.height) {
+            selection.zone.x = new_x;
+            selection.zone.y = new_y;
+          }
+          break;
+
+        case UP_LEFT:
+          new_x = selection.zone.x + dx;
+          new_y = selection.zone.y + dy;
+          new_width = selection.zone.width - dx;
+          new_height = selection.zone.height - dy;
+
+          if (new_x >= 0 && new_y >= 0
+                  && new_width > 3 && new_height > 3) {
+            selection.zone.x = new_x;
+            selection.zone.y = new_y;
+            selection.zone.width = new_width;
+            selection.zone.height = new_height;
+          }
+          break;
+
+        case UP_RIGHT:
+          new_y = selection.zone.y + dy;
+          new_width = selection.zone.width + dx;
+          new_height = selection.zone.height - dy;
+
+          if (new_y >= 0
+                  && new_width > 3 && new_height > 3
+                  && selection.zone.x + new_width <= imageDim.width) {
+            selection.zone.y = new_y;
+            selection.zone.width = new_width;
+            selection.zone.height = new_height;
+          }
+          break;
+
+        case DOWN_LEFT:
+          new_x = selection.zone.x + dx;
+          new_width = selection.zone.width - dx;
+          new_height = selection.zone.height + dy;
+
+          if (new_x >= 0
+                  && new_width > 3 && new_height > 3
+                  && selection.zone.y + new_height <= imageDim.height) {
+            selection.zone.x = new_x;
+            selection.zone.width = new_width;
+            selection.zone.height = new_height;
+          }
+          break;
+
+        case DOWN_RIGHT:
+          new_width = selection.zone.width + dx;
+          new_height = selection.zone.height + dy;
+
+          if (new_width > 3 && new_height > 3
+                  && selection.zone.x + new_width <= imageDim.width
+                  && selection.zone.y + new_height <= imageDim.height) {
+            selection.zone.width = new_width;
+            selection.zone.height = new_height;
+          }
+          break;
       }
       lastPos = pos;
     }
@@ -853,10 +890,10 @@ public class SceneProfileEditorPanel extends javax.swing.JPanel implements Custo
   }
 
   private void newProfileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newProfileButtonActionPerformed
-    File profileDir = new File(System.getProperty("user.dir") + File.separator + "profiles");   
+    File profileDir = new File(System.getProperty("user.dir") + File.separator + "profiles");
 
     // check if profileDir exists
-    
+
     String name = JOptionPane.showInputDialog(this, "Enter a display name for new profile: ", "Create Profile", 1);
     if (name.trim().isEmpty()) {
       return;
@@ -866,11 +903,11 @@ public class SceneProfileEditorPanel extends javax.swing.JPanel implements Custo
     if (filename.equals(".scn")) {
       return;
     }
-    
+
     if (!profileDir.exists()){
         profileDir.mkdir();
-    } 
-            
+    }
+
     File file = new File(profileDir.getAbsolutePath() + File.separator + filename);
     if (file.exists()) {
       if (JOptionPane.YES_OPTION != JOptionPane.showConfirmDialog(null,
@@ -879,21 +916,21 @@ public class SceneProfileEditorPanel extends javax.swing.JPanel implements Custo
         return;
       }
     }
-    
+
     Logger.info("Attemptig to save scene profile to " + file.getAbsolutePath());
-    
+
     try {
       FileOutputStream os = new FileOutputStream(file);
       Logger.info("Writing new scene profile to " + file.getAbsolutePath());
       SceneProfile newProfile = new SceneProfile(name, "", imageDim.width, imageDim.height);
       SceneProfileSerializer.serialize(newProfile, os);
       os.close();
-      
+
     } catch (IOException e) {
       String msg = "Error while writing profile. " + e.getMessage();
       Logger.error(msg, e);
       showErrorDialog(msg);
-      
+
     } catch (ProfileSerializerException e) {
       String msg = "Error while serializing profile. " + e.getMessage();
       Logger.error(msg, e);
