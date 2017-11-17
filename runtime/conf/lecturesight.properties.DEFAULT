@@ -133,3 +133,5 @@ cv.lecturesight.scheduler.schedule.file=/usr/share/galicaster-repository/attach/
 cv.lecturesight.scheduler.timezone.offset=2
 cv.lecturesight.scheduler.tracker.leadtime=10
 
+# Enable DropWizard metrics collection
+cv.lecturesight.util.metrics.enable=true
