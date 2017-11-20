@@ -164,7 +164,7 @@ public class SceneProfileEditorPanel extends javax.swing.JPanel implements Custo
   void setProfileSelection(SceneProfile profile) {
     ComboBoxModel model = profileChooser.getModel();
     for (int i = 0; i < model.getSize(); i++) {
-      if (((SceneProfileListItem)model.getElementAt(i)).profile.name.equals(profile.name)) {
+      if (((SceneProfileListItem) model.getElementAt(i)).profile.name.equals(profile.name)) {
         profileChooser.setSelectedIndex(i);
       }
     }
@@ -247,7 +247,7 @@ public class SceneProfileEditorPanel extends javax.swing.JPanel implements Custo
     }
   }
 
-   /**
+  /**
    * Draws the representation of an <code>Area</code> with the given Graphics
    * context, without a fill color.
    *
@@ -278,7 +278,7 @@ public class SceneProfileEditorPanel extends javax.swing.JPanel implements Custo
     }
   }
 
-    /**
+  /**
    * Draws a marker with the given Graphics context, with cross-hairs.
    *
    * @param g
@@ -293,14 +293,14 @@ public class SceneProfileEditorPanel extends javax.swing.JPanel implements Custo
 
     // draw cross-hairs
     g.setColor(lineColor);
-    g.fillRect(a.x + a.width/2, a.y+1, 2, a.height-1);
-    g.fillRect(a.x + 1, a.y + a.height/2, a.width-1, 2);
+    g.fillRect(a.x + a.width / 2, a.y + 1, 2, a.height - 1);
+    g.fillRect(a.x + 1, a.y + a.height / 2, a.width - 1, 2);
 
     // draw area name if existing
     if (!a.name.trim().isEmpty()) {
       g.setColor(borderColor);
       g.setFont(font);
-      g.drawString(a.name, a.x, a.y -5);
+      g.drawString(a.name, a.x, a.y - 5);
     }
 
     // draw handles if selected
@@ -312,7 +312,6 @@ public class SceneProfileEditorPanel extends javax.swing.JPanel implements Custo
       g.drawRect(a.x + a.width - 3, a.y + a.height - 3, 5, 5);
     }
   }
-
 
   /**
    * Returns true if <code>p</code> is inside a given rectangle
@@ -382,8 +381,8 @@ public class SceneProfileEditorPanel extends javax.swing.JPanel implements Custo
         int ah = selection.zone.height;
 
         // markers can only be moved, not resized
-        if ((selection.zone.getType() == Zone.Type.CALIBRATION) &&
-                isInside(pos, ax-5, ay-5, aw+10, ah+10)){
+        if ((selection.zone.getType() == Zone.Type.CALIBRATION)
+                && isInside(pos, ax - 5, ay - 5, aw + 10, ah + 10)) {
           selection.dragging = DraggingType.WHOLE;
           setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
           return;
@@ -450,7 +449,7 @@ public class SceneProfileEditorPanel extends javax.swing.JPanel implements Custo
 
     @Override
     public void mouseDragged(MouseEvent e) {
-      if (selection == null ) {
+      if (selection == null) {
         return;
       }
 
@@ -509,79 +508,110 @@ public class SceneProfileEditorPanel extends javax.swing.JPanel implements Custo
         }
       }
 
-      int new_x, new_y, new_width, new_height;
+      // Update zone, checking for boundary conditions in x and y
       switch (selection.dragging) {
-
         case WHOLE:
-          new_x = selection.zone.x + dx;
-          new_y = selection.zone.y + dy;
+          int new_x = selection.zone.x + dx;
+          int new_y = selection.zone.y + dy;
 
-          if (new_x >= 0 && new_y >= 0
-                  && new_x + selection.zone.width <= imageDim.width
-                  && new_y + selection.zone.height <= imageDim.height) {
-            selection.zone.x = new_x;
-            selection.zone.y = new_y;
-            lastPos = pos;
+          if (new_x < 0) {
+            new_x = 0;
+          } else if (new_x + selection.zone.width > imageDim.width) {
+            new_x = imageDim.width - selection.zone.width;
           }
+
+          if (new_y < 0) {
+            new_y = 0;
+          } else if (new_y + selection.zone.height > imageDim.height) {
+            new_y = imageDim.height - selection.zone.height;
+          }
+
+          selection.zone.x = new_x;
+          selection.zone.y = new_y;
+
+          lastPos = pos;
           break;
 
         case UP_LEFT:
-          new_x = pos.x;
-          new_y = pos.y;
-          new_width = selection.zone.width - (pos.x - selection.zone.x);
-          new_height = selection.zone.height - (pos.y - selection.zone.y);
-
-          if (new_x >= 0 && new_y >= 0
-                  && new_width > 3 && new_height > 3) {
-            selection.zone.x = new_x;
-            selection.zone.y = new_y;
-            selection.zone.width = new_width;
-            selection.zone.height = new_height;
-            lastPos = pos;
+          if (pos.x < 0) {
+            selection.zone.width = selection.zone.width + selection.zone.x;
+            selection.zone.x = 0;
+            lastPos.x = pos.x;
+          } else if ((selection.zone.width - (pos.x - selection.zone.x)) >= NEW_AREA_SIZE) {
+            selection.zone.width = selection.zone.width - (pos.x - selection.zone.x);
+            selection.zone.x = pos.x;
+            lastPos.x = pos.x;
           }
+
+          if (pos.y < 0) {
+            selection.zone.height = selection.zone.height + selection.zone.y;
+            selection.zone.y = 0;
+          } else if ((selection.zone.height - (pos.y - selection.zone.y)) >= NEW_AREA_SIZE) {
+            selection.zone.height = selection.zone.height - (pos.y - selection.zone.y);
+            selection.zone.y = pos.y;
+          }
+
           break;
 
         case UP_RIGHT:
-          new_y = pos.y;
-          new_width = pos.x - selection.zone.x;
-          new_height = selection.zone.height - (pos.y - selection.zone.y);
-
-          if (new_y >= 0
-                  && new_width > 3 && new_height > 3
-                  && (selection.zone.x + new_width) <= imageDim.width) {
-            selection.zone.y = new_y;
-            selection.zone.width = new_width;
-            selection.zone.height = new_height;
-            lastPos = pos;
+          if (pos.x >= imageDim.width) {
+            selection.zone.width = imageDim.width - selection.zone.x;
+            lastPos.x = pos.x;
+          } else if ((pos.x - selection.zone.x) >= NEW_AREA_SIZE) {
+            selection.zone.width =  pos.x - selection.zone.x;
+            lastPos.x = pos.x;
           }
+
+          if (pos.y < 0) {
+            selection.zone.height = selection.zone.height + selection.zone.y;
+            selection.zone.y = 0;
+            lastPos.y = pos.y;
+          } else if ((selection.zone.height - (pos.y - selection.zone.y)) >= NEW_AREA_SIZE) {
+            selection.zone.height = selection.zone.height - (pos.y - selection.zone.y);
+            selection.zone.y = pos.y;
+            lastPos.y = pos.y;
+          }
+
           break;
 
         case DOWN_LEFT:
-          new_x = pos.x;
-          new_width = selection.zone.width - (pos.x - selection.zone.x);
-          new_height = pos.y - selection.zone.y;
-
-          if (new_x >= 0
-                  && new_width > 3 && new_height > 3
-                  && (selection.zone.y + new_height) <= imageDim.height) {
-            selection.zone.x = new_x;
-            selection.zone.width = new_width;
-            selection.zone.height = new_height;
-            lastPos = pos;
+          if (pos.x < 0) {
+            selection.zone.width = selection.zone.width + selection.zone.x;
+            selection.zone.x = 0;
+            lastPos.x = pos.x;
+          } else if ((selection.zone.width - (pos.x - selection.zone.x)) >= NEW_AREA_SIZE) {
+            selection.zone.width = selection.zone.width - (pos.x - selection.zone.x);
+            selection.zone.x = pos.x;
+            lastPos.x = pos.x;
           }
+
+          if (pos.y >= imageDim.height) {
+            selection.zone.height = imageDim.height - selection.zone.y;
+            lastPos.y = pos.y;
+          } else if ((pos.y - selection.zone.y) >= NEW_AREA_SIZE) {
+            selection.zone.height = pos.y - selection.zone.y;
+            lastPos.y = pos.y;
+          }
+
           break;
 
         case DOWN_RIGHT:
-          new_width = pos.x - selection.zone.x;
-          new_height = pos.y - selection.zone.y;
-
-          if (new_width > 3 && new_height > 3
-                  && (selection.zone.x + new_width) <= imageDim.width
-                  && (selection.zone.y + new_height) <= imageDim.height) {
-            selection.zone.width = new_width;
-            selection.zone.height = new_height;
-            lastPos = pos;
+          if (pos.x >= imageDim.width) {
+            selection.zone.width = imageDim.width - selection.zone.x;
+            lastPos.x = pos.x;
+          } else if ((pos.x - selection.zone.x) >= NEW_AREA_SIZE) {
+            selection.zone.width = pos.x - selection.zone.x;
+            lastPos.x = pos.x;
           }
+
+          if (pos.y >= imageDim.height) {
+            selection.zone.height = imageDim.height - selection.zone.y;
+            lastPos.y = pos.y;
+          } else if ((pos.y - selection.zone.y) >= NEW_AREA_SIZE) {
+            selection.zone.height = pos.y - selection.zone.y;
+            lastPos.y = pos.y;
+          }
+
           break;
       }
     }
@@ -912,7 +942,6 @@ public class SceneProfileEditorPanel extends javax.swing.JPanel implements Custo
     File profileDir = new File(System.getProperty("user.dir") + File.separator + "profiles");
 
     // check if profileDir exists
-
     String name = JOptionPane.showInputDialog(this, "Enter a display name for new profile: ", "Create Profile", 1);
     if (name.trim().isEmpty()) {
       return;
@@ -923,8 +952,8 @@ public class SceneProfileEditorPanel extends javax.swing.JPanel implements Custo
       return;
     }
 
-    if (!profileDir.exists()){
-        profileDir.mkdir();
+    if (!profileDir.exists()) {
+      profileDir.mkdir();
     }
 
     File file = new File(profileDir.getAbsolutePath() + File.separator + filename);
@@ -958,7 +987,7 @@ public class SceneProfileEditorPanel extends javax.swing.JPanel implements Custo
   }//GEN-LAST:event_newProfileButtonActionPerformed
 
     private void toolButtonCalibrationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toolButtonCalibrationActionPerformed
-        // TODO add your handling code here:
+      // TODO add your handling code here:
     }//GEN-LAST:event_toolButtonCalibrationActionPerformed
 
 
