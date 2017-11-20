@@ -131,6 +131,7 @@ public class SimpleCameraOperator implements CameraOperator, ConfigurationListen
   @Override
   public void stop() {
     if (executor != null) {
+      worker.shutdown();
       executor.shutdownNow();
       executor = null;
       Logger.debug("Stopped worker thread");
@@ -253,10 +254,17 @@ public class SimpleCameraOperator implements CameraOperator, ConfigurationListen
 
         } else {
           // Target has timed out
-          Logger.debug("Target has timed out first_tracked_time=" + first_tracked_time + " lastSeen=" + target.lastSeen() + " age=" + (now-target.lastSeen()));
+          Logger.debug("Target has timed out first_tracked_time=" + first_tracked_time + " lastSeen=" + target.lastSeen() + " age=" + (now-target.lastSeen()) + " track_duration=" + (now - first_tracked_time));
           target = null;
           metrics.timedEvent("camera.operator.target.tracked", now - first_tracked_time);
         }
+      }
+    }
+
+    public void shutdown() {
+      // Write out the final metrics entry
+      if (target != null) {
+          metrics.timedEvent("camera.operator.target.tracked", System.currentTimeMillis() - first_tracked_time);
       }
     }
 
