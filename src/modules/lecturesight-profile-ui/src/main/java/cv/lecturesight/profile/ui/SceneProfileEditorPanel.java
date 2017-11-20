@@ -495,15 +495,27 @@ public class SceneProfileEditorPanel extends javax.swing.JPanel implements Custo
 
         if (right) {
           if (down) {
-            selection.dragging = DraggingType.DOWN_RIGHT;
+            if (selection.dragging != DraggingType.DOWN_RIGHT) {
+              selection.dragging = DraggingType.DOWN_RIGHT;
+              setCursor(Cursor.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR));
+            }
           } else {
-            selection.dragging = DraggingType.UP_RIGHT;
+            if (selection.dragging != DraggingType.UP_RIGHT) {
+              selection.dragging = DraggingType.UP_RIGHT;
+              setCursor(Cursor.getPredefinedCursor(Cursor.NE_RESIZE_CURSOR));
+            }
           }
         } else {
           if (down) {
-            selection.dragging = DraggingType.DOWN_LEFT;
+            if (selection.dragging != DraggingType.DOWN_LEFT) {
+              selection.dragging = DraggingType.DOWN_LEFT;
+              setCursor(Cursor.getPredefinedCursor(Cursor.SW_RESIZE_CURSOR));
+            }
           } else {
-            selection.dragging = DraggingType.UP_LEFT;
+            if (selection.dragging != DraggingType.UP_LEFT) {
+              selection.dragging = DraggingType.UP_LEFT;
+              setCursor(Cursor.getPredefinedCursor(Cursor.NW_RESIZE_CURSOR));
+            }
           }
         }
       }
