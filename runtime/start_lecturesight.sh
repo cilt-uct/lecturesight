@@ -39,7 +39,6 @@ if [ "$VAPIX$VISCA" == "00" ]; then
         rm -f $BASE_DIR/bundles/application/lecturesight-vapix-camera*jar
 fi
 
-
 # Check serial link type and set up socat if required
 RTP=`grep "^cv.lecturesight.framesource.input.mrl=rtph264://" $BASE_DIR/conf/lecturesight.properties`
 
@@ -55,8 +54,14 @@ fi
 # gstreamer debug logging
 # https://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gst-running.html
 export GST_DEBUG=3
-export GST_DEBUG_FILE=/opt/ls/log/gstreamer.log
+export GST_DEBUG_FILE=$BASE_DIR/log/gstreamer.log
 export GST_DEBUG_NO_COLOR=1
+export GST_DEBUG_DUMP_DOT_DIR=$BASE_DIR/log
+
+# Clear logs and metrics
+rm -f $BASE_DIR/log/*log
+rm -f $BASE_DIR/metrics/*csv
+rm -f $BASE_DIR/metrics/*json
 
 # start LectureSight
 java -Dlecturesight.basedir=$BASE_DIR $CONFIG_OPTS $LOG_OPTS $OPENCL_OPTS -jar $BASE_DIR/bin/felix.jar -b $BASE_DIR/bundles/system $FELIX_CACHE
