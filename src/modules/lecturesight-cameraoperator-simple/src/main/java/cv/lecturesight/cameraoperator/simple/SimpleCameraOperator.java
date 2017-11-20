@@ -205,6 +205,7 @@ public class SimpleCameraOperator implements CameraOperator, ConfigurationListen
           if (target != null) {
              metrics.incCounter("camera.operator.target.new");
              first_tracked_time = now;
+             Logger.debug("Acquired new tracking target (" + objs.size() + " available) first_tracked_time=" + first_tracked_time);
           }
         }
 
@@ -252,6 +253,7 @@ public class SimpleCameraOperator implements CameraOperator, ConfigurationListen
 
         } else {
           // Target has timed out
+          Logger.debug("Target has timed out first_tracked_time=" + first_tracked_time + " lastSeen=" + target.lastSeen() + " age=" + (now-target.lastSeen()));
           target = null;
           metrics.timedEvent("camera.operator.target.tracked", now - first_tracked_time);
         }
