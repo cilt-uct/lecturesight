@@ -62,6 +62,9 @@ cv.lecturesight.framesource.v4l.format=YUYV
 # Set this to true if the framesource is inverted (mounted upside-down) and should be rotated 180 degrees
 cv.lecturesight.framesource.inverted=false
 
+# LS-209 Set the max fps rate for the camera
+cv.lecturesight.framesource.maxfps=25
+
 #
 # Video Analysis _______________________________________________________________
 #
