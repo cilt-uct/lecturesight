@@ -456,30 +456,32 @@ public class SceneProfileEditorPanel extends javax.swing.JPanel implements Custo
       Point pos = cameraDisplayPanel.getPositionInImage(e.getPoint());
       int dx = pos.x - lastPos.x;
       int dy = pos.y - lastPos.y;
+      boolean prevRight = true;
+      boolean prevDown = true;
 
       // Change dragging action based on deltas and dimensions
       if (selection.dragging != DraggingType.WHOLE) {
-        boolean right = true;
-        boolean down = true;
-
         switch (selection.dragging) {
           case DOWN_RIGHT:
-            right = true;
-            down = true;
+            prevRight = true;
+            prevDown = true;
             break;
           case DOWN_LEFT:
-            right = false;
-            down = true;
+            prevRight = false;
+            prevDown = true;
             break;
           case UP_RIGHT:
-            right = true;
-            down = false;
+            prevRight = true;
+            prevDown = false;
             break;
           case UP_LEFT:
-            right = false;
-            down = false;
+            prevRight = false;
+            prevDown = false;
             break;
         }
+
+        boolean right = prevRight;
+        boolean down = prevDown;
 
         if (dx < 0 && (-dx > selection.zone.width)) {
           right = false;
@@ -550,7 +552,12 @@ public class SceneProfileEditorPanel extends javax.swing.JPanel implements Custo
             selection.zone.x = 0;
             lastPos.x = pos.x;
           } else if ((selection.zone.width - (pos.x - selection.zone.x)) >= NEW_AREA_SIZE) {
-            selection.zone.width = selection.zone.width - (pos.x - selection.zone.x);
+            if (prevRight) {
+              selection.zone.width = selection.zone.x - pos.x;
+            } else {
+              selection.zone.width = selection.zone.width - (pos.x - selection.zone.x);
+            }
+
             selection.zone.x = pos.x;
             lastPos.x = pos.x;
           }
@@ -558,9 +565,16 @@ public class SceneProfileEditorPanel extends javax.swing.JPanel implements Custo
           if (pos.y < 0) {
             selection.zone.height = selection.zone.height + selection.zone.y;
             selection.zone.y = 0;
+            lastPos.y = pos.y;
           } else if ((selection.zone.height - (pos.y - selection.zone.y)) >= NEW_AREA_SIZE) {
-            selection.zone.height = selection.zone.height - (pos.y - selection.zone.y);
+            if (prevDown) {
+              selection.zone.height = selection.zone.y - pos.y;
+            } else {
+              selection.zone.height = selection.zone.height - (pos.y - selection.zone.y);
+            }
+
             selection.zone.y = pos.y;
+            lastPos.y = pos.y;
           }
 
           break;
@@ -570,7 +584,14 @@ public class SceneProfileEditorPanel extends javax.swing.JPanel implements Custo
             selection.zone.width = imageDim.width - selection.zone.x;
             lastPos.x = pos.x;
           } else if ((pos.x - selection.zone.x) >= NEW_AREA_SIZE) {
-            selection.zone.width =  pos.x - selection.zone.x;
+            if (!prevRight) {
+              new_x = selection.zone.x + selection.zone.width;
+              selection.zone.width = pos.x - selection.zone.x - selection.zone.width;
+              selection.zone.x = new_x;
+            } else {
+              selection.zone.width = pos.x - selection.zone.x;
+            }
+
             lastPos.x = pos.x;
           }
 
@@ -579,7 +600,12 @@ public class SceneProfileEditorPanel extends javax.swing.JPanel implements Custo
             selection.zone.y = 0;
             lastPos.y = pos.y;
           } else if ((selection.zone.height - (pos.y - selection.zone.y)) >= NEW_AREA_SIZE) {
-            selection.zone.height = selection.zone.height - (pos.y - selection.zone.y);
+            if (prevDown) {
+              selection.zone.height = selection.zone.y - pos.y;
+            } else {
+              selection.zone.height = selection.zone.height - (pos.y - selection.zone.y);
+            }
+
             selection.zone.y = pos.y;
             lastPos.y = pos.y;
           }
@@ -592,7 +618,12 @@ public class SceneProfileEditorPanel extends javax.swing.JPanel implements Custo
             selection.zone.x = 0;
             lastPos.x = pos.x;
           } else if ((selection.zone.width - (pos.x - selection.zone.x)) >= NEW_AREA_SIZE) {
-            selection.zone.width = selection.zone.width - (pos.x - selection.zone.x);
+            if (prevRight) {
+              selection.zone.width = selection.zone.x - pos.x;
+            } else {
+              selection.zone.width = selection.zone.width - (pos.x - selection.zone.x);
+            }
+
             selection.zone.x = pos.x;
             lastPos.x = pos.x;
           }
@@ -601,7 +632,14 @@ public class SceneProfileEditorPanel extends javax.swing.JPanel implements Custo
             selection.zone.height = imageDim.height - selection.zone.y;
             lastPos.y = pos.y;
           } else if ((pos.y - selection.zone.y) >= NEW_AREA_SIZE) {
-            selection.zone.height = pos.y - selection.zone.y;
+            if (!prevDown) {
+              new_y = selection.zone.y + selection.zone.height;
+              selection.zone.height = pos.y - selection.zone.y - selection.zone.height;
+              selection.zone.y = new_y;
+            } else {
+              selection.zone.height = pos.y - selection.zone.y;
+            }
+
             lastPos.y = pos.y;
           }
 
@@ -612,7 +650,15 @@ public class SceneProfileEditorPanel extends javax.swing.JPanel implements Custo
             selection.zone.width = imageDim.width - selection.zone.x;
             lastPos.x = pos.x;
           } else if ((pos.x - selection.zone.x) >= NEW_AREA_SIZE) {
-            selection.zone.width = pos.x - selection.zone.x;
+            // changes in direction require resizing of zone to maintain anchor points
+            if (!prevRight) {
+              new_x = selection.zone.x + selection.zone.width;
+              selection.zone.width = pos.x - selection.zone.x - selection.zone.width;
+              selection.zone.x = new_x;
+            } else {
+              selection.zone.width = pos.x - selection.zone.x;
+            }
+
             lastPos.x = pos.x;
           }
 
@@ -620,7 +666,14 @@ public class SceneProfileEditorPanel extends javax.swing.JPanel implements Custo
             selection.zone.height = imageDim.height - selection.zone.y;
             lastPos.y = pos.y;
           } else if ((pos.y - selection.zone.y) >= NEW_AREA_SIZE) {
-            selection.zone.height = pos.y - selection.zone.y;
+            if (!prevDown) {
+              new_y = selection.zone.y + selection.zone.height;
+              selection.zone.height = pos.y - selection.zone.y - selection.zone.height;
+              selection.zone.y = new_y;
+            } else {
+              selection.zone.height = pos.y - selection.zone.y;
+            }
+
             lastPos.y = pos.y;
           }
 
