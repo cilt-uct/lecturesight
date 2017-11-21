@@ -154,7 +154,7 @@ public class HeartBeatImpl implements HeartBeat {
   @Override
   public void step(int i) {
     if (ready) {
-      iterationsToRun = i;
+      iterationsToRun = i-1;
       nextFrame();
     } else {
       throw new IllegalStateException("Cannot step, HeartBeat not initialized");
