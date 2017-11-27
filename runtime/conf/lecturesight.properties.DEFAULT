@@ -145,3 +145,6 @@ cv.lecturesight.util.metrics.enable=true
 # Save overview snapshots
 cv.lecturesight.framesource.snapshot.file=/opt/ls/record/overview.png
 
+# Calibration UI (not working - see LS-61)
+#cv.lecturesight.setup.video.input=gst://rtspsrc location=rtsp://hahn1-cam01.uct.ac.za/axis-media/media.amp ! rtph264depay ! avdec_h264 ! videoconvert
+
