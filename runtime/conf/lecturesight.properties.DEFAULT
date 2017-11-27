@@ -141,3 +141,7 @@ cv.lecturesight.scheduler.tracker.leadtime=10
 
 # Enable DropWizard metrics collection
 cv.lecturesight.util.metrics.enable=true
+
+# Save overview snapshots
+cv.lecturesight.framesource.snapshot.file=/opt/ls/record/overview.png
+
