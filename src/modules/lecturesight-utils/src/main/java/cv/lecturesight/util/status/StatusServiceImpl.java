@@ -25,14 +25,24 @@ import org.apache.felix.scr.annotations.Properties;
 import org.apache.felix.scr.annotations.Property;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+
 import org.osgi.service.component.ComponentContext;
 import org.pmw.tinylog.Logger;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-@Component(name="lecturesight.util.status", immediate=true)
+@Component(name = "lecturesight.util.status", immediate = true)
 @Service
 @Properties({
 @Property(name = "osgi.command.scope", value = "status"),
@@ -151,6 +161,29 @@ public class StatusServiceImpl implements StatusService, ConfigurationListener {
       // Post to URL
       Logger.debug("Sending status update to {}", url);
 
+      try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
+
+        HttpPost uploadFile = new HttpPost(url);
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+        builder.addTextBody("field1", "yes", ContentType.TEXT_PLAIN);
+
+        // This attaches the file to the POST:
+        File f = new File("/opt/ls/record/overview.png");
+          builder.addBinaryBody(
+          "file",
+          new FileInputStream(f),
+          ContentType.APPLICATION_OCTET_STREAM,
+          f.getName()
+        );
+
+        HttpEntity multipart = builder.build();
+        uploadFile.setEntity(multipart);
+        CloseableHttpResponse response = httpClient.execute(uploadFile);
+        Logger.debug("Status update returned code {}", response.getStatusLine().getStatusCode());
+      } catch (Exception e) {
+        // catch java.net.UnknownHostException | org.apache.http.conn.HttpHostConnectException
+        Logger.error(e, "Status update failed");
+      }
     }
   }
 
