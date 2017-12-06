@@ -62,11 +62,6 @@
         <version>3.1.0</version>
     </dependency>
     <dependency>
-        <groupId>org.apache.httpcomponents</groupId>
-        <artifactId>httpclient-osgi</artifactId>
-        <version>4.5</version>
-    </dependency>
-    <dependency>
         <groupId>org.tinylog</groupId>
         <artifactId>slf4j-binding</artifactId>
     </dependency>
@@ -109,7 +104,7 @@
             <Embed-Dependency>*;scope=compile|runtime;inline=false;artifactId=!junit|maven-*|plexus-*|org.apache.felix.scr.*|tinylog</Embed-Dependency>
             <Embed-Transitive>true</Embed-Transitive>
             <Import-Package>
-		!net.sf.ehcache,!net.spy.memcached,!javax.servlet,!org.apache.avalon.framework.logger,!org.apache.log,!org.apache.log4j,!org.codehaus.plexus.util,*
+		!org.codehaus.plexus.util,*
             </Import-Package>
             <Export-Package>
               cv.lecturesight.util,
