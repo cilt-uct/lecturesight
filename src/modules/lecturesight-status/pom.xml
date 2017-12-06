@@ -108,7 +108,6 @@
 		!net.sf.ehcache,!net.spy.memcached,!javax.servlet,!org.apache.avalon.framework.logger,!org.apache.log,!org.apache.log4j,!org.codehaus.plexus.util,*
             </Import-Package>
             <Embed-Transitive>true</Embed-Transitive>
-            <!-- Embed-Dependency>*;scope=compile|runtime;inline=false;artifactId=!junit|maven-*|plexus-*|org.apache.felix.scr.*|tinylog|metrics-*</Embed-Dependency -->
             <Embed-Dependency>*;scope=compile|runtime;inline=false;artifactId=http*|fluent-hc|commons-logging</Embed-Dependency>
           </instructions>
         </configuration>
