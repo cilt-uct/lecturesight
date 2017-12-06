@@ -90,6 +90,7 @@
       </activation>
       <modules>
         <module>modules/lecturesight-utils</module>
+        <module>modules/lecturesight-status</module>
         <module>modules/lecturesight-cameraoperator-api</module>
         <module>modules/lecturesight-cameraoperator-simple</module>
         <module>modules/lecturesight-connectedcomponent-api</module>
