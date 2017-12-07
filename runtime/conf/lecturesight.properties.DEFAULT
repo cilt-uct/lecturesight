@@ -149,8 +149,8 @@ cv.lecturesight.framesource.snapshot.file=/opt/ls/record/overview.png
 #cv.lecturesight.setup.video.input=gst://rtspsrc location=rtsp://hahn1-cam01.uct.ac.za/axis-media/media.amp ! rtph264depay ! avdec_h264 ! videoconvert
 
 # Status Reporting (set name to CA name, e.g. hahn1)
-cv.lecturesight.status.enable=false
-cv.lecturesight.status.url=http://camonitor.uct.ac.za/ls-status/update
+cv.lecturesight.status.enable=true
+cv.lecturesight.status.url=http://camonitor.uct.ac.za/lecturesight/
 cv.lecturesight.status.interval=60
 cv.lecturesight.status.name=CHANGEME
 
