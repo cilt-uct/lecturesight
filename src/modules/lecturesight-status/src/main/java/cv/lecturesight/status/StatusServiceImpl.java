@@ -17,6 +17,7 @@
  */
 package cv.lecturesight.status;
 
+import cv.lecturesight.framesource.FrameSourceManager;
 import cv.lecturesight.heartbeat.api.HeartBeat;
 import cv.lecturesight.operator.CameraOperator;
 import cv.lecturesight.profile.api.SceneProfile;
@@ -65,6 +66,9 @@ public class StatusServiceImpl implements StatusService, ConfigurationListener {
 
   @Reference
   private SceneProfileManager sceneProfileManager;
+
+  @Reference
+  FrameSourceManager frameSourceManager;
 
   // The active profile
   private SceneProfile activeProfile;
@@ -209,13 +213,14 @@ public class StatusServiceImpl implements StatusService, ConfigurationListener {
         builder.addTextBody("profile", profile, ContentType.TEXT_PLAIN);
 
         // Overview image snapshot
-        File f = new File("/opt/ls/record/overview.png");
-        builder.addBinaryBody(
-          "overview-image",
-          new FileInputStream(f),
-          ContentType.APPLICATION_OCTET_STREAM,
-          f.getName()
-        );
+        String snFile =  frameSourceManager.getOverviewSnapshotFile();
+        if (snFile != null && !snFile.isEmpty()) {
+          File f = new File(snFile);
+          if (f.isFile()) {
+            builder.addBinaryBody("overview-image", new FileInputStream(f),
+              ContentType.APPLICATION_OCTET_STREAM, f.getName());
+          }
+        }
 
         HttpEntity multipart = builder.build();
         uploadFile.setEntity(multipart);
