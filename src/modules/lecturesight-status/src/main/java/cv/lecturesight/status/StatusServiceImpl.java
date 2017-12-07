@@ -19,13 +19,14 @@ package cv.lecturesight.status;
 
 import cv.lecturesight.heartbeat.api.HeartBeat;
 import cv.lecturesight.operator.CameraOperator;
+import cv.lecturesight.profile.api.SceneProfile;
+import cv.lecturesight.profile.api.SceneProfileManager;
+import cv.lecturesight.profile.api.SceneProfileSerializer;
 import cv.lecturesight.util.conf.Configuration;
 import cv.lecturesight.util.conf.ConfigurationListener;
 import cv.lecturesight.util.metrics.MetricsService;
 
 import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Properties;
-import org.apache.felix.scr.annotations.Property;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 import org.apache.http.HttpEntity;
@@ -47,10 +48,6 @@ import java.util.concurrent.TimeUnit;
 
 @Component(name = "lecturesight.status", immediate = true)
 @Service
-@Properties({
-@Property(name = "osgi.command.scope", value = "status"),
-@Property(name = "osgi.command.function", value = {"show"})
-})
 
 public class StatusServiceImpl implements StatusService, ConfigurationListener {
 
@@ -65,6 +62,12 @@ public class StatusServiceImpl implements StatusService, ConfigurationListener {
 
   @Reference
   private MetricsService metrics;
+
+  @Reference
+  private SceneProfileManager sceneProfileManager;
+
+  // The active profile
+  private SceneProfile activeProfile;
 
   public static final String PROPKEY_ENABLE = "enable";
   public static final String PROPKEY_URL = "url";
@@ -199,6 +202,11 @@ public class StatusServiceImpl implements StatusService, ConfigurationListener {
 
         // Metrics 
         builder.addTextBody("metrics", metricsJson, ContentType.APPLICATION_JSON);
+
+        // Active scene profile
+        SceneProfile activeProfile = sceneProfileManager.getActiveProfile();
+        String profile = SceneProfileSerializer.serialize(activeProfile);
+        builder.addTextBody("profile", profile, ContentType.TEXT_PLAIN);
 
         // Overview image snapshot
         File f = new File("/opt/ls/record/overview.png");
