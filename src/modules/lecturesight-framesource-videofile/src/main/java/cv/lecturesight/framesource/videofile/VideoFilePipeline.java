@@ -139,7 +139,6 @@ public class VideoFilePipeline implements FrameGrabber {
 
   private void linkElements() throws UnableToLinkElementsException {
     elementsLinked = false;
-
     decodebin.connect(new Element.PAD_ADDED() {
 
       @Override
@@ -159,7 +158,6 @@ public class VideoFilePipeline implements FrameGrabber {
     if (!src.link(decodebin)) {
       throw new UnableToLinkElementsException(src, decodebin);
     }
-
     if (!videoconvert.link(capsfilter)) {
       throw new UnableToLinkElementsException(videoconvert, capsfilter);
     }
