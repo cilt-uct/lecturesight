@@ -150,7 +150,7 @@ cv.lecturesight.framesource.snapshot.file=/opt/ls/record/overview.png
 
 # Status Reporting (set name to CA name, e.g. hahn1)
 cv.lecturesight.status.enable=true
-cv.lecturesight.status.url=http://camonitor.uct.ac.za/lecturesight/
+cv.lecturesight.status.url=http://camonitor.uct.ac.za/lecturesight/status/
 cv.lecturesight.status.interval=60
 cv.lecturesight.status.name=CHANGEME
 
