@@ -50,6 +50,11 @@ public class TrackerUIPanel extends javax.swing.JPanel implements CustomRenderer
   @Override
   public void render(Graphics g) {
 
+    // Opaque rectangle so the frame, fps and targets are more visible
+    Color background = new Color(0, 0, 0, 160);
+    g.setColor(background);
+    g.fillRect(0, 0, 160, 40);
+
     g.setFont(font);
 
     frameTime[sample_i++] = 1000.0 / (double)(System.currentTimeMillis() - lastFrame);
@@ -67,6 +72,7 @@ public class TrackerUIPanel extends javax.swing.JPanel implements CustomRenderer
       fps = sum / FPS_SAMPLES;
     }
 
+    g.setColor(Color.green);
     g.drawString("  frame : " + Long.toString(parent.fsrc.getFrameNumber()), 3, 12);
     g.drawString("    fps : " + df.format(fps), 3, 22);
 
@@ -110,6 +116,7 @@ public class TrackerUIPanel extends javax.swing.JPanel implements CustomRenderer
     }
 
     g.setFont(font);
+    g.setColor(Color.green);
     if (parent.numTargets > 0) {
       g.drawString("targets : " + parent.numTargets + " (" + targetList + ")", 3, 32);
     } else {
