@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
   
   <artifactId>lecturesight-cameraoperator-panonly</artifactId>
-  <name>LectureSight pan-only Camera Operator</name>
+  <name>LectureSight Pan-Only Camera Operator</name>
   <groupId>cv.lecturesight</groupId>
   <packaging>bundle</packaging>
   
