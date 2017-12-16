@@ -7,7 +7,6 @@ import cv.lecturesight.ptz.api.PTZCameraProfile;
 import cv.lecturesight.util.conf.Configuration;
 import cv.lecturesight.util.geometry.Position;
 import cv.lecturesight.util.geometry.Preset;
-import cv.lecturesight.vapix.service.VAPIXCameraImpl.MyAuthenticator;
 
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
@@ -23,8 +22,8 @@ import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.PasswordAuthentication;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
@@ -480,22 +479,24 @@ public class VAPIXCameraImpl implements PTZCamera {
    * @param preset
    *            The name of the preset to move the camera to
    */
-  public void movePreset(String preset) {
+  public boolean movePreset(String preset) {
 
     Logger.debug("Move preset name " + preset);
 
     if (Arrays.asList(presets).contains(preset)) {
-
       try {
         String result = this.doCommand("/axis-cgi/com/ptz.cgi?gotoserverpresetname=" + preset);
         Logger.trace("Move preset [" + preset + "] (" + result + ")");
       } catch (IOException e) {
         Logger.error("moveHome: " + e.getMessage());
-      } finally {
+        return false;
       }
     } else {
       Logger.debug("Preset name not found: " + preset);
+      return false;
     }
+
+    return true;
   }
 
   /**
@@ -1024,7 +1025,30 @@ public class VAPIXCameraImpl implements PTZCamera {
 
   @Override
   public List<Preset> getPresets() {
-    return Collections.emptyList();
+
+    Logger.info("Fetching camera preset positions");
+
+    ArrayList<Preset> presetList = new ArrayList<>();
+
+    // Update list of camera presets
+    presets = getPresetNames();
+
+    for (String preset : presets) {
+      if (movePreset(preset)) {
+        // wait for the camera to arrive
+        try {
+          Thread.sleep(2500);
+          Position pos = getPosition();
+          Preset p = new Preset(preset, pos.getX(), pos.getY(), zoom);
+          Logger.debug("Camera has preset {}", p);
+          presetList.add(p);
+        } catch (InterruptedException e) {
+          //
+        }
+      }
+    }
+
+    return presetList;
   }
 
   /**

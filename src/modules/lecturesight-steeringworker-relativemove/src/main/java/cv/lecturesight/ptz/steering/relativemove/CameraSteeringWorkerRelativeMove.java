@@ -26,6 +26,7 @@ import cv.lecturesight.util.conf.Configuration;
 import cv.lecturesight.util.conf.ConfigurationListener;
 import cv.lecturesight.util.geometry.NormalizedPosition;
 import cv.lecturesight.util.geometry.Position;
+import cv.lecturesight.util.geometry.Preset;
 import cv.lecturesight.util.metrics.MetricsService;
 
 import org.apache.felix.scr.annotations.Component;
@@ -259,15 +260,18 @@ public class CameraSteeringWorkerRelativeMove implements CameraSteeringWorker, C
     // get service configuration
     setConfiguration();
 
-    // Camera model
-    model = new CameraPositionModel(pan_min, pan_max, tilt_min, tilt_max);
-
     // get camera parameters
     maxspeed_pan = camera.getProfile().getPanMaxSpeed();
     maxspeed_tilt = camera.getProfile().getTiltMaxSpeed();
     maxspeed_zoom = camera.getProfile().getZoomMaxSpeed();
     zoom_min = camera.getProfile().getZoomMin();
     zoom_max = camera.getProfile().getZoomMax();
+
+    // Get the camera presets for calibration
+    List<Preset> presets = camera.getPresets();
+
+    // Camera model
+    model = new CameraPositionModel(pan_min, pan_max, tilt_min, tilt_max);
 
     // initialize worker
     worker = new SteeringWorker();

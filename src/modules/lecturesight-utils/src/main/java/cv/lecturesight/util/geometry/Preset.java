@@ -31,7 +31,7 @@ public class Preset extends Position implements Cloneable {
     this.name = "";
   }
 
-  public Preset(int x, int y, int zoom, String name) {
+  public Preset(String name, int x, int y, int zoom) {
     this.x = x;
     this.y = y;
     this.zoom = zoom;
@@ -61,11 +61,11 @@ public class Preset extends Position implements Cloneable {
 
   @Override
   public Preset clone() {
-    return new Preset(x, y, zoom, name);
+    return new Preset(name, x, y, zoom);
   }
 
   public Preset flip(boolean xflip, boolean yflip) {
-    return new Preset(xflip ? (-1 * x) : x, yflip ? (-1 * y) : y, zoom, name);
+    return new Preset(name, xflip ? (-1 * x) : x, yflip ? (-1 * y) : y, zoom);
   }
 
   @Override
