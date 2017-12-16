@@ -17,6 +17,15 @@
  */
 package cv.lecturesight.util.geometry;
 
+/**
+ * Convert between overview image co-ordinates and normalized co-ordinates.
+ *
+ * For example, overview (0,0) to (640,360) is mapped to normalized (-1, -1) to (1,1),
+ * and overview (320, 180) is mapped to normalized (0,0).
+ *
+ * Note that the Y co-ordinates are opposite to what one would expect (above is negative,
+ * below is positive).
+ */
 public class CoordinatesNormalization {
 
   private int maxX;
