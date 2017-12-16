@@ -21,6 +21,7 @@ import org.apache.commons.math3.analysis.interpolation.SplineInterpolator;
 import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Convert between normalized co-ordinates and camera pan/tilt co-ordinates
@@ -103,11 +104,12 @@ public class CameraPositionModel {
    * @param cameraPreset Array of camera preset co-ordinates matching the scene markers
    * @return true if the model has been updated based on the preset co-ordinates.
    */
-  public boolean update(NormalizedPosition[] sceneMarker, Position[] cameraPreset) {
+  public boolean update(List<NormalizedPosition> sceneMarker, List<Position> cameraPreset) {
 
-    int points = sceneMarker.length;
+    int points = sceneMarker.size();
 
-    if ((points < 3) || (points != cameraPreset.length)) {
+    // SplineInterpolator requires at least 3 points
+    if ((points < 3) || (points != cameraPreset.size())) {
       return false;
     }
 
@@ -120,10 +122,10 @@ public class CameraPositionModel {
     double[] yCamera = new double[points];
 
     for (int i = 0; i < points; i++) {
-      xNorm[i] = (double) sceneMarker[i].getX();
-      xCamera[i] = (int) cameraPreset[i].getX();
-      yNorm[i] = (double) sceneMarker[i].getY();
-      yCamera[i] = (int) cameraPreset[i].getY();
+      xNorm[i] = (double) sceneMarker.get(i).getX();
+      xCamera[i] = (int) cameraPreset.get(i).getX();
+      yNorm[i] = (double) sceneMarker.get(i).getY();
+      yCamera[i] = (int) cameraPreset.get(i).getY();
     }
 
     Arrays.sort(xNorm);
@@ -141,10 +143,14 @@ public class CameraPositionModel {
     minCameraY = (int) yCamera[0];
     maxCameraY = (int) yCamera[points-1];
 
-    cameraNormX = new SplineInterpolator().interpolate(xCamera, xNorm);
-    normCameraX = new SplineInterpolator().interpolate(xNorm, xCamera);
-    normCameraY = new SplineInterpolator().interpolate(yNorm, yCamera);
-    cameraNormY = new SplineInterpolator().interpolate(yCamera, yNorm);
+    try {
+      cameraNormX = new SplineInterpolator().interpolate(xCamera, xNorm);
+      normCameraX = new SplineInterpolator().interpolate(xNorm, xCamera);
+      normCameraY = new SplineInterpolator().interpolate(yNorm, yCamera);
+      cameraNormY = new SplineInterpolator().interpolate(yCamera, yNorm);
+    } catch (Exception e) {
+      return false;
+    }
 
     return true;
   }
@@ -163,19 +169,20 @@ public class CameraPositionModel {
 
     if ((cameraNormX != null) && (cameraNormY != null)) {
 
-      if ((pos.getX() >= minCameraX) && (pos.getX() <= maxCameraX)) {
+      if (cameraNormX.isValidPoint(pos.getX())) {
         // Spline interpolation
-        out.setX((float) cameraNormX.value((double) pos.getX()));
+        out.setX((float) cameraNormX.value(pos.getX()));
       } else {
         // TODO Linear
       }
 
-      if ((pos.getY() >= minCameraY) && (pos.getX() <= maxCameraY)) {
+      if (cameraNormY.isValidPoint(pos.getY())) {
         // Spline interpolation
-        out.setY((float) cameraNormY.value((double) pos.getY()));
+        out.setY((float) cameraNormY.value(pos.getY()));
       } else {
         // TODO Linear
       }
+
     } else {
       // Linear mapping
       out.setX((x - pan_min) / (pan_max - pan_min) * 2 - 1);
@@ -198,15 +205,17 @@ public class CameraPositionModel {
     float y = pos.getY();
 
     if ((normCameraX != null) && (normCameraY != null)) {
-      if ((pos.getX() >= minNormX) && (pos.getX() <= maxNormX)) {
+
+      if (normCameraX.isValidPoint(pos.getX())) {
         // Spline interpolation
-        out.setX((int) normCameraX.value((double) pos.getX()));
+        out.setX((int) normCameraX.value(pos.getX()));
       } else {
         // TODO Linear
       }
 
-      if ((pos.getY() >= minNormY) && (pos.getY() <= maxNormY)) {
-        out.setY((int) normCameraY.value((double) pos.getY()));
+      if (normCameraY.isValidPoint(pos.getY())) {
+        // Spline interpolation
+        out.setY((int) normCameraY.value(pos.getY()));
       } else {
         // TODO Linear
       }

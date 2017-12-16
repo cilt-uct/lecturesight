@@ -17,6 +17,9 @@
  */
 package cv.lecturesight.ptz.steering.relativemove;
 
+import cv.lecturesight.profile.api.SceneProfile;
+import cv.lecturesight.profile.api.SceneProfileManager;
+import cv.lecturesight.profile.api.Zone;
 import cv.lecturesight.ptz.api.CameraListener;
 import cv.lecturesight.ptz.api.PTZCamera;
 import cv.lecturesight.ptz.steering.api.CameraSteeringWorker;
@@ -25,6 +28,7 @@ import cv.lecturesight.scripting.api.ScriptingService;
 import cv.lecturesight.util.conf.Configuration;
 import cv.lecturesight.util.conf.ConfigurationListener;
 import cv.lecturesight.util.geometry.CameraPositionModel;
+import cv.lecturesight.util.geometry.CoordinatesNormalization;
 import cv.lecturesight.util.geometry.NormalizedPosition;
 import cv.lecturesight.util.geometry.Position;
 import cv.lecturesight.util.geometry.Preset;
@@ -36,7 +40,9 @@ import org.apache.felix.scr.annotations.Service;
 import org.osgi.service.component.ComponentContext;
 import org.pmw.tinylog.Logger;
 
+import java.util.ArrayList;
 import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
@@ -57,6 +63,9 @@ public class CameraSteeringWorkerRelativeMove implements CameraSteeringWorker, C
 
   @Reference
   private PTZCamera camera;            // PTZCamera implementation
+
+  @Reference
+  private SceneProfileManager spm;     // Scene profile manager
 
   @Reference
   private ScriptingService engine;
@@ -264,11 +273,15 @@ public class CameraSteeringWorkerRelativeMove implements CameraSteeringWorker, C
     maxspeed_tilt = camera.getProfile().getTiltMaxSpeed();
     zoom_max = camera.getProfile().getZoomMax();
 
-    // Get the camera presets for calibration
-    List<Preset> presets = camera.getPresets();
-
     // Camera model
     model = new CameraPositionModel(pan_min, pan_max, tilt_min, tilt_max);
+
+    // Now update the model for marker/preset calibration if available
+    if (autoCalibrate()) {
+      Logger.info("Automatic calibration successful");
+    } else {
+      Logger.info("Automatic calibration not possible");
+    }
 
     // initialize worker
     worker = new SteeringWorker();
@@ -297,6 +310,50 @@ public class CameraSteeringWorkerRelativeMove implements CameraSteeringWorker, C
 
     camera.stopMove();
     Logger.info("Deactivated");
+  }
+
+  private boolean autoCalibrate() {
+
+    SceneProfile profile = spm.getActiveProfile();
+    List<Zone> markerZones = profile.getCalibrationZones();
+
+    if (markerZones.size() < 2) {
+      // Need at least 2 calibration points
+      return false;
+    }
+
+    List<Preset> presets = camera.getPresets();
+    HashMap<String,Preset> presetMap = new HashMap<>();
+
+    for (Preset preset : presets) {
+      presetMap.put(preset.getName(), preset);
+    }
+
+    List<NormalizedPosition> sceneMarkers = new ArrayList<>();
+    List<Position> cameraPresets = new ArrayList<>();
+
+    // Convert between overview co-ordinates and normalized co-ordinates
+    CoordinatesNormalization normalizer = new CoordinatesNormalization(profile.width, profile.height);
+
+    for (Zone marker : markerZones) {
+      // Is there a preset for this zone?
+      if (presetMap.containsKey(marker.name)) {
+        Position p = (Position) presetMap.get(marker.name);
+        cameraPresets.add(p);
+
+        // marker is a rectangle, so find the centre point
+        Position marker_pos = new Position(marker.x + marker.width/2, marker.y + marker.y/2);
+        NormalizedPosition marker_posN = normalizer.toNormalized(marker_pos);
+        sceneMarkers.add(marker_posN);
+      }
+    }
+
+    if (!cameraPresets.isEmpty()) {
+      // Let the model decide if it has enough points
+      return model.update(sceneMarkers, cameraPresets);
+    }
+
+    return false;
   }
 
   @Override
