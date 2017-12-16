@@ -6,7 +6,7 @@ import cv.lecturesight.ptz.api.PTZCameraException;
 import cv.lecturesight.ptz.api.PTZCameraProfile;
 import cv.lecturesight.util.conf.Configuration;
 import cv.lecturesight.util.geometry.Position;
-import cv.lecturesight.vapix.service.VAPIXCameraImpl.MyAuthenticator;
+import cv.lecturesight.util.geometry.Preset;
 
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
@@ -22,6 +22,7 @@ import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.PasswordAuthentication;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.LinkedList;
@@ -159,7 +160,7 @@ public class VAPIXCameraImpl implements PTZCamera {
         this.model_name = result.get("root.Brand.ProdFullName");
         this.brand = result.get("root.Brand.Brand");
 
-        this.presets = getPresets();
+        this.presets = getPresetNames();
 
         Logger.info("Vapix: " + this.brand + " " + this.model_name);
 
@@ -478,22 +479,24 @@ public class VAPIXCameraImpl implements PTZCamera {
    * @param preset
    *            The name of the preset to move the camera to
    */
-  public void movePreset(String preset) {
+  public boolean movePreset(String preset) {
 
     Logger.debug("Move preset name " + preset);
 
     if (Arrays.asList(presets).contains(preset)) {
-
       try {
         String result = this.doCommand("/axis-cgi/com/ptz.cgi?gotoserverpresetname=" + preset);
         Logger.trace("Move preset [" + preset + "] (" + result + ")");
       } catch (IOException e) {
         Logger.error("moveHome: " + e.getMessage());
-      } finally {
+        return false;
       }
     } else {
       Logger.debug("Preset name not found: " + preset);
+      return false;
     }
+
+    return true;
   }
 
   /**
@@ -507,7 +510,7 @@ public class VAPIXCameraImpl implements PTZCamera {
     try {
       String result = doCommand("/axis-cgi/com/ptzconfig.cgi?setserverpresetname=" + name);
       Logger.trace("setPreset: " + name + "(" + result + ")");
-      this.presets = getPresets(); // refresh the list of presets
+      this.presets = getPresetNames(); // refresh the list of presets
     } catch (IOException e) {
       Logger.error("setPreset: " + e.getMessage());
     } finally {
@@ -525,7 +528,7 @@ public class VAPIXCameraImpl implements PTZCamera {
     try {
       String result = doCommand("/axis-cgi/com/ptzconfig.cgi?removeserverpresetname=" + name);
       Logger.trace("removePreset: " + name + "(" + result + ")");
-      this.presets = getPresets(); // refresh the list of presets
+      this.presets = getPresetNames(); // refresh the list of presets
     } catch (Exception e) {
       Logger.error("removePreset: " + e.getMessage());
     }
@@ -536,7 +539,7 @@ public class VAPIXCameraImpl implements PTZCamera {
    *
    * @return String array of all the presets on the camera
    */
-  private String[] getPresets() {
+  private String[] getPresetNames() {
 
     Hashtable<String, String> list = processCommand("/axis-cgi/com/ptz.cgi?query=presetposall");
     String[] result = new String[list.size() - 1];
@@ -1018,6 +1021,34 @@ public class VAPIXCameraImpl implements PTZCamera {
     }
 
     return new Position();
+  }
+
+  @Override
+  public List<Preset> getPresets() {
+
+    Logger.info("Fetching camera preset positions");
+
+    ArrayList<Preset> presetList = new ArrayList<>();
+
+    // Update list of camera presets
+    presets = getPresetNames();
+
+    for (String preset : presets) {
+      if (movePreset(preset)) {
+        // wait for the camera to arrive
+        try {
+          Thread.sleep(2500);
+          Position pos = getPosition();
+          Preset p = new Preset(preset, pos.getX(), pos.getY(), zoom);
+          Logger.debug("Camera has preset {}", p);
+          presetList.add(p);
+        } catch (InterruptedException e) {
+          //
+        }
+      }
+    }
+
+    return presetList;
   }
 
   /**

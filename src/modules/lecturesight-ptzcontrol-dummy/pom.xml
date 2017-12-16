@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>ptzcontrol-dummy</artifactId>
-  <name>Dummy PTZ Camera</name>
+  <name>LectureSight Dummy PTZ Camera</name>
   <groupId>cv.lecturesight</groupId>
   <packaging>bundle</packaging>
 
