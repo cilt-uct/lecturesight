@@ -15,29 +15,54 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-package cv.lecturesight.ptz.steering.absolutemove;
+package cv.lecturesight.util.geometry;
 
-import cv.lecturesight.util.geometry.NormalizedPosition;
-import cv.lecturesight.util.geometry.Position;
-
+/**
+ * Convert between normalized co-ordinates and camera pan/tilt co-ordinates
+ */
 public class CameraPositionModel {
 
   // scene limits for normalization
-  private final int pan_min;
-  private final int pan_max;
-  private final int tilt_min;
-  private final int tilt_max;
+  private int pan_min;
+  private int pan_max;
+  private int tilt_min;
+  private int tilt_max;
 
-  private Position camera_pos = new Position(0, 0);   // camera position in camera coordinates
-  private Position target_pos = new Position(0, 0);   // target position in camera coordinates
-  private NormalizedPosition target_posn = new NormalizedPosition(0.0f, 0.0f);  // camera position in normalized coordinates
-  private NormalizedPosition camera_posn = new NormalizedPosition(0.0f, 0.0f);  // target position in normalized coordinates
+  // target position
+  private boolean target_set = false;
 
+  // camera position in camera coordinates
+  private Position camera_pos = new Position(0, 0);
+
+  // target position in camera coordinates
+  private Position target_pos = new Position(0, 0);
+
+  // camera position in normalized coordinates
+  private NormalizedPosition target_posn = new NormalizedPosition(0.0f, 0.0f);
+
+  // target position in normalized coordinates
+  private NormalizedPosition camera_posn = new NormalizedPosition(0.0f, 0.0f);
+
+  /**
+   * Initialize camera position model using scene limits
+   * @param pan_min
+   * @param pan_max
+   * @param tilt_min
+   * @param tilt_max
+   */
   public CameraPositionModel(int pan_min, int pan_max, int tilt_min, int tilt_max) {
+    update(pan_min, pan_max, tilt_min, tilt_max);
+  }
+
+  /**
+   * Update camera model from scene limits
+   */
+  public void update(int pan_min, int pan_max, int tilt_min, int tilt_max) {
     this.pan_max = pan_max;
     this.pan_min = pan_min;
     this.tilt_max = tilt_max;
     this.tilt_min = tilt_min;
+    return;
   }
 
   /**
@@ -47,6 +72,7 @@ public class CameraPositionModel {
    * @return normalized coordinates
    */
   public NormalizedPosition toNormalizedCoordinates(Position pos) {
+
     NormalizedPosition out = new NormalizedPosition(0.0f, 0.0f);
     float x = pos.getX();
     float y = pos.getY();
@@ -64,12 +90,13 @@ public class CameraPositionModel {
    * @return camera coordinates
    */
   public Position toCameraCoordinates(NormalizedPosition pos) {
+
     Position out = new Position(0, 0);
     float x = pos.getX();
     float y = pos.getY();
 
-    out.setX( (int) ( (x+1) * (pan_max - pan_min) * 0.5 + pan_min));
-    out.setY( (int) ( (y+1) * (tilt_max - tilt_min) * 0.5 + tilt_min));
+    out.setX((int) ((x + 1) * (pan_max - pan_min) * 0.5 + pan_min));
+    out.setY((int) ((y+1) * (tilt_max - tilt_min) * 0.5 + tilt_min));
 
     return out;
   }
@@ -85,11 +112,13 @@ public class CameraPositionModel {
   }
 
   public synchronized void setTargetPositionNorm(NormalizedPosition posn) {
+    target_set = true;
     target_posn = posn;
     target_pos = toCameraCoordinates(posn);
   }
 
   public synchronized void setTargetPosition(Position pos) {
+    target_set = true;
     target_posn = toNormalizedCoordinates(pos);
     target_pos = pos;
   }
@@ -109,4 +138,9 @@ public class CameraPositionModel {
   public synchronized NormalizedPosition getTargetPositionNorm() {
     return target_posn.clone();
   }
+
+  public boolean isTargetSet() {
+    return target_set;
+  }
+
 }
