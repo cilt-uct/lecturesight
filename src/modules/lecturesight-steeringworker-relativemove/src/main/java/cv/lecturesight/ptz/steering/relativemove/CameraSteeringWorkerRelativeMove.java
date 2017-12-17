@@ -318,14 +318,18 @@ public class CameraSteeringWorkerRelativeMove implements CameraSteeringWorker, C
     SceneProfile profile = spm.getActiveProfile();
     List<Zone> markerZones = profile.getCalibrationZones();
 
+    Logger.debug("Active scene profile {} has {} calibration markers", profile.name, markerZones.size());
+
     if (markerZones.size() < 2) {
       // Need at least 2 calibration points
       return false;
     }
 
     List<Preset> presets = camera.getPresets();
-    HashMap<String,Preset> presetMap = new HashMap<>();
 
+    Logger.debug("Camera has {} presets", presets.size());
+
+    HashMap<String,Preset> presetMap = new HashMap<>();
     for (Preset preset : presets) {
       presetMap.put(preset.getName(), preset);
     }
@@ -339,6 +343,8 @@ public class CameraSteeringWorkerRelativeMove implements CameraSteeringWorker, C
     for (Zone marker : markerZones) {
       // Is there a preset for this zone?
       if (presetMap.containsKey(marker.name)) {
+
+        Logger.debug("Using marker {} for calibration", marker.name);
         Position p = (Position) presetMap.get(marker.name);
         cameraPresets.add(p);
 
