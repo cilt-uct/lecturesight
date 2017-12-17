@@ -278,7 +278,8 @@ public class CameraSteeringWorkerRelativeMove implements CameraSteeringWorker, C
 
     // Now update the model for marker/preset calibration if available
     if (autoCalibrate()) {
-      Logger.info("Automatic calibration successful");
+      Logger.info("Automatic calibration, camera pan/tilt limits: pan {} to {}, tilt {} to {}",
+        pan_min, pan_max, tilt_min, tilt_max);
     } else {
       Logger.info("Automatic calibration not possible");
     }
