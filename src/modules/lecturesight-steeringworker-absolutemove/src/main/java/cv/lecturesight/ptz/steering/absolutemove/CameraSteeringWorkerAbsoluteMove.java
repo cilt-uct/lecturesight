@@ -23,8 +23,10 @@ import cv.lecturesight.ptz.steering.api.CameraSteeringWorker;
 import cv.lecturesight.ptz.steering.api.UISlave;
 import cv.lecturesight.scripting.api.ScriptingService;
 import cv.lecturesight.util.conf.Configuration;
+import cv.lecturesight.util.geometry.CameraPositionModel;
 import cv.lecturesight.util.geometry.NormalizedPosition;
 import cv.lecturesight.util.geometry.Position;
+
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.LinkedList;

@@ -37,7 +37,7 @@ import org.pmw.tinylog.Logger;
 public class ConsoleCommands implements DummyInterface {
 
   @Reference
-  CameraSteeringWorker steerer;
+  private CameraSteeringWorker steerer;
 
   public void on(String[] args) {
     steerer.setSteering(true);
