@@ -96,6 +96,16 @@ public class CameraPositionModelTest {
     Assert.assertEquals(nearTopLeftN, model.toNormalizedCoordinates(nearTopLeft));
     Assert.assertEquals(nearBottomRightN, model.toNormalizedCoordinates(nearBottomRight));
 
+    // Outside the normalized co-ord range
+
+    Position outsideTopLeft = new Position(18700, 2550);
+    Position outsideBottomLeft = new Position(-18700, -9550);
+
+    // These should calculate to 1.1, 1.1 but NormalisedPosition applies min/max values of -1 and 1
+
+    Assert.assertEquals(new NormalizedPosition(1.0f, 1.0f), model.toNormalizedCoordinates(outsideTopLeft));
+    Assert.assertEquals(new NormalizedPosition(-1.0f, -1.0f), model.toNormalizedCoordinates(outsideBottomLeft));
+
   }
 
   @org.junit.Test
