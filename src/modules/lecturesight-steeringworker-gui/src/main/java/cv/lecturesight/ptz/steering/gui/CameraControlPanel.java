@@ -258,8 +258,8 @@ public class CameraControlPanel extends JPanel implements UISlave, MouseListener
   }
 
   private void updateSize() {
-    normalizer.setMaxX(getWidth());
-    normalizer.setMaxY(getHeight());
+    normalizer.setWidth(getWidth());
+    normalizer.setHeight(getHeight());
   }
 
   @Override
