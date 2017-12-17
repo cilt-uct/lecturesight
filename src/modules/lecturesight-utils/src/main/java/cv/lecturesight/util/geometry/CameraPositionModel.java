@@ -62,6 +62,11 @@ public class CameraPositionModel {
   private float minNormY = 1;
   private float maxNormY = -1;
 
+  private int minCameraX = 0;
+  private int maxCameraX = 0;
+  private int minCameraY = 0;
+  private int maxCameraY = 0;
+
   /**
    * Initialize camera position model using scene limits
    * @param pan_min
@@ -137,6 +142,11 @@ public class CameraPositionModel {
     minNormY = (float) yNorm[0];
     maxNormY = (float) yNorm[points-1];
 
+    minCameraX = (int) Math.round(xCamera[0]);
+    maxCameraX = (int) Math.round(xCamera[points-1]);
+    minCameraY = (int) Math.round(yCamera[0]);
+    maxCameraY = (int) Math.round(yCamera[points-1]);
+
     Logger.info("Norm X {0.00} to {0.00}", minNormX, maxNormX);
     Logger.info("Norm Y {0.00} to {0.00}", minNormY, maxNormY);
 
@@ -155,25 +165,25 @@ public class CameraPositionModel {
     if (normCameraX.isValidPoint(-1)) {
       pan_min = (int) Math.round(normCameraX.value(-1));
     } else {
-      pan_min = findEdge(normCameraX, -1, minNormX, maxNormX);
+      pan_min = (int) Math.round(findEdge(normCameraX, -1, minNormX, maxNormX));
     }
 
     if (normCameraX.isValidPoint(1)) {
       pan_max = (int) Math.round(normCameraX.value(1));
     } else {
-      pan_max = findEdge(normCameraX, 1, minNormX, maxNormX);
+      pan_max = (int) Math.round(findEdge(normCameraX, 1, minNormX, maxNormX));
     }
 
     if (normCameraY.isValidPoint(-1)) {
       tilt_min = (int) Math.round(normCameraY.value(-1));
     } else {
-      tilt_min = findEdge(normCameraY, -1, minNormY, maxNormY);
+      tilt_min = (int) Math.round(findEdge(normCameraY, -1, minNormY, maxNormY));
     }
 
     if (normCameraY.isValidPoint(1)) {
       tilt_max = (int) Math.round(normCameraY.value(1));
     } else {
-      tilt_max = findEdge(normCameraY, 1, minNormY, maxNormY);
+      tilt_max = (int) Math.round(findEdge(normCameraY, 1, minNormY, maxNormY));
     }
 
     Logger.info("pan min/max {} to {}, tilt min/max {} to {}",
@@ -183,36 +193,38 @@ public class CameraPositionModel {
   }
 
   /**
-   * Return the camera position for the normalized edge point, extrapolated from the spline function.
+   * Return a position extrapolated outside the spline points.
+   * Used bidirectionally (normalized to camera and camera to normalized)
+   *
    * @param spline The spline function for the axis
-   * @param edgeNorm The edge point (-1 or 1)
-   * @param minNorm The smallest point x value
-   * @param maxNorm The largeest point x value
+   * @param x The edge point (-1 or 1)
+   * @param minX The smallest knot point x value
+   * @param maxX The largest knot point x value
    * @return
    */
-  private int findEdge(PolynomialSplineFunction spline, float edgeNorm, float minNorm, float maxNorm) {
+  private double findEdge(PolynomialSplineFunction spline, float x, float minX, float maxX) {
 
-    Logger.info("Finding edge: {0.00}, {0.00}, {0.00}", edgeNorm, minNorm, maxNorm);
+    Logger.info("Finding edge: {0.00}, {0.00}, {0.00}", x, minX, maxX);
 
     double edge;
 
-    if (edgeNorm < minNorm) {
+    if (x < minX) {
       // Extrapolate from the smallest calibration point and a point close to it
-      double minCamera = spline.value(minNorm);
-      double nextNorm = minNorm + 0.1 * (maxNorm - minNorm);
-      double nextCamera = spline.value(nextNorm);
-      edge = extrapolate(edgeNorm, minNorm, minCamera, nextNorm, nextCamera);
+      double minY = spline.value(minX);
+      double nextX = minX + 0.1 * (maxX - minX);
+      double nextY = spline.value(nextX);
+      edge = extrapolate(x, minX, minY, nextX, nextY);
 
     } else {
       // Extrapolate from the largest calibration point and a point close to it
-      double maxCamera = spline.value(maxNorm);
-      double nextNorm = maxNorm - 0.1 * (maxNorm - minNorm);
-      double nextCamera = spline.value(nextNorm);
-      edge = extrapolate(edgeNorm, maxNorm, maxCamera, nextNorm, nextCamera);
+      double maxY = spline.value(maxX);
+      double nextX = maxX - 0.1 * (maxX - minX);
+      double nextY = spline.value(nextX);
+      edge = extrapolate(x, maxX, maxY, nextX, nextY);
     }
 
     Logger.info("Edge is {0.00}", edge);
-    return (int) Math.round(edge);
+    return edge;
   }
 
   public double extrapolate(double x, double x1, double y1, double x2, double y2) {
@@ -234,24 +246,22 @@ public class CameraPositionModel {
 
     if ((cameraNormX != null) && (cameraNormY != null)) {
 
-      if (cameraNormX.isValidPoint(pos.getX())) {
+      if (cameraNormX.isValidPoint(x)) {
         // Spline interpolation
-        out.setX((float) cameraNormX.value(pos.getX()));
+        out.setX((float) cameraNormX.value(x));
       } else {
-        out.setX((x - pan_min) / (pan_max - pan_min) * 2 - 1);
-        // TODO Linear
+        out.setX((float) findEdge(cameraNormX, x, minCameraX, maxCameraX));
       }
 
       if (cameraNormY.isValidPoint(pos.getY())) {
         // Spline interpolation
         out.setY((float) cameraNormY.value(pos.getY()));
       } else {
-        out.setY((y - tilt_min) / (tilt_max - tilt_min) * 2 - 1);
-        // TODO Linear
+        out.setY((float) findEdge(cameraNormY, y, minCameraY, maxCameraY));
       }
 
     } else {
-      // Linear mapping
+      // Linear mapping using scene limits
       out.setX((x - pan_min) / (pan_max - pan_min) * 2 - 1);
       out.setY((y - tilt_min) / (tilt_max - tilt_min) * 2 - 1);
     }
@@ -273,24 +283,18 @@ public class CameraPositionModel {
 
     if ((normCameraX != null) && (normCameraY != null)) {
 
-      if (normCameraX.isValidPoint(pos.getX())) {
+      if (normCameraX.isValidPoint(x)) {
         // Spline interpolation
-        double camX = normCameraX.value(pos.getX());
-        Logger.info("Spline-interpolated camera X: {}", camX);
-        out.setX((int) Math.round(camX));
+        out.setX((int) Math.round(normCameraX.value(x)));
       } else {
-        // TODO Linear
-        out.setX((int) Math.round((x + 1) * (pan_max - pan_min) * 0.5 + pan_min));
-
+        out.setX((int) Math.round(findEdge(normCameraX, x, minNormX, maxNormX)));
       }
 
-      if (normCameraY.isValidPoint(pos.getY())) {
+      if (normCameraY.isValidPoint(y)) {
         // Spline interpolation
-        out.setY((int) Math.round(normCameraY.value(pos.getY())));
+        out.setY((int) Math.round(normCameraY.value(y)));
       } else {
-        // TODO Linear
-        out.setY((int) Math.round((y + 1) * (tilt_max - tilt_min) * 0.5 + tilt_min));
-
+        out.setY((int) Math.round(findEdge(normCameraY, y, minNormY, maxNormY)));
       }
 
     } else {
