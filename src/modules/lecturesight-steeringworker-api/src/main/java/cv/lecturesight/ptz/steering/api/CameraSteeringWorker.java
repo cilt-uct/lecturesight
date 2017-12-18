@@ -55,6 +55,8 @@ public interface CameraSteeringWorker {
 
   boolean isMoving();
 
+  boolean autoCalibrate();
+
   int getPanMin();
 
   int getPanMax();
