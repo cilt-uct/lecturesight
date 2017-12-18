@@ -125,7 +125,7 @@ public class CameraPositionModel {
 
     int points = sceneMarker.size();
 
-    Logger.info("Calibrating with {} points", points);
+    Logger.debug("Calibrating model with {} points", points);
 
     // SplineInterpolator requires at least 3 points
     if ((points < 3) || (points != cameraPreset.size())) {
@@ -145,7 +145,7 @@ public class CameraPositionModel {
       xCamera[i] = cameraPreset.get(i).getX();
       yNorm[i] = sceneMarker.get(i).getY();
       yCamera[i] = cameraPreset.get(i).getY();
-      Logger.info("Adding calibration point {0.00},{0.00} = {0.00},{0.00}", xNorm[i], yNorm[i], xCamera[i], yCamera[i]);
+      Logger.debug("Adding calibration point {0.00},{0.00} = {0.00},{0.00}", xNorm[i], yNorm[i], xCamera[i], yCamera[i]);
     }
 
     Arrays.sort(xNorm);
@@ -163,8 +163,8 @@ public class CameraPositionModel {
     minCameraY = (int) Math.round(yCamera[0]);
     maxCameraY = (int) Math.round(yCamera[points - 1]);
 
-    Logger.info("Norm X {0.00} to {0.00}", minNormX, maxNormX);
-    Logger.info("Norm Y {0.00} to {0.00}", minNormY, maxNormY);
+    Logger.debug("normalized X range {0.00} to {0.00}, normalized Y range {0.00} to {0.00}",
+      minNormX, maxNormX, minNormY, maxNormY);
 
     try {
       cameraNormX = new SplineInterpolator().interpolate(xCamera, xNorm);
@@ -172,7 +172,7 @@ public class CameraPositionModel {
       normCameraY = new SplineInterpolator().interpolate(yNorm, yCamera);
       cameraNormY = new SplineInterpolator().interpolate(yCamera, yNorm);
     } catch (Exception e) {
-      Logger.warn(e, "Cannot create calibration spline function");
+      Logger.warn(e, "Cannot create calibration spline function from co-ordinate set");
       return false;
     }
 
@@ -202,7 +202,7 @@ public class CameraPositionModel {
       tilt_max = (int) Math.round(findEdge(normCameraY, 1, minNormY, maxNormY));
     }
 
-    Logger.info("pan min/max {} to {}, tilt min/max {} to {}",
+    Logger.debug("Updated pan min/max {} to {}, tilt min/max {} to {}",
       pan_min, pan_max, tilt_min, tilt_max);
 
     return true;
@@ -216,35 +216,27 @@ public class CameraPositionModel {
    * @param x The edge point (-1 or 1)
    * @param minX The smallest knot point x value
    * @param maxX The largest knot point x value
-   * @return
+   * @return The extrapolated y position for x
    */
   private double findEdge(PolynomialSplineFunction spline, float x, float minX, float maxX) {
-
-    Logger.info("Finding edge: {0.00}, {0.00}, {0.00}", x, minX, maxX);
-
-    double edge;
 
     if (x < minX) {
       // Extrapolate from the smallest calibration point and a point close to it
       double minY = spline.value(minX);
       double nextX = minX + 0.1 * (maxX - minX);
       double nextY = spline.value(nextX);
-      edge = extrapolate(x, minX, minY, nextX, nextY);
-
+      return extrapolate(x, minX, minY, nextX, nextY);
     } else {
       // Extrapolate from the largest calibration point and a point close to it
       double maxY = spline.value(maxX);
       double nextX = maxX - 0.1 * (maxX - minX);
       double nextY = spline.value(nextX);
-      edge = extrapolate(x, maxX, maxY, nextX, nextY);
+      return extrapolate(x, maxX, maxY, nextX, nextY);
     }
 
-    Logger.info("Edge is {0.00}", edge);
-    return edge;
   }
 
   public double extrapolate(double x, double x1, double y1, double x2, double y2) {
-    Logger.info("extrapolate for {0.00} from {0.00},{0.00} and {0.00},{0.00}", x, x1, y1, x2, y2);
     return y1 + (x - x1) / (x2 - x1) * (y2 - y1);
   }
 
