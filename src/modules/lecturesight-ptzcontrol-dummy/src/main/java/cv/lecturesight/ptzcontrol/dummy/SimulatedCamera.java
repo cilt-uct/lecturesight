@@ -384,7 +384,7 @@ public class SimulatedCamera implements PTZCamera {
 
   private void informListeners() {
     for (CameraListener l : listeners) {
-      Logger.debug("informListeners()");
+      Logger.trace("informListeners()");
       l.positionUpdated(current_pos.clone());
     }
   }
