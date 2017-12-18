@@ -1026,7 +1026,7 @@ public class VAPIXCameraImpl implements PTZCamera {
   @Override
   public List<Preset> getPresets() {
 
-    Logger.info("Fetching camera preset positions");
+    Logger.debug("Fetching camera preset positions");
 
     ArrayList<Preset> presetList = new ArrayList<>();
 
