@@ -357,7 +357,14 @@ public class CameraSteeringWorkerRelativeMove implements CameraSteeringWorker, C
 
     if (!cameraPresets.isEmpty()) {
       // Let the model decide if it has enough points
-      return model.update(sceneMarkers, cameraPresets);
+      if (model.update(sceneMarkers, cameraPresets)) {
+        // Update the scene limits
+        pan_min = model.getPanMin();
+        pan_max = model.getPanMax();
+        tilt_min = model.getTiltMin();
+        tilt_max = model.getTiltMax();
+        return true;
+      }
     }
 
     return false;

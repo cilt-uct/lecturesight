@@ -78,6 +78,22 @@ public class CameraPositionModel {
     update(pan_min, pan_max, tilt_min, tilt_max);
   }
 
+  public int getPanMin() {
+    return pan_min;
+  }
+
+  public int getPanMax() {
+    return pan_max;
+  }
+
+  public int getTiltMin() {
+    return tilt_min;
+  }
+
+  public int getTiltMax() {
+    return tilt_max;
+  }
+
   /**
    * Update camera model from scene limits
    */
