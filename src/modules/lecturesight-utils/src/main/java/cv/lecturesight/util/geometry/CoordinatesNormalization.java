@@ -49,12 +49,12 @@ public class CoordinatesNormalization {
 
   // Range 0 ... width - 1 for co-ordinates from -1 ... 1
   public int denormalizeX(float x) {
-    return (int) ((x + 1) / 2) * (width - 1);
+    return (int) Math.round((x + 1) / 2f * (width - 1));
   }
 
   // Range 0 ... height - 1 for co-ordinates from -1 ... 1
   public int denormalizeY(float y) {
-    return (int) ((-1 * y + 1) / 2) * (height - 1);
+    return (int) Math.round((-1 * y + 1) / 2f * (height - 1));
   }
 
   public NormalizedPosition toNormalized(Position pos) {
