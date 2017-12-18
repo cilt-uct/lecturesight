@@ -82,6 +82,7 @@ public class CameraSteeringWorkerRelativeMove implements CameraSteeringWorker, C
   private int tilt_min;
   private int tilt_max;
   private int zoom_max;
+  private boolean autoCalibrated = false;
 
   // max pan, tilt and zoom speeds
   protected int maxspeed_pan;
@@ -363,6 +364,7 @@ public class CameraSteeringWorkerRelativeMove implements CameraSteeringWorker, C
         pan_max = model.getPanMax();
         tilt_min = model.getTiltMin();
         tilt_max = model.getTiltMax();
+        autoCalibrated = true;
         return true;
       }
     }
@@ -374,17 +376,23 @@ public class CameraSteeringWorkerRelativeMove implements CameraSteeringWorker, C
   public void configurationChanged() {
     Logger.debug("Refreshing configuration");
     setConfiguration();
-    model.update(pan_min, pan_max, tilt_min, tilt_max);
+
+    if (!autoCalibrated) {
+      // Update the model only if the scene limits are set manually
+      model.update(pan_min, pan_max, tilt_min, tilt_max);
+    }
   }
 
   /*
    ** Set configuration values
    */
   private void setConfiguration() {
+
     alpha_x = config.getInt(Constants.PROPKEY_ALPHAX);
     alpha_y = config.getInt(Constants.PROPKEY_ALPHAY);
     stop_x = config.getInt(Constants.PROPKEY_STOPX);
     stop_y = config.getInt(Constants.PROPKEY_STOPY);
+
     damp_pan = config.getFloat(Constants.PROPKEY_DAMP_PAN);
     if (damp_pan > 1.0 || damp_pan < 0.0) {
       Logger.warn("Illegal value for configuration parameter {}. Must be in range [0..1]. Using default value 1.0.",
@@ -394,43 +402,47 @@ public class CameraSteeringWorkerRelativeMove implements CameraSteeringWorker, C
     damp_tilt = config.getFloat(Constants.PROPKEY_DAMP_TILT);
     if (damp_tilt > 1.0 || damp_tilt < 0.0) {
       Logger.warn("Illegal value for configuration parameter {}. Must be in range [0..1]. Using default value 1.0.",
-        Constants.PROPKEY_DAMP_PAN);
+        Constants.PROPKEY_DAMP_TILT);
       damp_tilt = 1.0f;
     }
+
     initial_delay = config.getInt(Constants.PROPKEY_INITIAL_DELAY);
+
     focus_fixed = config.getBoolean(Constants.PROPKEY_FOCUS_FIXED);
 
-    // initialize limits for pan and tilt, if not configured by camera calibration
-    // the limits from the camera profile are taken
-    String val = config.get(Constants.PROPKEY_LIMIT_LEFT);
-    if (val.isEmpty() || "none".equalsIgnoreCase(val)) {
-      pan_min = camera.getProfile().getPanMin();
-    } else {
-      pan_min = config.getInt(Constants.PROPKEY_LIMIT_LEFT);
-    }
+    // Update the scene limits only if they have not been auto-calibrated
+    if (!autoCalibrated) {
+      // Initialize limits for pan and tilt. If not configured, the limits from the camera profile are used.
+      String val = config.get(Constants.PROPKEY_LIMIT_LEFT);
+      if (val.isEmpty() || "none".equalsIgnoreCase(val)) {
+        pan_min = camera.getProfile().getPanMin();
+      } else {
+        pan_min = config.getInt(Constants.PROPKEY_LIMIT_LEFT);
+      }
 
-    val = config.get(Constants.PROPKEY_LIMIT_RIGHT);
-    if (val.isEmpty() || "none".equalsIgnoreCase(val)) {
-      pan_max = camera.getProfile().getPanMax();
-    } else {
-      pan_max = config.getInt(Constants.PROPKEY_LIMIT_RIGHT);
-    }
+      val = config.get(Constants.PROPKEY_LIMIT_RIGHT);
+      if (val.isEmpty() || "none".equalsIgnoreCase(val)) {
+        pan_max = camera.getProfile().getPanMax();
+      } else {
+        pan_max = config.getInt(Constants.PROPKEY_LIMIT_RIGHT);
+      }
 
-    val = config.get(Constants.PROPKEY_LIMIT_TOP);
-    if (val.isEmpty() || "none".equalsIgnoreCase(val)) {
-      tilt_max = camera.getProfile().getTiltMax();
-    } else {
-      tilt_max = config.getInt(Constants.PROPKEY_LIMIT_TOP);
-    }
+      val = config.get(Constants.PROPKEY_LIMIT_TOP);
+      if (val.isEmpty() || "none".equalsIgnoreCase(val)) {
+        tilt_max = camera.getProfile().getTiltMax();
+      } else {
+        tilt_max = config.getInt(Constants.PROPKEY_LIMIT_TOP);
+      }
 
-    val = config.get(Constants.PROPKEY_LIMIT_BOTTOM);
-    if (val.isEmpty() || "none".equalsIgnoreCase(val)) {
-      tilt_min = camera.getProfile().getTiltMin();
-    } else {
-      tilt_min = config.getInt(Constants.PROPKEY_LIMIT_BOTTOM);
-    }
+      val = config.get(Constants.PROPKEY_LIMIT_BOTTOM);
+      if (val.isEmpty() || "none".equalsIgnoreCase(val)) {
+        tilt_min = camera.getProfile().getTiltMin();
+      } else {
+        tilt_min = config.getInt(Constants.PROPKEY_LIMIT_BOTTOM);
+      }
 
-    Logger.debug("Camera pan/tilt limits: pan {} to {}, tilt {} to {}", pan_min, pan_max, tilt_min, tilt_max);
+      Logger.debug("Camera pan/tilt limits: pan {} to {}, tilt {} to {}", pan_min, pan_max, tilt_min, tilt_max);
+    }
 
     yflip = config.getBoolean(Constants.PROPKEY_YFLIP);
     xflip = config.getBoolean(Constants.PROPKEY_XFLIP);
