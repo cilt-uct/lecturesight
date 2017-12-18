@@ -64,18 +64,22 @@ Update the `lecturesight.properties` configuration with those values, and restar
 
 !!! info "Automatic marker calibration is only supported for [VAPIX](../modules/ptzcontrol-vapix) cameras."
 
-Marker calibration maps overview co-ordinates to camera pan and tilt values by matching positions on the overview image with camera preset positions.
+Marker calibration maps overview co-ordinates to camera pan and tilt values by matching positions on the
+overview image with camera preset positions.
 
-> The calibration process creates horizontal and vertical conversion models using [spline interpolation](https://en.wikipedia.org/wiki/Spline_interpolation) inside the range of the
-marker points, and linear extrapolation outside the range, to convert between overview image co-ordinates and camera positions.
+> The calibration process creates horizontal and vertical conversion models using
+[spline interpolation](https://en.wikipedia.org/wiki/Spline_interpolation) inside the range of the marker points,
+and linear extrapolation outside the range, to convert between overview image co-ordinates and camera positions.
 This will in general provide more accurate results than setting the scene limits manually.
 
 To set up marker calibration:
 
-* In the [Scene Profile Editor](../ui/profile#calibration-markers), identify 3 or more fixed points on the image (for example the corner of a fixed blackboard, or a light switch). The set of points should cover most of the horizontal and vertical range of the presentation area.
+* In the [Scene Profile Editor](../ui/profile#calibration-markers), identify 3 or more fixed points on the image
+(for example the corner of a fixed blackboard, or a light switch). The set of points should cover most of the
+horizontal and vertical range of the presentation area.
 * Create calibration markers at each point. Give each marker a name, for example `m1`, `m2`, `m3`, `m4`, `m5`, and save the profile.
-* In the camera web interface, create a set of presets with the same names as the calibration markers. At each preset, the camera should be centred
-on the venue feature identified by the matching calibration marker.
+* In the camera web interface, create a set of presets with the same names as the calibration markers.
+At each preset, the camera should be centred on the venue feature identified by the matching calibration marker.
 * Restart LectureSight, or use the [console](../core/console) command `cs:calibrate` to trigger marker calibration:
 
 ```
@@ -83,11 +87,11 @@ g! cs:calibrate
 Automatic calibration completed
 ```
 
-The calibration process discovers the pan and tilt co-ordinates of each preset by moving the camera in turn to each position, with a pause time of
-2.5s between presets.
+The calibration process discovers the pan and tilt co-ordinates of each preset by moving the camera in turn to each position,
+with a pause time of 2.5s between presets.
 
-On subsequent startup, the [Steering Worker](../modules/steeringworker-relativemove) will report whether automatic calibration has been used, and if successful,
-the values of the calculated pan and tilt thresholds:
+On subsequent startup, the [Steering Worker](../modules/steeringworker-relativemove) will report whether automatic calibration
+has been used, and if successful, the values of the calculated pan and tilt thresholds:
 
 ```
 Automatic calibration, camera pan/tilt limits: pan -3673 to 3649, tilt -2596 to 2348
