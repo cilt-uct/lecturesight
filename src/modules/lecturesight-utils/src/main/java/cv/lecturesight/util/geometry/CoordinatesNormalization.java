@@ -39,12 +39,12 @@ public class CoordinatesNormalization {
 
   // Range -1 ... 1 for co-ordinates from 0 ... width - 1
   public float normalizeX(int x) {
-    return (x / (float) (width-1)) * 2.0f - 1.0f;
+    return (x / (float) (width - 1)) * 2.0f - 1.0f;
   }
 
   // Range -1 ... 1 for co-ordinates from 0 ... height - 1
   public float normalizeY(int y) {
-    return (y / (float) (height-1)) * -2.0f + 1.0f;
+    return (y / (float) (height - 1)) * -2.0f + 1.0f;
   }
 
   // Range 0 ... width - 1 for co-ordinates from -1 ... 1

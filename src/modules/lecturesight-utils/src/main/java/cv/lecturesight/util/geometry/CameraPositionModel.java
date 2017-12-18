@@ -154,14 +154,14 @@ public class CameraPositionModel {
     Arrays.sort(yCamera);
 
     minNormX = (float) xNorm[0];
-    maxNormX = (float) xNorm[points-1];
+    maxNormX = (float) xNorm[points - 1];
     minNormY = (float) yNorm[0];
-    maxNormY = (float) yNorm[points-1];
+    maxNormY = (float) yNorm[points - 1];
 
     minCameraX = (int) Math.round(xCamera[0]);
-    maxCameraX = (int) Math.round(xCamera[points-1]);
+    maxCameraX = (int) Math.round(xCamera[points - 1]);
     minCameraY = (int) Math.round(yCamera[0]);
-    maxCameraY = (int) Math.round(yCamera[points-1]);
+    maxCameraY = (int) Math.round(yCamera[points - 1]);
 
     Logger.info("Norm X {0.00} to {0.00}", minNormX, maxNormX);
     Logger.info("Norm Y {0.00} to {0.00}", minNormY, maxNormY);
