@@ -32,7 +32,7 @@ import org.pmw.tinylog.Logger;
 @Service()
 @Properties({
   @Property(name = "osgi.command.scope", value = "cs"),
-  @Property(name = "osgi.command.function", value = {"on", "off", "move", "home", "zoom"})
+  @Property(name = "osgi.command.function", value = {"on", "off", "move", "home", "zoom", "calibrate"})
 })
 public class ConsoleCommands implements DummyInterface {
 
@@ -92,4 +92,21 @@ public class ConsoleCommands implements DummyInterface {
       }
     }
   }
+
+  public void calibrate(String[] args) {
+
+    boolean steering = steerer.isSteering();
+
+    if (steering)
+      steerer.setSteering(false);
+
+    console(steerer.autoCalibrate()
+      ? "Automatic calibration completed"
+      : "Automatic calibration not possible");
+
+    if (steering)
+      steerer.setSteering(true);
+
+  }
+
 }

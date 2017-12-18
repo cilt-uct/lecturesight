@@ -39,22 +39,22 @@ public class CoordinatesNormalization {
 
   // Range -1 ... 1 for co-ordinates from 0 ... width - 1
   public float normalizeX(int x) {
-    return (x / (float) (width-1)) * 2.0f - 1.0f;
+    return (x / (float) (width - 1)) * 2.0f - 1.0f;
   }
 
   // Range -1 ... 1 for co-ordinates from 0 ... height - 1
   public float normalizeY(int y) {
-    return (y / (float) (height-1)) * -2.0f + 1.0f;
+    return (y / (float) (height - 1)) * -2.0f + 1.0f;
   }
 
   // Range 0 ... width - 1 for co-ordinates from -1 ... 1
   public int denormalizeX(float x) {
-    return (int) ((x + 1) / 2) * (width - 1);
+    return (int) Math.round((x + 1) / 2f * (width - 1));
   }
 
   // Range 0 ... height - 1 for co-ordinates from -1 ... 1
   public int denormalizeY(float y) {
-    return (int) ((-1 * y + 1) / 2) * (height - 1);
+    return (int) Math.round((-1 * y + 1) / 2f * (height - 1));
   }
 
   public NormalizedPosition toNormalized(Position pos) {

@@ -282,6 +282,12 @@ public class CameraSteeringWorkerAbsoluteMove implements CameraSteeringWorker {
   }
 
   @Override
+  public boolean autoCalibrate() {
+    // not supported
+    return false;
+  }
+
+  @Override
   public void setInitialPosition(NormalizedPosition pos) {
     Logger.debug("Set initial normalized position (x,y from -1 to 1): " + pos.getX() + " " + pos.getY());
     setTargetPosition(pos);

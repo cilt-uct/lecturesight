@@ -59,6 +59,10 @@ public class CoordinatesNormalizationTest {
     CoordinatesNormalization normalizer = new CoordinatesNormalization(9, 7);
 
     Assert.assertEquals(
+      new Position(4,3),
+      normalizer.fromNormalized(new NormalizedPosition(0f, 0f)));
+
+    Assert.assertEquals(
       new Position(0,0),
       normalizer.fromNormalized(new NormalizedPosition(-1, 1)));
 

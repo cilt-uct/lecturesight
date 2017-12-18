@@ -314,7 +314,7 @@ public class CameraSteeringWorkerRelativeMove implements CameraSteeringWorker, C
     Logger.info("Deactivated");
   }
 
-  private boolean autoCalibrate() {
+  public boolean autoCalibrate() {
 
     SceneProfile profile = spm.getActiveProfile();
     List<Zone> markerZones = profile.getCalibrationZones();
