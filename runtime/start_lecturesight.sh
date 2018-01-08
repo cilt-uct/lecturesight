@@ -34,13 +34,13 @@ VAPIX=`grep -c ^cv.lecturesight.vapix.camera.host $BASE_DIR/conf/lecturesight.pr
 if [ "$VISCA" == "1" ]; then
         echo VISCA camera
         rm -f $BASE_DIR/bundles/application/lecturesight-vapix-camera*jar
-        rm -f $BASE_DIR/bundles/application/ptzcontrol-dummy-*.jar
+        rm -f $BASE_DIR/bundles/application/lecturesight-ptzcontrol-dummy-*.jar
 fi
 
 if [ "$VAPIX" == "1" ]; then
         echo VAPIX camera
         rm -f $BASE_DIR/bundles/application/visca*jar
-        rm -f $BASE_DIR/bundles/application/ptzcontrol-dummy-*.jar
+        rm -f $BASE_DIR/bundles/application/lecturesight-ptzcontrol-dummy-*.jar
 fi
 
 if [ "$VAPIX$VISCA" == "00" ]; then
