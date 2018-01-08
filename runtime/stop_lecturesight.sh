@@ -7,7 +7,7 @@ java -cp /opt/ls/bin ShutdownOSGI localhost 2501 10
 LS_PID=`ps aux | grep java | awk '/lecturesight/ && !/awk/ {print $2}'`
 if [ -z "$LS_PID" ]; then
   echo "LectureSight already stopped"
-  exit 1
+  exit 0
 fi
 
 sleep 10
