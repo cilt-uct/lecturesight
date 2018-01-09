@@ -207,23 +207,18 @@ public class CameraPositionModelTest {
     // Update model
     Assert.assertTrue(model.update(sceneMarkers, cameraPresets));
 
-    // Check interpolation and inverse (X)
+    // Check interpolation and inverse
     NormalizedPosition nPos = new NormalizedPosition(-0.7f, 0);
     Position cameraPos = model.toCameraCoordinates(nPos);
     NormalizedPosition nPosInv = model.toNormalizedCoordinates(cameraPos);
     Assert.assertEquals(-2842, cameraPos.getX());
-    Assert.assertTrue(Math.abs(nPos.getX() -  nPosInv.getX()) < 0.01);
+    Assert.assertTrue(Math.abs(nPos.getX() -  nPosInv.getX()) < 0.001);
 
     nPos = new NormalizedPosition(0, -0.6f);
     cameraPos = model.toCameraCoordinates(nPos);
     nPosInv = model.toNormalizedCoordinates(cameraPos);
-
     Assert.assertEquals(-1162, cameraPos.getY());
-
-    float invErr = Math.abs(nPos.getY() -  nPosInv.getY());
-    // Logger.info("Inverse error " +  invErr);
-    // Assert.assertTrue(invErr < 0.01);
-
+    Assert.assertTrue(Math.abs(nPos.getY() -  nPosInv.getY()) < 0.001);
   }
 
 }

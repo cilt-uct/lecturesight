@@ -208,7 +208,7 @@ public class CameraPositionModel {
         lastCameraY = yCameraV;
         lastNormY = yNormV;
       } else {
-        Logger.warn("Ignoring Y preset position: not monotonic {} < {} or too closely spaced {0.00} to {0.00}",
+        Logger.debug("Ignoring Y preset position: not monotonic {} < {} or too closely spaced {0.00} to {0.00}",
           yCameraV, lastCameraY, yNormV, lastNormY);
       }
     }
