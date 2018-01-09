@@ -175,13 +175,15 @@ public class CameraControlPanel extends JPanel implements UISlave, MouseListener
 
     // get camera and target position
     NormalizedPosition tposn = camera.getTargetPosition();
-    String targetPosStr = camera.toCameraCoordinates(tposn).toString();
+    String targetPosStr = camera.getTargetCameraPosition().toString();
 
+    // Translate to overview image co-ordinates
     Position tpos = normalizer.fromNormalized(tposn);
 
     NormalizedPosition aposn = camera.getActualPosition();
-    String cameraPosStr = camera.toCameraCoordinates(aposn).toString();
+    String cameraPosStr = camera.getActualCameraPosition().toString();
 
+    // Translate to overview image co-ordinates
     Position apos = normalizer.fromNormalized(aposn);
 
     // draw camera and target position

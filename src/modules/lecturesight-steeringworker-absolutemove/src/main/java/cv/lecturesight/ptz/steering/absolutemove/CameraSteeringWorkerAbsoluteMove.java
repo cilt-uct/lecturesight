@@ -308,8 +308,18 @@ public class CameraSteeringWorkerAbsoluteMove implements CameraSteeringWorker {
   }
 
   @Override
+  public Position getTargetCameraPosition() {
+    return model.getTargetPosition();
+  }
+
+  @Override
   public NormalizedPosition getActualPosition() {
     return model.getCameraPositionNorm();
+  }
+
+  @Override
+  public Position getActualCameraPosition() {
+    return model.getCameraPosition();
   }
 
   @Override
@@ -373,11 +383,6 @@ public class CameraSteeringWorkerAbsoluteMove implements CameraSteeringWorker {
   @Override
   public int getTiltMax() {
     return tilt_max;
-  }
-
-  @Override
-  public Position toCameraCoordinates(NormalizedPosition posn) {
-    return model.toCameraCoordinates(posn);
   }
 
   @Override

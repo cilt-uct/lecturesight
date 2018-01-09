@@ -203,8 +203,6 @@ public class CameraSteeringWorkerRelativeMove implements CameraSteeringWorker, C
           ts = (int) (((float) dy_abs / (float) alpha_y) * maxspeed_tilt);
           if (ts > 1) {
             ts *= damp_tilt;
-          } else if (ts == 0) {
-            dy = 0;
           }
           ts = (ts == 0) ? 1 : ts;
         } else {
@@ -237,6 +235,7 @@ public class CameraSteeringWorkerRelativeMove implements CameraSteeringWorker, C
             if (last_cmd != CameraCmd.STOP) {
               camera.stopMove();
               last_cmd = CameraCmd.STOP;
+              Logger.trace("Camera Stop");
             }
           } else {
 
@@ -258,6 +257,7 @@ public class CameraSteeringWorkerRelativeMove implements CameraSteeringWorker, C
               camera.moveDownLeft(ps, ts);
             }
             last_cmd = CameraCmd.MOVE;
+            Logger.trace("Camera Move");
 
           }
 
@@ -355,7 +355,7 @@ public class CameraSteeringWorkerRelativeMove implements CameraSteeringWorker, C
         cameraPresets.add(p);
 
         // marker is a rectangle, so find the centre point
-        Position marker_pos = new Position(marker.x + marker.width/2, marker.y + marker.y/2);
+        Position marker_pos = new Position(marker.x + marker.width/2, marker.y + marker.height/2);
         NormalizedPosition marker_posN = normalizer.toNormalized(marker_pos);
         sceneMarkers.add(marker_posN);
 
@@ -534,8 +534,18 @@ public class CameraSteeringWorkerRelativeMove implements CameraSteeringWorker, C
   }
 
   @Override
+  public Position getTargetCameraPosition() {
+    return model.getTargetPosition();
+  }
+
+  @Override
   public NormalizedPosition getActualPosition() {
     return model.getCameraPositionNorm();
+  }
+
+  @Override
+  public Position getActualCameraPosition() {
+    return model.getCameraPosition();
   }
 
   @Override
@@ -605,11 +615,6 @@ public class CameraSteeringWorkerRelativeMove implements CameraSteeringWorker, C
   @Override
   public int getTiltMax() {
     return tilt_max;
-  }
-
-  @Override
-  public Position toCameraCoordinates(NormalizedPosition posn) {
-    return model.toCameraCoordinates(posn);
   }
 
   @Override
