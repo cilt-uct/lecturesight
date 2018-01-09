@@ -177,4 +177,53 @@ public class CameraPositionModelTest {
 
   }
 
+  @org.junit.Test
+  public void testAutoCalibrationMonotonic() {
+
+    model.update(-17000, 17000, -9000, 2000);
+
+    NormalizedPosition upperRightN = new NormalizedPosition(0.1f, 0.1f);
+    NormalizedPosition lowerLeftN = new NormalizedPosition(-0.1f, -0.1f);
+
+    List<NormalizedPosition> sceneMarkers = new ArrayList<>();
+    List<Position> cameraPresets = new ArrayList<>();
+
+    // Add markers
+    sceneMarkers.add(new NormalizedPosition(-0.47f, -0.26f));
+    cameraPresets.add(new Position(-2107, -855));
+
+    sceneMarkers.add(new NormalizedPosition(-0.18f,-0.00f));
+    cameraPresets.add(new Position(-967, -621));
+
+    sceneMarkers.add(new NormalizedPosition(0.64f, -0.09f));
+    cameraPresets.add(new Position(2238, -643));
+
+    sceneMarkers.add(new NormalizedPosition(-0.91f, 0.03f));
+    cameraPresets.add(new Position(-3422, -348));
+
+    sceneMarkers.add(new NormalizedPosition(0.90f, 0.06f));
+    cameraPresets.add(new Position(3268, -471));
+
+    // Update model
+    Assert.assertTrue(model.update(sceneMarkers, cameraPresets));
+
+    // Check interpolation and inverse (X)
+    NormalizedPosition nPos = new NormalizedPosition(-0.7f, 0);
+    Position cameraPos = model.toCameraCoordinates(nPos);
+    NormalizedPosition nPosInv = model.toNormalizedCoordinates(cameraPos);
+    Assert.assertEquals(-2842, cameraPos.getX());
+    Assert.assertTrue(Math.abs(nPos.getX() -  nPosInv.getX()) < 0.01);
+
+    nPos = new NormalizedPosition(0, -0.6f);
+    cameraPos = model.toCameraCoordinates(nPos);
+    nPosInv = model.toNormalizedCoordinates(cameraPos);
+
+    Assert.assertEquals(-1162, cameraPos.getY());
+
+    float invErr = Math.abs(nPos.getY() -  nPosInv.getY());
+    // Logger.info("Inverse error " +  invErr);
+    // Assert.assertTrue(invErr < 0.01);
+
+  }
+
 }

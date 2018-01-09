@@ -19,10 +19,13 @@ package cv.lecturesight.util.geometry;
 
 import org.apache.commons.math3.analysis.interpolation.SplineInterpolator;
 import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
+import org.pmw.tinylog.Level;
 import org.pmw.tinylog.Logger;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Convert between normalized co-ordinates and camera pan/tilt co-ordinates
@@ -132,39 +135,108 @@ public class CameraPositionModel {
       return false;
     }
 
+    int minCameraPresetX = Integer.MAX_VALUE;
+    int minCameraPresetY = Integer.MAX_VALUE;
+
     // X Values
+    Map<Double, Integer> xMap = new TreeMap<>();
+
+    // Y values
+    Map<Double, Integer> yMap = new TreeMap<>();
+
+    for (int i = 0; i < points; i++) {
+
+      minCameraPresetX = Math.min(minCameraPresetX, cameraPreset.get(i).getX());
+      minCameraPresetY = Math.min(minCameraPresetY, cameraPreset.get(i).getY());
+
+      xMap.put(new Double(sceneMarker.get(i).getX()), cameraPreset.get(i).getX());
+      yMap.put(new Double(sceneMarker.get(i).getY()), cameraPreset.get(i).getY());
+
+      Logger.debug("Adding calibration point {0.0000},{0.0000} = {},{}",
+        sceneMarker.get(i).getX(), sceneMarker.get(i).getY(), cameraPreset.get(i).getX(), cameraPreset.get(i).getY());
+    }
+
+    // Check X values
+    int lastCameraX = minCameraPresetX - 1;
+    double lastNormX = -2;
+    int xpoints = 0;
+
     double[] xNorm = new double[points];
     double[] xCamera = new double[points];
 
-    // Y values
+    // Check set of X points
+    for (Map.Entry<Double,Integer> entry : xMap.entrySet()) {
+      Double xNormV = entry.getKey();
+      Integer xCameraV = entry.getValue();
+
+      Logger.trace("X point: {0.0000}, {}", xNormV, xCameraV);
+
+      if ((xCameraV > lastCameraX) && (xNormV - lastNormX > 0.1)) {
+        xNorm[xpoints] = xNormV;
+        xCamera[xpoints] = xCameraV;
+        xpoints++;
+        lastCameraX = xCameraV;
+        lastNormX = xNormV;
+      } else {
+        Logger.debug("Ignoring X preset position: not monotonic {} < {} or too closely spaced {0.00} to {0.00}",
+          xCameraV, lastCameraX, xNormV, lastNormX);
+      }
+    }
+
+    Logger.debug("X axis: {} points offered, {} points used", points, xpoints);
+    xNorm = Arrays.copyOf(xNorm, xpoints);
+    xCamera = Arrays.copyOf(xCamera, xpoints);
+
+    // Check set of Y points
+    int lastCameraY = minCameraPresetY - 1;
+    double lastNormY = -2;
+    int ypoints = 0;
+
     double[] yNorm = new double[points];
     double[] yCamera = new double[points];
 
-    for (int i = 0; i < points; i++) {
-      xNorm[i] = sceneMarker.get(i).getX();
-      xCamera[i] = cameraPreset.get(i).getX();
-      yNorm[i] = sceneMarker.get(i).getY();
-      yCamera[i] = cameraPreset.get(i).getY();
-      Logger.debug("Adding calibration point {0.00},{0.00} = {0.00},{0.00}", xNorm[i], yNorm[i], xCamera[i], yCamera[i]);
+    for (Map.Entry<Double,Integer> entry : yMap.entrySet()) {
+      Double yNormV = entry.getKey();
+      Integer yCameraV = entry.getValue();
+
+      Logger.trace("Y point: {0.0000}, {}", yNormV, yCameraV);
+
+      if ((yCameraV > lastCameraY) && (yNormV - lastNormY > 0.1)) {
+        yNorm[ypoints] = yNormV;
+        yCamera[ypoints] = yCameraV;
+        ypoints++;
+        lastCameraY = yCameraV;
+        lastNormY = yNormV;
+      } else {
+        Logger.warn("Ignoring Y preset position: not monotonic {} < {} or too closely spaced {0.00} to {0.00}",
+          yCameraV, lastCameraY, yNormV, lastNormY);
+      }
     }
 
-    Arrays.sort(xNorm);
-    Arrays.sort(xCamera);
-    Arrays.sort(yNorm);
-    Arrays.sort(yCamera);
+    Logger.debug("Y axis: {} points offered, {} points used", points, ypoints);
+    yNorm = Arrays.copyOf(yNorm, ypoints);
+    yCamera = Arrays.copyOf(yCamera, ypoints);
+
+    if ((xpoints < 3) || (ypoints < 3)) {
+      Logger.info("Insufficient usable marker points for calibration: {} usable x points, {} usable y points", xpoints, ypoints);
+      return false;
+    }
 
     minNormX = (float) xNorm[0];
-    maxNormX = (float) xNorm[points - 1];
+    maxNormX = (float) xNorm[xpoints - 1];
     minNormY = (float) yNorm[0];
-    maxNormY = (float) yNorm[points - 1];
+    maxNormY = (float) yNorm[ypoints - 1];
 
     minCameraX = (int) Math.round(xCamera[0]);
-    maxCameraX = (int) Math.round(xCamera[points - 1]);
+    maxCameraX = (int) Math.round(xCamera[xpoints - 1]);
     minCameraY = (int) Math.round(yCamera[0]);
-    maxCameraY = (int) Math.round(yCamera[points - 1]);
+    maxCameraY = (int) Math.round(yCamera[ypoints - 1]);
 
-    Logger.debug("normalized X range {0.00} to {0.00}, normalized Y range {0.00} to {0.00}",
+    Logger.debug("normalized X range {0.0000} to {0.0000}, normalized Y range {0.0000} to {0.0000}",
       minNormX, maxNormX, minNormY, maxNormY);
+
+    Logger.debug("camera X range {} to {}, camera Y range {} to {}",
+      minCameraX, maxCameraX, minCameraY, maxCameraY);
 
     try {
       cameraNormX = new SplineInterpolator().interpolate(xCamera, xNorm);
@@ -205,7 +277,34 @@ public class CameraPositionModel {
     Logger.debug("Updated pan min/max {} to {}, tilt min/max {} to {}",
       pan_min, pan_max, tilt_min, tilt_max);
 
+    if (Logger.getLevel() == Level.TRACE) {
+      logModel();
+    }
+
     return true;
+  }
+
+  /**
+   * Log the model
+   */
+  public void logModel() {
+
+    Logger.trace("X Axis Overview:Camera Mapping, interpolated from {} to {}", minNormX, maxNormX);
+    for (int x = -100; x <= 100; x += 5) {
+      NormalizedPosition nPos = new NormalizedPosition(x / 100f, 0);
+      Position cameraPos = toCameraCoordinates(nPos);
+      NormalizedPosition nPosInv = toNormalizedCoordinates(cameraPos);
+      Logger.trace("xNorm:xCam {0.0000} {} inverse {0.0000}", nPos.getX(), cameraPos.getX(), nPosInv.getX());
+    }
+
+    Logger.trace("Y Axis Overview:Mapping, interpolated from {} to {}", minNormY, maxNormY);
+    for (int y = -100; y <= 100; y += 5) {
+      NormalizedPosition nPos = new NormalizedPosition(0, y / 100f);
+      Position cameraPos = toCameraCoordinates(nPos);
+      NormalizedPosition nPosInv = toNormalizedCoordinates(cameraPos);
+      Logger.trace("yNorm:yCam {0.0000} {} inverse {0.0000}", nPos.getY(), cameraPos.getY(), nPosInv.getY());
+    }
+
   }
 
   /**
