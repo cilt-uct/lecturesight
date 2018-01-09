@@ -238,13 +238,34 @@ public class CameraPositionModel {
     Logger.debug("camera X range {} to {}, camera Y range {} to {}",
       minCameraX, maxCameraX, minCameraY, maxCameraY);
 
+    // Create normalized to camera interpolators
     try {
-      cameraNormX = new SplineInterpolator().interpolate(xCamera, xNorm);
       normCameraX = new SplineInterpolator().interpolate(xNorm, xCamera);
       normCameraY = new SplineInterpolator().interpolate(yNorm, yCamera);
-      cameraNormY = new SplineInterpolator().interpolate(yCamera, yNorm);
     } catch (Exception e) {
       Logger.warn(e, "Cannot create calibration spline function from co-ordinate set");
+      return false;
+    }
+
+    double[] xCameraCalc = new double[200];
+    double[] yCameraCalc = new double[200];
+    double[] xNormRange = new double[200];
+    double[] yNormRange = new double[200];
+
+    // Create inverse functions (camera to normalized)
+    for (int x = -100; x < 100; x++) {
+      xNormRange[x + 100] = x / 100f;
+      yNormRange[x + 100] = x / 100f;
+      Position xyCalc = toCameraCoordinates(new NormalizedPosition(x / 100f, x/100f));
+      xCameraCalc[x + 100] = xyCalc.getX();
+      yCameraCalc[x + 100] = xyCalc.getY();
+    }
+
+    try {
+      cameraNormX = new SplineInterpolator().interpolate(xCameraCalc, xNormRange);
+      cameraNormY = new SplineInterpolator().interpolate(yCameraCalc, yNormRange);
+    } catch (Exception e) {
+      Logger.warn(e, "Cannot create inverse spline function from co-ordinate set");
       return false;
     }
 
