@@ -135,6 +135,8 @@ public class CameraSteeringWorkerRelativeMove implements CameraSteeringWorker, C
 
       Position new_pos = new_pos_camera.flip(xflip, yflip);
 
+      Logger.trace("new_pos_camera: {} xflip: {} yflip: {}", new_pos_camera, xflip, yflip);
+
       // If no target has been set yet, do nothing except record position
       if (!model.isTargetSet()) {
         model.setCameraPosition(new_pos);
@@ -143,7 +145,10 @@ public class CameraSteeringWorkerRelativeMove implements CameraSteeringWorker, C
       }
 
       Position target_pos = model.getTargetPosition();
+
       boolean target_changed = !(target_pos.getX() == last_target.getX() && target_pos.getY() == last_target.getY());
+
+      Logger.trace("Camera position: {} target position: {} target_changed: {}", camera_pos, target_pos, target_changed);
 
       // update camera position model, notify movement listeners
       if (!new_pos.equals(camera_pos)) {
@@ -222,7 +227,8 @@ public class CameraSteeringWorkerRelativeMove implements CameraSteeringWorker, C
         // apply computed speeds if speeds or target have changed
         if (target_changed || ps != last_ps || ts != last_ts || (moving && (ps == 0) && (ts == 0))) {
 
-          Logger.debug("Steering check: moving=" + moving + " target_changed=" + target_changed + " last_ps=" + last_ps + " last_ts=" + last_ts + " ps=" + ps + " ts=" + ts + " dx=" + dx + " dy=" + dy);
+          Logger.debug("Steering check: moving={} target_changed={} last_ps={} last_ts={} ps={} ts={} dx={} dy={}",
+            moving, target_changed, last_ps, last_ts, ps, ts, dx, dy);
 
           bridge.panSpeed.current = ps;
           bridge.tiltSpeed.current = ts;
@@ -345,7 +351,6 @@ public class CameraSteeringWorkerRelativeMove implements CameraSteeringWorker, C
       // Is there a preset for this zone?
       if (presetMap.containsKey(marker.name)) {
 
-        Logger.debug("Using marker '{}' for calibration", marker.name);
         Position p = (Position) presetMap.get(marker.name);
         cameraPresets.add(p);
 
@@ -353,6 +358,9 @@ public class CameraSteeringWorkerRelativeMove implements CameraSteeringWorker, C
         Position marker_pos = new Position(marker.x + marker.width/2, marker.y + marker.y/2);
         NormalizedPosition marker_posN = normalizer.toNormalized(marker_pos);
         sceneMarkers.add(marker_posN);
+
+        Logger.debug("Using marker '{}' for calibration: overview {} camera {},{}",
+          marker.name, marker_posN, p.getX(), p.getY());
       }
     }
 
