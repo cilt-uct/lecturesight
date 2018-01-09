@@ -457,7 +457,7 @@ public class VAPIXCameraImpl implements PTZCamera {
     Logger.debug("Move preset index " + preset_index);
 
     if (presets != null) {
-      if (presets.length <= (preset_index + 1) && (preset_index >= 0)) {
+      if (presets.length >= (preset_index + 1) && (preset_index >= 0)) {
         try {
           String result = this.doCommand("/axis-cgi/com/ptz.cgi?gotoserverpresetno=" + (preset_index + 1));
           Logger.trace("Move preset index[" + preset_index + "] (" + result + ")");
