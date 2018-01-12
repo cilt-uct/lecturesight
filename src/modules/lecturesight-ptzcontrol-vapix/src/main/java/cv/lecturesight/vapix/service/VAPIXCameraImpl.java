@@ -456,21 +456,13 @@ public class VAPIXCameraImpl implements PTZCamera {
 
     Logger.debug("Move preset index " + preset_index);
 
-    if (presets != null) {
-      if (presets.length >= (preset_index + 1) && (preset_index >= 0)) {
-        try {
-          String result = this.doCommand("/axis-cgi/com/ptz.cgi?gotoserverpresetno=" + (preset_index + 1));
-          Logger.trace("Move preset index[" + preset_index + "] (" + result + ")");
-        } catch (IOException e) {
-          Logger.error("movePreset: " + e.getMessage());
-        } finally {
-        }
-      } else {
-        Logger.debug("Preset index not found: " + preset_index);
-      }
-    } else {
-      Logger.debug("No presets configured");
+    try {
+      String result = this.doCommand("/axis-cgi/com/ptz.cgi?gotoserverpresetno=" + (preset_index + 1));
+      Logger.trace("Move preset number {}: {}", preset_index, result);
+    } catch (IOException e) {
+      Logger.error("movePreset: " + e.getMessage());
     }
+
   }
 
   /**
@@ -543,6 +535,7 @@ public class VAPIXCameraImpl implements PTZCamera {
 
     Hashtable<String, String> list = processCommand("/axis-cgi/com/ptz.cgi?query=presetposall");
     String[] result = new String[list.size() - 1];
+    int preset = 0;
     if (list.get("success").equals("1")) {
 
       for (Entry<String, String> entry : list.entrySet()) {
@@ -550,7 +543,7 @@ public class VAPIXCameraImpl implements PTZCamera {
         String value = entry.getValue();
 
         if (key.indexOf("presetposno") >= 0)
-          result[Integer.parseInt(key.replace("presetposno", "")) - 1] = value;
+          result[preset++] = value;
           Logger.trace("Camera preset {}: {}", key, value);
       }
     }
