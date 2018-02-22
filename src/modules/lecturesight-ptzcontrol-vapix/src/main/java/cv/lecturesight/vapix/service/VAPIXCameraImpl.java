@@ -33,6 +33,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * PTZCamera implementation using the Axis VAPIX protocol:
@@ -365,7 +367,7 @@ public class VAPIXCameraImpl implements PTZCamera {
       String[] list = result.split("~");
 
       for (String line : list) {
-        String[] parts = line.split("=");
+        String[] parts = line.split("=", 2);
 
         if (parts.length > 1) {
           processed.put(parts[0], (parts.length >= 2 ? parts[1] : ""));
@@ -1025,20 +1027,46 @@ public class VAPIXCameraImpl implements PTZCamera {
 
     ArrayList<Preset> presetList = new ArrayList<>();
 
-    // Update list of camera presets
-    presets = getPresetNames();
+    Hashtable<String, String> result = processCommand("/axis-cgi/admin/param.cgi?action=list&group=PTZ.Preset.P0.Position");
+    if (!result.get("success").equals("1")) {
+      Logger.warn("Unable to fetch camera preset positions");
+      return presetList;
+    }
 
-    for (String preset : presets) {
-      if (movePreset(preset)) {
-        // wait for the camera to arrive
-        try {
-          Thread.sleep(2500);
-          Position pos = getPosition();
-          Preset p = new Preset(preset, pos.getX(), pos.getY(), zoom);
-          Logger.debug("Camera has preset {}", p);
-          presetList.add(p);
-        } catch (InterruptedException e) {
-          //
+    /*
+     * Results are pairs of .Data and .Name like this:
+     *   root.PTZ.Preset.P0.Position.P1.Data=tilt=24.628906:focus=32766.000000:pan=-1.425781:iris=32766.000000:zoom=154.000000
+     *   root.PTZ.Preset.P0.Position.P1.Name=Home
+     * But if the camera is inverted, then we have to swap the sign of the pan and tilt values.
+     */
+
+    String presetPatternRe = "root\\.PTZ\\.Preset\\.P0\\.Position\\.(P[0-9]+)\\.Name";
+    String dataPatternRe = "tilt=([0-9.-]+):focus=([0-9.]+):pan=([0-9.-]+):iris=([0-9.-]+):zoom=([0-9.-]+)$";
+
+    Pattern presetPattern = Pattern.compile(presetPatternRe);
+    Pattern dataPattern = Pattern.compile(dataPatternRe);
+
+    for (String presetInfo : result.keySet()) {
+      if (presetInfo.endsWith(".Name")) {
+        String presetName = result.get(presetInfo);
+        Matcher matcher = presetPattern.matcher(presetInfo);
+        if (matcher.matches()) {
+          String presetNumber = matcher.group(1);
+          String dataPrefix = "root.PTZ.Preset.P0.Position." + presetNumber+ ".Data";
+          String dataLine = result.get(dataPrefix);
+          Matcher dataMatcher = dataPattern.matcher(dataLine);
+          if (dataMatcher.matches()) {
+            int x = Math.round(this.map(Float.parseFloat(dataMatcher.group(3)), range_pan.min, scale_pan_rev, lim_pan.min)) * (inverted ? -1 : 1);
+            int y = Math.round(this.map(Float.valueOf(dataMatcher.group(1)), range_tilt.min, scale_tilt_rev, lim_tilt.min)) * (inverted ? -1 : 1);
+            int z = Math.round(this.map(Float.valueOf(dataMatcher.group(5)), range_zoom.min, scale_zoom_rev, lim_zoom.min));
+            Preset p = new Preset(presetName, x, y, z);
+            Logger.debug("Camera has preset {}", p);
+            presetList.add(p);
+          } else {
+            Logger.warn("Unexpected format for preset data string: {}", dataLine);
+          }
+        } else {
+          Logger.warn("Unexpected format for preset response key: {}", presetInfo);
         }
       }
     }
