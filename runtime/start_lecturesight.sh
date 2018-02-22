@@ -69,9 +69,33 @@ export GST_DEBUG_NO_COLOR=1
 export GST_DEBUG_DUMP_DOT_DIR=$BASE_DIR/log
 
 # Clear logs and metrics
-rm -f $BASE_DIR/log/*log
+rm -f $BASE_DIR/log/ls.log
+rm -f $BASE_DIR/log/gstreamer.log
 rm -f $BASE_DIR/metrics/*csv
 rm -f $BASE_DIR/metrics/*json
 
 # start LectureSight
-java -Dlecturesight.basedir=$BASE_DIR $CONFIG_OPTS $LOG_OPTS $OPENCL_OPTS $DEBUG_OPTS -jar $BASE_DIR/bin/felix.jar -b $BASE_DIR/bundles/system $FELIX_CACHE
+ERROR_LOG=/opt/ls/log/ls-run.log
+
+while true
+do
+        /usr/bin/logger "LectureSight start"
+        TIMESTAMP=`date +"%Y-%m-%d %H:%M:%S"`
+        echo "$TIMESTAMP ###### LectureSight start" >> $ERROR_LOG
+
+        java -Dlecturesight.basedir=$BASE_DIR $CONFIG_OPTS $LOG_OPTS $OPENCL_OPTS $DEBUG_OPTS -jar $BASE_DIR/bin/felix.jar -b $BASE_DIR/bundles/system $FELIX_CACHE
+
+        if [ $? != 0 ]; then
+                echo "Abnormal exit: restarting LectureSight in 30s"
+                /usr/bin/logger "LectureSight abnormal exit"
+                TIMESTAMP=`date +"%Y-%m-%d %H:%M:%S"`
+                echo "$TIMESTAMP ###### LectureSight abnormal exit" >> $ERROR_LOG
+                sleep 30
+        else
+                echo "Normal exit"
+                /usr/bin/logger "LectureSight normal exit"
+                TIMESTAMP=`date +"%Y-%m-%d %H:%M:%S"`
+                echo "$TIMESTAMP ###### LectureSight normal exit" >> $ERROR_LOG
+                break
+        fi
+done
