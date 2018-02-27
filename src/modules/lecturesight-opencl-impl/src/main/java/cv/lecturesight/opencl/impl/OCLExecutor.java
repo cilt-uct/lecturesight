@@ -121,7 +121,7 @@ public class OCLExecutor extends Thread {
         if (msg != null) {
           warn += ": " + msg;
         }
-        Logger.warn(warn);
+        Logger.error(e, warn);
       }
       try {
         if (landing) {
@@ -133,7 +133,7 @@ public class OCLExecutor extends Thread {
         if (msg != null) {
           warn += ": " + msg;
         }
-        Logger.error(warn, e);
+        Logger.error(e, warn);
       }
     }
   }
