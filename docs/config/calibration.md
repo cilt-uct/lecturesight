@@ -97,13 +97,17 @@ has been used, and if successful, the values of the calculated pan and tilt thre
 Automatic calibration, camera pan/tilt limits: pan -3673 to 3649, tilt -2596 to 2348
 ```
 
-Once automatic calibration has run, changes to the configured scene limits will have no effect, as the calculated values will be used.
+Once automatic calibration has successfully run, changes to the configured scene limits will have no effect,
+as the calculated values will be used.
 
 If no calibration markers have been created or there are too few matching markers and presets, the log will include:
 
 ```
 Automatic calibration not possible
 ```
+
+This can be caused by markers that are too close together in the x or y axes. Try to adjust the marker positions
+so they are distributed across the field of view, both horizontally and vertically.
 
 ## Initial position
 

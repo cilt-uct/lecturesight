@@ -100,9 +100,13 @@ public class ConsoleCommands implements DummyInterface {
     if (steering)
       steerer.setSteering(false);
 
-    console(steerer.autoCalibrate()
-      ? "Automatic calibration completed"
-      : "Automatic calibration not possible");
+    if (steerer.autoCalibrate()) {
+      console("Automatic calibration, camera pan/tilt limits: pan "
+              + steerer.getPanMin() + " to " + steerer.getPanMax()
+              + ", tilt " + steerer.getTiltMin() + " to " + steerer.getTiltMax());
+    } else {
+      console("Automatic calibration not possible");
+    }
 
     if (steering)
       steerer.setSteering(true);
