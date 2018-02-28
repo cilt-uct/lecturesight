@@ -77,7 +77,7 @@
     <profile>
       <id>demonstration</id>
       <activation>
-        <activeByDefault>true</activeByDefault>
+        <activeByDefault>false</activeByDefault>
       </activation>
       <modules>
         <module>modules/lecturesight-cameraoperator-api</module>
@@ -132,8 +132,11 @@
         <module>modules/lecturesight-display-api</module>
         <module>modules/lecturesight-display-impl</module>
         <module>modules/lecturesight-framesource-api</module>
+        <module>modules/lecturesight-framesource-gst</module>
         <module>modules/lecturesight-framesource-impl</module>
         <module>modules/lecturesight-framesource-v4l</module>
+        <module>modules/lecturesight-framesource-rtph264</module> 
+        <module>modules/lecturesight-framesource-videofile</module>
         <module>modules/lecturesight-gui-api</module>
         <module>modules/lecturesight-gui-impl</module>
         <module>modules/lecturesight-heartbeat</module>
@@ -144,7 +147,9 @@
         <module>modules/lecturesight-profile-manager</module>
         <module>modules/lecturesight-profile-ui</module>
         <module>modules/lecturesight-ptzcontrol-api</module>
+        <module>modules/lecturesight-ptzcontrol-dummy</module>
         <module>modules/lecturesight-ptzcontrol-vapix</module>
+        <module>modules/lecturesight-scheduler</module>
         <module>modules/lecturesight-scripting-api</module>
         <module>modules/lecturesight-script-utils</module>
         <module>modules/lecturesight-scripting-stub</module>
