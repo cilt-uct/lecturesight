@@ -49,18 +49,6 @@ if [ "$VAPIX$VISCA" == "00" ]; then
         rm -f $BASE_DIR/bundles/application/lecturesight-vapix-camera*jar
 fi
 
-# Check serial link type and set up socat if required
-RTP=`grep "^cv.lecturesight.framesource.input.mrl=rtph264://" $BASE_DIR/conf/lecturesight.properties`
-
-# Match RPi hostname without the port
-if [[ "$RTP" =~ rtph264://([a-z0-9.-]+) ]]; then
-        RPI=${BASH_REMATCH[1]}
-        echo RPi overview camera: $RPI
-        # Serial link
-        killall --quiet socat
-        /usr/bin/socat pty,link=/dev/ttyUSB0,waitslave tcp:$RPI:2000 &
-fi
-
 # gstreamer debug logging
 # https://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gst-running.html
 export GST_DEBUG=3
@@ -74,16 +62,22 @@ rm -f $BASE_DIR/log/gstreamer.log
 rm -f $BASE_DIR/metrics/*csv
 rm -f $BASE_DIR/metrics/*json
 
+# Log OpenCL errors
+export CL_LOG_ERRORS=stdout
+
 # start LectureSight
 ERROR_LOG=/opt/ls/log/ls-run.log
+LSOUT_LOG=/opt/ls/log/ls-stdout.log
 
 while true
 do
         /usr/bin/logger "LectureSight start"
         TIMESTAMP=`date +"%Y-%m-%d %H:%M:%S"`
         echo "$TIMESTAMP ###### LectureSight start" >> $ERROR_LOG
+        echo "$TIMESTAMP ###### LectureSight start" >> $LSOUT_LOG
+        echo "$TIMESTAMP ###### LectureSight start"
 
-        java -Dlecturesight.basedir=$BASE_DIR $CONFIG_OPTS $LOG_OPTS $OPENCL_OPTS $DEBUG_OPTS -jar $BASE_DIR/bin/felix.jar -b $BASE_DIR/bundles/system $FELIX_CACHE
+        java -Dlecturesight.basedir=$BASE_DIR $CONFIG_OPTS $LOG_OPTS $OPENCL_OPTS $DEBUG_OPTS -jar $BASE_DIR/bin/felix.jar -b $BASE_DIR/bundles/system $FELIX_CACHE >> $LSOUT_LOG 2>&1
 
         if [ $? != 0 ]; then
                 echo "Abnormal exit: restarting LectureSight in 30s"
