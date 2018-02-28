@@ -184,6 +184,10 @@ public class VideoAnalysisTemplateMatching implements ObjectTracker, Configurati
 
     @Override
     public void land() {
+      // Ignore when shutting down
+      if (ocl == null)
+        return;
+
       ocl.castSignal(sig_IMAGEPROC);
     }
   }
@@ -226,6 +230,11 @@ public class VideoAnalysisTemplateMatching implements ObjectTracker, Configurati
 
     @Override
     public void land() {
+
+      // Ignore when shutting down
+      if ((ocl == null) || (cclabel == null))
+        return;
+
       numRegions = cclabel.getNumBlobs();
 
       if (numRegions > 0) {
@@ -331,6 +340,11 @@ public class VideoAnalysisTemplateMatching implements ObjectTracker, Configurati
 
     @Override
     public void land() {
+
+      // Ignore when shutting down
+      if (ocl == null)
+        return;
+
       // update targets that were matched
       if (numTemplMatches > 0) {
         int [] results = new int[numTemplMatches * 4];
