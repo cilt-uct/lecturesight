@@ -27,7 +27,9 @@ import cv.lecturesight.util.conf.Configuration;
 import cv.lecturesight.util.conf.ConfigurationListener;
 import cv.lecturesight.util.metrics.MetricsService;
 
+import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
+import org.apache.felix.scr.annotations.Deactivate;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 import org.apache.http.HttpEntity;
@@ -96,6 +98,7 @@ public class StatusServiceImpl implements StatusService, ConfigurationListener {
   private ScheduledExecutorService executor = null;
   private final StatusExecutor statusExecutor = new StatusExecutor();
 
+  @Activate
   protected void activate(ComponentContext cc) {
 
     setConfiguration();
@@ -105,6 +108,7 @@ public class StatusServiceImpl implements StatusService, ConfigurationListener {
     Logger.debug("Activated");
   }
 
+  @Deactivate
   protected void deactivate(ComponentContext cc) {
     stopReporting();
     shutdown = true;
