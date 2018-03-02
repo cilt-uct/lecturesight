@@ -110,10 +110,13 @@ cv.lecturesight.ptz.steering.worker.relativemove.scene.limit.bottom=-5000
 # Configuration of pan-only (simple) Camera Operator
 #
 
-# Initial camera position for tracking
-cv.lecturesight.cameraoperator.panonly.pan=0.0
-cv.lecturesight.cameraoperator.panonly.tilt=-0.5
-cv.lecturesight.cameraoperator.panonly.zoom=0.6
+# Initial camera position for tracking: camera preset (preferred)
+cv.lecturesight.cameraoperator.panonly.start.preset=Start
+
+# Initial camera position for tracking: overview co-ordinates
+#cv.lecturesight.cameraoperator.panonly.pan=0.0
+#cv.lecturesight.cameraoperator.panonly.tilt=-0.5
+#cv.lecturesight.cameraoperator.panonly.zoom=0.6
 
 # Frame width (minimize panning movement when the target is inside the frame)
 cv.lecturesight.cameraoperator.panonly.frame.width=0.4
@@ -122,7 +125,7 @@ cv.lecturesight.cameraoperator.panonly.frame.width=0.4
 cv.lecturesight.cameraoperator.panonly.timeout=500
 
 # Reset the camera to this preset position when not tracking (because of scheduler)
-cv.lecturesight.cameraoperator.panonly.idle.preset=0
+cv.lecturesight.cameraoperator.panonly.idle.preset=Home
 
 # Do not acquire a new target if there are more than this number of targets being tracked
 cv.lecturesight.cameraoperator.panonly.target.limit=2
