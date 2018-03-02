@@ -518,7 +518,6 @@ public class CameraSteeringWorkerRelativeMove implements CameraSteeringWorker, C
     setSteering(false);
 
     model.setTargetPositionNorm(pos);
-    Position target_pos = model.getTargetPosition();
 
     camera.movePreset(presetName);
 

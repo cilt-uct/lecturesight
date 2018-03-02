@@ -177,7 +177,7 @@ public class SimpleCameraOperator implements CameraOperator, ConfigurationListen
    */
   private void setInitialTrackingPosition() {
 
-    if (start_preset != null && !start_preset.isEmpty() && steerer.movePreset(start_preset)) {
+    if (start_preset != null && !start_preset.isEmpty()) {
       Logger.debug("Set initial tracking position: preset {}", start_preset);
       steerer.setInitialPosition(start_preset);
     } else {
