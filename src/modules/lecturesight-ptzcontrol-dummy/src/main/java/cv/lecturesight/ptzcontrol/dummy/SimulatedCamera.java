@@ -167,8 +167,9 @@ public class SimulatedCamera implements PTZCamera {
   }
 
   @Override
-  public void movePreset(int preset) {
-    moveHome();       // the only preset in this camera is the home position
+  public boolean movePreset(String presetName) {
+    // the only preset in this camera is the home position
+    return true;
   }
 
   @Override
