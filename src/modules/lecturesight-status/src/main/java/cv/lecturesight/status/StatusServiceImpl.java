@@ -30,6 +30,8 @@ import cv.lecturesight.util.metrics.MetricsService;
 import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Deactivate;
+import org.apache.felix.scr.annotations.Properties;
+import org.apache.felix.scr.annotations.Property;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 import org.apache.http.HttpEntity;
@@ -51,6 +53,11 @@ import java.util.concurrent.TimeUnit;
 
 @Component(name = "lecturesight.status", immediate = true)
 @Service
+
+@Properties({
+  @Property(name = "osgi.command.scope", value = "status"),
+  @Property(name = "osgi.command.function", value = {"show"})
+})
 
 public class StatusServiceImpl implements StatusService, ConfigurationListener {
 
@@ -122,6 +129,18 @@ public class StatusServiceImpl implements StatusService, ConfigurationListener {
       stopReporting();
       startReporting();
     }
+  }
+
+  // Console command
+  public void show(String[] args) {
+    console(enable ? "Status reporting enabled" : "Status reporting disabled");
+  }
+
+  private void console(String s) {
+    //CHECKSTYLE:OFF
+    System.out.println(s);
+    //CHECKSTYLE:ON
+    return;
   }
 
   private void setConfiguration() {
