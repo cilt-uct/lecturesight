@@ -65,6 +65,7 @@ public class OCLExecutor extends Thread {
         }
       }
     } catch (InterruptedException e) {
+      Logger.debug("Interrupted");
       callbackExecutor.shutdownNow();   // TODO is it right to terminate execution this way?
     }
   }
