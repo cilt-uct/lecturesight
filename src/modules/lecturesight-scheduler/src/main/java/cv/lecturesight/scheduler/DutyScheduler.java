@@ -285,7 +285,8 @@ public class DutyScheduler implements ArtifactInstaller, DummyInterface {
         // overview images will continue to be processed and displayed at 1fps (execution interval),
         // without any analysis or camera movement taking place.
         if (!eventActivity && !heart.isRunning()) {
-          heart.step(1);
+          // TODO This appears to cause issues with NVIDIA cards
+          // heart.step(1);
         }
       }
     }
