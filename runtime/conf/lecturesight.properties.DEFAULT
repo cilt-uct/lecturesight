@@ -8,17 +8,6 @@
 #cv.lecturesight.heartbeat.autostart=-1
 
 #
-# VISCA Configuration __________________________________________________________
-#
-com.wulff.lecturesight.visca.port.device=/dev/ttyUSB0
-
-# Camera position update request interval
-com.wulff.lecturesight.visca.updater.interval=200
-
-# To report the camera focus position, enable this setting and adjust the update interval to 500ms
-#com.wulff.lecturesight.visca.updater.poll.focus=true
-
-#
 # VAPIX Configuration (Axis cameras)
 #
 #cv.lecturesight.vapix.camera.host=venue-cam01.uct.ac.za
@@ -86,49 +75,37 @@ cv.lecturesight.videoanalysis.object.dormant.max=1500
 # The 'stop' values control the size of the area around the target in which 
 # the camera movement stops.
 cv.lecturesight.ptz.steering.worker.relativemove.move.damp.pan=0.4
-cv.lecturesight.ptz.steering.worker.relativemove.move.damp.tilt=0.2
+cv.lecturesight.ptz.steering.worker.relativemove.move.damp.tilt=0.4
 cv.lecturesight.ptz.steering.worker.relativemove.move.alpha.x=2000
 cv.lecturesight.ptz.steering.worker.relativemove.move.alpha.y=2000
 cv.lecturesight.ptz.steering.worker.relativemove.move.stop.x=200
 cv.lecturesight.ptz.steering.worker.relativemove.move.stop.y=200
 
-# The scene limits must be set to the pan and tilt values that correspond to the
-# limits of the image of the overview camera. Setting this correctly is vital 
-# for a proper calibration of the system!
-# If these properties are not configured, the limits of the camera coordinate
-# system are regarded as the scene limits.
+# Scene Limits - only used when automatic calibration is not possible
 cv.lecturesight.ptz.steering.worker.relativemove.scene.limit.left=-4650
 cv.lecturesight.ptz.steering.worker.relativemove.scene.limit.right=3000
 cv.lecturesight.ptz.steering.worker.relativemove.scene.limit.top=-600
 cv.lecturesight.ptz.steering.worker.relativemove.scene.limit.bottom=-5000
 
-# Disable auto-focus when tracking
-#cv.lecturesight.ptz.steering.worker.relativemove.focus.fixed=true
-#cv.lecturesight.ptz.steering.worker.relativemove.move.initial.delay=5000
-
 #
-# Configuration of pan-only (simple) Camera Operator
+# Configuration of PTZ Camera Operator (pan/tilt)
 #
 
 # Initial camera position for tracking: camera preset (preferred)
-cv.lecturesight.cameraoperator.panonly.start.preset=Start
-
-# Initial camera position for tracking: overview co-ordinates
-#cv.lecturesight.cameraoperator.panonly.pan=0.0
-#cv.lecturesight.cameraoperator.panonly.tilt=-0.5
-#cv.lecturesight.cameraoperator.panonly.zoom=0.6
-
-# Frame width (minimize panning movement when the target is inside the frame)
-cv.lecturesight.cameraoperator.panonly.frame.width=0.4
-
-# Time to continue tracking objects after they were last seen (milliseconds)
-cv.lecturesight.cameraoperator.panonly.timeout=500
+cv.lecturesight.cameraoperator.ptz.start.preset=Start
 
 # Reset the camera to this preset position when not tracking (because of scheduler)
-cv.lecturesight.cameraoperator.panonly.idle.preset=Home
+cv.lecturesight.cameraoperator.ptz.idle.preset=Home
 
-# Do not acquire a new target if there are more than this number of targets being tracked
-cv.lecturesight.cameraoperator.panonly.target.limit=2
+# Disable tilting (pan-only)
+cv.lecturesight.cameraoperator.ptz.tilt.lock=true
+
+# Frame width (minimize panning movement when the target is inside the frame)
+cv.lecturesight.cameraoperator.ptz.frame.width=0.4
+
+#
+# Other
+#
 
 # Profile manager - set profile for masking regions
 cv.lecturesight.profile.manager.active.profile=overview
