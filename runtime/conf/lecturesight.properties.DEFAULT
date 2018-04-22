@@ -13,17 +13,6 @@
 #cv.lecturesight.vapix.camera.host=venue-cam01.uct.ac.za
 cv.lecturesight.vapix.camera.username=root
 cv.lecturesight.vapix.camera.password=root
-cv.lecturesight.vapix.camera.pan.min=-17000
-cv.lecturesight.vapix.camera.pan.max=17000
-cv.lecturesight.vapix.camera.tilt.min=-2000
-cv.lecturesight.vapix.camera.tilt.max=9000
-cv.lecturesight.vapix.camera.zoom.min=1
-cv.lecturesight.vapix.camera.zoom.max=9999
-cv.lecturesight.vapix.camera.zoom.maxspeed=1
-cv.lecturesight.vapix.updater.interval=100
-
-# Set this property to true if the camera is inverted
-#cv.lecturesight.vapix.camera.inverted=true
 
 #
 # Video Input __________________________________________________________________
