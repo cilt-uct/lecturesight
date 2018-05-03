@@ -90,6 +90,14 @@ do
                 /usr/bin/logger "LectureSight normal exit"
                 TIMESTAMP=`date +"%Y-%m-%d %H:%M:%S"`
                 echo "$TIMESTAMP ###### LectureSight normal exit" >> $ERROR_LOG
-                break
+
+		LATESTLOG=`ls -t $BASE_DIR/log/ls.*.log | head -1`
+		ERRORS=`grep ERROR $LATESTLOG | grep -c Heartbeat`
+		if [ $ERRORS == "0" ]; then
+			break
+		else
+			echo "$TIMESTAMP Errors reported in log $LATESTLOG: restarting"  >> $ERROR_LOG
+			sleep 30
+		fi
         fi
 done
