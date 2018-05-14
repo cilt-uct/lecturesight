@@ -282,8 +282,23 @@ public class SimulatedCamera implements PTZCamera {
       clampPosition(target);
       target_pos.setX(target.getX());
       target_pos.setY(target.getY());
-      speedPan = panSpeed;
-      speedTilt = tiltSpeed;
+
+      // adjust speeds to move the camera directly towards the target
+      int dx = Math.abs(current_pos.getX() - target.getX());
+      int dy = Math.abs(current_pos.getY() - target.getY());
+      double theta = (dx == 0) ? 1.5708 : Math.atan(dy/(float)dx);
+
+      // just use panSpeed as the speed towards the target
+      speedPan = (int)(panSpeed * Math.cos(theta));
+      speedTilt = (int)(panSpeed * Math.sin(theta));
+
+      if (dx > 0 && speedPan == 0) {
+        speedPan = 1;
+      }
+      if (dy > 0 && speedTilt == 0) {
+        speedTilt = 1;
+      }
+
     }
   }
 
@@ -307,8 +322,8 @@ public class SimulatedCamera implements PTZCamera {
     if (x < PAN_MIN) in.setX(PAN_MIN);
     if (x > PAN_MAX) in.setX(PAN_MAX);
     int y = in.getY();
-    if (y < TILT_MIN) in.setX(TILT_MIN);
-    if (x < TILT_MAX) in.setX(TILT_MAX);
+    if (y < TILT_MIN) in.setY(TILT_MIN);
+    if (y > TILT_MAX) in.setY(TILT_MAX);
   }
 
   @Override
