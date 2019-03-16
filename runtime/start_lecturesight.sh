@@ -1,5 +1,19 @@
 #! /bin/bash
 
+UPTIME=`cat /proc/uptime | awk '{print int($1)}'`
+
+if [ "$UPTIME" -lt "90" ]; then
+	sleep 15
+fi
+
+wget -q --spider http://media.uct.ac.za
+if [ "$?" != 0 ]; then
+        echo Waiting for network to come up
+        sleep 300
+fi
+
+UPTIME=`cat /proc/uptime | awk '{print int($1)}'`
+
 # set correct base dir for production and daemon operation
 BASE_DIR="/opt/ls"
 cd $BASE_DIR
@@ -71,10 +85,10 @@ LSOUT_LOG=/opt/ls/log/ls-stdout.log
 
 while true
 do
-        /usr/bin/logger "LectureSight start"
+        /usr/bin/logger "LectureSight start (uptime $UPTIME)"
         TIMESTAMP=`date +"%Y-%m-%d %H:%M:%S"`
-        echo "$TIMESTAMP ###### LectureSight start" >> $ERROR_LOG
-        echo "$TIMESTAMP ###### LectureSight start" >> $LSOUT_LOG
+        echo "$TIMESTAMP ###### LectureSight start (uptime $UPTIME)" >> $ERROR_LOG
+        echo "$TIMESTAMP ###### LectureSight start (uptime $UPTIME)" >> $LSOUT_LOG
         echo "$TIMESTAMP ###### LectureSight start"
 
         java -Dlecturesight.basedir=$BASE_DIR $CONFIG_OPTS $LOG_OPTS $OPENCL_OPTS $DEBUG_OPTS -jar $BASE_DIR/bin/felix.jar -b $BASE_DIR/bundles/system $FELIX_CACHE >> $LSOUT_LOG 2>&1
