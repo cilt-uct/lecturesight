@@ -24,6 +24,7 @@ import org.freedesktop.gstreamer.Buffer;
 import org.freedesktop.gstreamer.Caps;
 import org.freedesktop.gstreamer.Element;
 import org.freedesktop.gstreamer.ElementFactory;
+import org.freedesktop.gstreamer.Gst;
 import org.freedesktop.gstreamer.Pipeline;
 import org.freedesktop.gstreamer.Sample;
 import org.freedesktop.gstreamer.State;
@@ -63,8 +64,16 @@ public class GStreamerFrameGrabber implements FrameGrabber {
 
     Logger.debug("Creating gstreamer pipeline: " + pipelineDef);
 
+    Pipeline pipe = null;
+
     // instantiate user provided pipeline segment
-    Pipeline pipe = Pipeline.launch(pipelineDef);
+    Element element = Gst.parseLaunch(pipelineDef);
+    if (element instanceof Pipeline) {
+      pipe = (Pipeline) element;
+    } else {
+      Logger.error("Did not get back pipeline from definition: {}", pipelineDef);
+      throw new IllegalStateException("Could not create pipeline");
+    }
 
     // find most downstream element in user pipeline
     Element last = pipe.getElementsSorted().get(0);

@@ -28,7 +28,7 @@ import org.freedesktop.gstreamer.ElementFactory;
 import org.freedesktop.gstreamer.GstObject;
 import org.freedesktop.gstreamer.Pad;
 import org.freedesktop.gstreamer.PadDirection;
-import org.freedesktop.gstreamer.PadLinkReturn;
+import org.freedesktop.gstreamer.PadLinkException;
 import org.freedesktop.gstreamer.Pipeline;
 import org.freedesktop.gstreamer.Sample;
 import org.freedesktop.gstreamer.State;
@@ -145,11 +145,11 @@ public class VideoFilePipeline implements FrameGrabber {
       public void padAdded(Element element, Pad pad) {
         Pad peerPad = videoconvert.getStaticPad("sink");
         if (pad.getDirection() == PadDirection.SRC) {
-          PadLinkReturn result = pad.link(peerPad);
-          if ((result != PadLinkReturn.OK) && (result != PadLinkReturn.WAS_LINKED)) {
-            Logger.error("Can't link decodebin to videoconvert");
-          } else {
+          try {
+            pad.link(peerPad);
             elementsLinked = true;
+          } catch (PadLinkException e) {
+            Logger.error("Can't link decodebin to videoconvert");
           }
         }
       }

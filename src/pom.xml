@@ -452,9 +452,9 @@
       <dependency>
         <groupId>org.freedesktop.gstreamer</groupId>
         <artifactId>gst1-java-core</artifactId>
-        <version>0.9.1</version>
+        <version>0.9.4</version>
       </dependency>
-     
+
       <!-- testing -->
       <dependency>
         <groupId>junit</groupId>
