@@ -3,13 +3,7 @@
 UPTIME=`cat /proc/uptime | awk '{print int($1)}'`
 
 if [ "$UPTIME" -lt "90" ]; then
-	sleep 15
-fi
-
-wget -q --spider http://media.uct.ac.za
-if [ "$?" != 0 ]; then
-        echo Waiting for network to come up
-        sleep 300
+	sleep 60
 fi
 
 UPTIME=`cat /proc/uptime | awk '{print int($1)}'`
@@ -42,23 +36,18 @@ fi
 rm -rf $FELIX_CACHE/*
 
 # Check camera config and remove bundles for other camera types
-VISCA=`grep -c ^com.wulff.lecturesight.visca.port.device $BASE_DIR/conf/lecturesight.properties`
 VAPIX=`grep -c ^cv.lecturesight.vapix.camera.host $BASE_DIR/conf/lecturesight.properties`
-
-if [ "$VISCA" == "1" ]; then
-        echo VISCA camera
-        rm -f $BASE_DIR/bundles/application/lecturesight-vapix-camera*jar
-        rm -f $BASE_DIR/bundles/application/lecturesight-ptzcontrol-dummy-*.jar
-fi
+PTZ_HOST=`grep ^cv.lecturesight.vapix.camera.host $BASE_DIR/conf/lecturesight.properties | awk -F = '{print $2}'`
 
 if [ "$VAPIX" == "1" ]; then
-        echo VAPIX camera
+        echo VAPIX camera: $PTZ_HOST
         rm -f $BASE_DIR/bundles/application/visca*jar
         rm -f $BASE_DIR/bundles/application/lecturesight-ptzcontrol-dummy-*.jar
 fi
 
-if [ "$VAPIX$VISCA" == "00" ]; then
+if [ "$VAPIX$" == "0" ]; then
 	echo No camera configured - using PTZ Dummy
+	PTZ_HOST=localhost
         rm -f $BASE_DIR/bundles/application/visca*jar
         rm -f $BASE_DIR/bundles/application/lecturesight-vapix-camera*jar
 fi
@@ -82,6 +71,14 @@ export CL_LOG_ERRORS=stdout
 # start LectureSight
 ERROR_LOG=/opt/ls/log/ls-run.log
 LSOUT_LOG=/opt/ls/log/ls-stdout.log
+
+# Wait for PTZ camera to be up
+TIMESTAMP=`date +"%Y-%m-%d %H:%M:%S"`
+echo "$TIMESTAMP Check:  $PTZ_HOST" >> $LSOUT_LOG
+until ping -c1 $PTZ_HOST &>/dev/null; do sleep 5; done
+
+TIMESTAMP=`date +"%Y-%m-%d %H:%M:%S"`
+echo "$TIMESTAMP Online: $PTZ_HOST" >> $LSOUT_LOG
 
 while true
 do
