@@ -42,10 +42,12 @@
               com.ochafik.lang.*,
               com.ochafik.net,
               com.ochafik.io,
-              com.sun.jna.*,
               cv.lecturesight.opencl.*;
               version=${project.version}
             </Export-Package>
+            <Private-Package>
+              com.sun.jna.*,
+            </Private-Package>
           </instructions>
         </configuration>
       </plugin>
