@@ -72,6 +72,7 @@
             <Bundle-Activator>cv.lecturesight.framesource.videofile.Activator</Bundle-Activator>
             <Export-Package>cv.lecturesight.framesource.videofile;version=${project.version}</Export-Package>
             <Import-Package>
+              cv.lecturesight.framesource,
               *;resolution:=optional
             </Import-Package>
             <Embed-Dependency>

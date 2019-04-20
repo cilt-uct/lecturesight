@@ -70,6 +70,9 @@
         <extensions>true</extensions>
         <configuration>
           <instructions>
+            <Import-Package>
+              cv.lecturesight.framesource
+            </Import-Package>
             <Bundle-SymbolicName>cv.lecturesight.framesource.v4l</Bundle-SymbolicName>
             <Private-Package>
               au.edu.jcu.v4l4j,
