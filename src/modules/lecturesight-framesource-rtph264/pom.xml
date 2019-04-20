@@ -68,6 +68,7 @@
             <Export-Package>cv.lecturesight.framesource.rtph264;version=${project.version}</Export-Package>
             <Import-Package>
               cv.lecturesight.framesource,
+              org.freedesktop.gstreamer.lowlevel,
               *;resolution:=optional
             </Import-Package>
             <Embed-Dependency>

@@ -87,6 +87,7 @@
           <instructions>
             <Bundle-SymbolicName>cv.lecturesight.framesource</Bundle-SymbolicName>
             <Export-Package>cv.lecturesight.framesource.impl;version=${project.version}</Export-Package>
+            <Import-Package>org.pmw.tinylog</Import-Package>
           </instructions>
         </configuration>
       </plugin>

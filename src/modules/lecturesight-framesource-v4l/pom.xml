@@ -71,7 +71,9 @@
         <configuration>
           <instructions>
             <Import-Package>
-              cv.lecturesight.framesource
+              cv.lecturesight.framesource,
+              cv.lecturesight.util.conf,
+              org.osgi.service.component,
             </Import-Package>
             <Bundle-SymbolicName>cv.lecturesight.framesource.v4l</Bundle-SymbolicName>
             <Private-Package>
