@@ -45,9 +45,9 @@
               cv.lecturesight.opencl.*;
               version=${project.version}
             </Export-Package>
-            <Embed-Dependency>
-              com.sun.jna.*;inline=true
-            </Embed-Dependency>
+            <Private-Package>
+              com.sun.jna.*,
+            </Private-Package>
           </instructions>
         </configuration>
       </plugin>
