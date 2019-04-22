@@ -74,6 +74,7 @@
               cv.lecturesight.framesource,
               cv.lecturesight.util.conf,
               org.osgi.service.component,
+              org.pmw.tinylog,
             </Import-Package>
             <Bundle-SymbolicName>cv.lecturesight.framesource.v4l</Bundle-SymbolicName>
             <Private-Package>
