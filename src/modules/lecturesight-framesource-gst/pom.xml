@@ -67,13 +67,14 @@
             <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
             <Export-Package>cv.lecturesight.framesource.gst;version=${project.version}</Export-Package>
             <Import-Package>
-              cv.lecturesight.framesource,
-              org.freedesktop.gstreamer.lowlevel,
               *;resolution:=optional
             </Import-Package>
             <Embed-Dependency>
               gst1-java-core;inline=true,
             </Embed-Dependency>
+            <Private-Package>
+              com.sun.jna.*,
+            </Private-Package>
           </instructions>
         </configuration>
       </plugin>
