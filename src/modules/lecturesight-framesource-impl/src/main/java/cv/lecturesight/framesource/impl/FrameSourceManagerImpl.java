@@ -47,8 +47,8 @@ import org.pmw.tinylog.Logger;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Implementation of Service API
@@ -80,7 +80,7 @@ public class FrameSourceManagerImpl implements FrameSourceManager, EventHandler 
   @Reference
   private SceneProfileManager spm;
   private ComponentContext componentContext;
-  private Map<String, FrameGrabberFactory> sourceTypes = new HashMap<String, FrameGrabberFactory>();
+  private Map<String, FrameGrabberFactory> sourceTypes = new ConcurrentHashMap<String, FrameGrabberFactory>();
   private FrameSourceDescriptor providerMRL = null;
 
   private boolean inverted = false;
@@ -223,20 +223,24 @@ public class FrameSourceManagerImpl implements FrameSourceManager, EventHandler 
     }
   }
 
-  private void installFrameGrabberFactory(ServiceReference ref) {
+  private synchronized void installFrameGrabberFactory(ServiceReference ref) {
     String name = (String) ref.getProperty(FRAMESOURCE_NAME_PROPERTY);
     String types = (String) ref.getProperty(FRAMESOURCE_TYPE_PROPERTY);
     for (String type : types.split(",")) {
       FrameGrabberFactory factory = (FrameGrabberFactory) componentContext.getBundleContext().getService(ref);
-      sourceTypes.put(type.trim(), factory);
-      Logger.info("Registered FrameGrabberFactory " + name + " (type: " + type.trim() + ")");
-      try {
-        FrameSourceDescriptor fsd = new FrameSourceDescriptor(config.get(PROPKEY_MRL));
-        if (fsd.getType().equals(type.trim())) {
-          activateProvider(config.get(PROPKEY_MRL));
+      if (!sourceTypes.containsKey(type.trim())) {
+        sourceTypes.put(type.trim(), factory);
+        Logger.info("Registered FrameGrabberFactory {} (type: {})", name, type);
+        try {
+          FrameSourceDescriptor fsd = new FrameSourceDescriptor(config.get(PROPKEY_MRL));
+          if (fsd.getType().equals(type.trim())) {
+            activateProvider(config.get(PROPKEY_MRL));
+          }
+        } catch (Exception e) {
+          Logger.warn("Unable to check if newly installed FrameGrabberFactory fits FrameSourceProvider configuration");
         }
-      } catch (Exception e) {
-        Logger.warn("Unable to check if newly installed FrameGrabberFactory fits FrameSourceProvider configuration");
+      } else {
+          Logger.info("Ignored FrameGrabberFactory {} (type: {}) - already registered", name, type);
       }
     }
   }
