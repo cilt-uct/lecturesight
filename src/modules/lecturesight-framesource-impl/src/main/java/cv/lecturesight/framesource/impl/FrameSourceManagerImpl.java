@@ -125,9 +125,6 @@ public class FrameSourceManagerImpl implements FrameSourceManager, EventHandler 
       Logger.error("Error during scanning for plugins", e);
     }
 
-    // listen to bundle un-/register events
-    cc.getBundleContext().registerService(EventHandler.class.getName(), this, cc.getProperties());
-
     try {
       providerMRL = new FrameSourceDescriptor(config.get(PROPKEY_MRL));
       Logger.info("Framesource selected: type " + providerMRL.getType() + " at location " + providerMRL.getLocator());
