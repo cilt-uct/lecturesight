@@ -22,7 +22,7 @@ public class ShutdownOSGI {
 
         System.out.println("Shutting down OSGI on " + host + ":" + port + " (timeout " + timeout + "s)");
 
-	String command="stop 0\n";
+	String command="felix:stop 0\n";
 
 	try {
 	   try (Socket socket=new Socket(host, port)) {
