@@ -24,7 +24,7 @@ DEBUG_SUSPEND="y"
 FELIX_CACHE="$BASE_DIR/felix-cache"
 LOG_OPTS="-Dtinylog.configuration=$BASE_DIR/conf/log.properties"
 OPENCL_OPTS="-Docl.device.type=$OPENCL_DEVICE -Docl.profiling=no"
-CONFIG_OPTS="-Dfelix.config.properties=file:$BASE_DIR/conf/config.properties -Dfelix.fileinstall.dir=$BASE_DIR/conf/fileinstall/ -Dgosh.args=--noi"
+CONFIG_OPTS="-Dfelix.config.properties=file:$BASE_DIR/conf/config.properties -Dfelix.fileinstall.dir=$BASE_DIR/conf/fileinstall/ -Dgosh.args=--noi -Dorg.jline.terminal.dumb=true"
 
 if [ "$#" = "1" ] && [ "$1" = "debug" ] ; then
   DEBUG_OPTS="-Xdebug -Xnoagent -Xrunjdwp:transport=dt_socket,address=$DEBUG_PORT,server=y,suspend=$DEBUG_SUSPEND"
