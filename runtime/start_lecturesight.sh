@@ -88,7 +88,7 @@ do
         echo "$TIMESTAMP ###### LectureSight start (uptime $UPTIME)" >> $LSOUT_LOG
         echo "$TIMESTAMP ###### LectureSight start"
 
-        java -Dlecturesight.basedir=$BASE_DIR $CONFIG_OPTS $LOG_OPTS $OPENCL_OPTS $DEBUG_OPTS -jar $BASE_DIR/bin/felix.jar -b $BASE_DIR/bundles/system $FELIX_CACHE >> $LSOUT_LOG 2>&1
+        /usr/bin/java -Dlecturesight.basedir=$BASE_DIR $CONFIG_OPTS $LOG_OPTS $OPENCL_OPTS $DEBUG_OPTS -jar $BASE_DIR/bin/felix.jar -b $BASE_DIR/bundles/system $FELIX_CACHE >> $LSOUT_LOG 2>&1
 
         if [ $? != 0 ]; then
                 echo "Abnormal exit: restarting LectureSight in 30s"
