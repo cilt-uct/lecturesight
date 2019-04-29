@@ -54,7 +54,7 @@ fi
 
 # gstreamer debug logging
 # https://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gst-running.html
-export GST_DEBUG=3
+export GST_DEBUG=*:4,GST_STATES:5
 export GST_DEBUG_FILE=$BASE_DIR/log/gstreamer.log
 export GST_DEBUG_NO_COLOR=1
 export GST_DEBUG_DUMP_DOT_DIR=$BASE_DIR/log
