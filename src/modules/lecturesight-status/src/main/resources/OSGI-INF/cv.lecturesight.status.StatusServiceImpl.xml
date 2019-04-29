@@ -4,6 +4,10 @@
         <provide interface="cv.lecturesight.status.StatusService"/>
         <provide interface="cv.lecturesight.util.conf.ConfigurationListener"/>
     </service>
+    <property name="osgi.command.scope" value="status"/>
+    <property name="osgi.command.function">
+        show
+    </property>
     <reference name="config" interface="cv.lecturesight.util.conf.Configuration" cardinality="1..1" policy="static" bind="setConfig"/>
     <reference name="heart" interface="cv.lecturesight.heartbeat.api.HeartBeat" cardinality="1..1" policy="static" bind="setHeart"/>
     <reference name="operator" interface="cv.lecturesight.operator.CameraOperator" cardinality="1..1" policy="static" bind="setOperator"/>
