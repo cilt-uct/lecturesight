@@ -2,12 +2,6 @@
 
 UPTIME=`cat /proc/uptime | awk '{print int($1)}'`
 
-if [ "$UPTIME" -lt "90" ]; then
-	sleep 60
-fi
-
-UPTIME=`cat /proc/uptime | awk '{print int($1)}'`
-
 # set correct base dir for production and daemon operation
 BASE_DIR="/opt/ls"
 cd $BASE_DIR
@@ -38,6 +32,7 @@ rm -rf $FELIX_CACHE/*
 # Check camera config and remove bundles for other camera types
 VAPIX=`grep -c ^cv.lecturesight.vapix.camera.host $BASE_DIR/conf/lecturesight.properties`
 PTZ_HOST=`grep ^cv.lecturesight.vapix.camera.host $BASE_DIR/conf/lecturesight.properties | awk -F = '{print $2}'`
+V4L_DEV=`grep ^cv.lecturesight.framesource.input.mrl=v4l2 $BASE_DIR/conf/lecturesight.properties | cut -c46- | awk -F[ '{print $1}'`
 
 if [ "$VAPIX" == "1" ]; then
         echo VAPIX camera: $PTZ_HOST
@@ -79,6 +74,13 @@ until ping -c1 $PTZ_HOST &>/dev/null; do sleep 5; done
 
 TIMESTAMP=`date +"%Y-%m-%d %H:%M:%S"`
 echo "$TIMESTAMP Online: $PTZ_HOST" >> $LSOUT_LOG
+
+# Wait for V4L device (webcam) to be available
+if [ ! -z $V4L_DEV ]; then
+	echo "$TIMESTAMP Check:  $V4L_DEV" >> $LSOUT_LOG
+	until [ -e $V4L_DEV ]; do sleep 5; done
+	echo "$TIMESTAMP Found:  $V4L_DEV" >> $LSOUT_LOG
+fi
 
 while true
 do
