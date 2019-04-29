@@ -91,7 +91,6 @@ public class StatusServiceImpl implements StatusService, ConfigurationListener {
   private ScheduledExecutorService executor = null;
   private final StatusExecutor statusExecutor = new StatusExecutor();
 
-  @Activate
   protected void activate(ComponentContext cc) {
 
     setConfiguration();
@@ -101,7 +100,6 @@ public class StatusServiceImpl implements StatusService, ConfigurationListener {
     Logger.debug("Activated");
   }
 
-  @Deactivate
   protected void deactivate(ComponentContext cc) {
     stopReporting();
     shutdown = true;
