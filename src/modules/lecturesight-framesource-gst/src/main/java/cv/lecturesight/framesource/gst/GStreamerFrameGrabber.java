@@ -64,16 +64,8 @@ public class GStreamerFrameGrabber implements FrameGrabber {
 
     Logger.debug("Creating gstreamer pipeline: " + pipelineDef);
 
-    Pipeline pipe = null;
-
     // instantiate user provided pipeline segment
-    Element element = Gst.parseLaunch(pipelineDef);
-    if (element instanceof Pipeline) {
-      pipe = (Pipeline) element;
-    } else {
-      Logger.error("Did not get back pipeline from definition: {}", pipelineDef);
-      throw new IllegalStateException("Could not create pipeline");
-    }
+    Pipeline pipe = (Pipeline) Gst.parseLaunch(pipelineDef);
 
     // find most downstream element in user pipeline
     Element last = pipe.getElementsSorted().get(0);
