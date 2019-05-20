@@ -78,8 +78,16 @@ echo "$TIMESTAMP Online: $PTZ_HOST" >> $LSOUT_LOG
 # Wait for V4L device (webcam) to be available
 if [ ! -z $V4L_DEV ]; then
 	echo "$TIMESTAMP Check:  $V4L_DEV" >> $LSOUT_LOG
+
 	until [ -e $V4L_DEV ]; do sleep 5; done
+
+	TIMESTAMP=`date +"%Y-%m-%d %H:%M:%S"`
 	echo "$TIMESTAMP Found:  $V4L_DEV" >> $LSOUT_LOG
+
+	until [ `v4l2-ctl --device=$V4L_DEV --list-ctrls | grep -c gain` == "1" ]; do sleep 5; done
+
+	TIMESTAMP=`date +"%Y-%m-%d %H:%M:%S"`
+	echo "$TIMESTAMP Ready:  $V4L_DEV" >> $LSOUT_LOG
 fi
 
 while true
