@@ -34,11 +34,6 @@
     </dependency>
     <dependency>
       <groupId>cv.lecturesight</groupId>
-      <artifactId>lecturesight-gui-api</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>cv.lecturesight</groupId>
       <artifactId>lecturesight-profile-api</artifactId>
       <version>${project.version}</version>
     </dependency>

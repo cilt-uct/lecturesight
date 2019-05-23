@@ -29,11 +29,6 @@
     </dependency>
     <dependency>
       <groupId>cv.lecturesight</groupId>
-      <artifactId>lecturesight-ptzcontrol-api</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>cv.lecturesight</groupId>
       <artifactId>lecturesight-cameraoperator-api</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -51,10 +46,6 @@
       <groupId>cv.lecturesight</groupId>
       <artifactId>lecturesight-util</artifactId>
       <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.osgi</groupId>
-      <artifactId>org.osgi.core</artifactId>
     </dependency>
     <dependency>
       <groupId>org.osgi</groupId>

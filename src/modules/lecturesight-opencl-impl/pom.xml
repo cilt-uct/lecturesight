@@ -18,26 +18,12 @@
   <dependencies>
     <dependency>
       <groupId>cv.lecturesight</groupId>
-      <artifactId>lecturesight-util</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>cv.lecturesight</groupId>
       <artifactId>lecturesight-opencl-api</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.osgi</groupId>
       <artifactId>org.osgi.core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.osgi</groupId>
-      <artifactId>org.osgi.compendium</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
     </dependency>
     <dependency>
         <groupId>org.tinylog</groupId>
