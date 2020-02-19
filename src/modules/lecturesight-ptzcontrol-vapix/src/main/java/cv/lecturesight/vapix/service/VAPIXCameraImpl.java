@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.concurrent.Executors;
@@ -33,6 +34,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * PTZCamera implementation using the Axis VAPIX protocol:
@@ -1048,13 +1050,14 @@ public class VAPIXCameraImpl implements PTZCamera {
      *   root.PTZ.Preset.P0.Position.P1.Data=tilt=24.628906:focus=32766.000000:pan=-1.425781:iris=32766.000000:zoom=154.000000
      *   root.PTZ.Preset.P0.Position.P1.Name=Home
      * But if the camera is inverted, then we have to swap the sign of the pan and tilt values.
+     *
+     * With latest firmware, the Data line is
+     *   root.PTZ.Preset.P0.Position.P1.Data=pan=25.605469:tilt=13.007812:zoom=475.000000
      */
 
     String presetPatternRe = "root\\.PTZ\\.Preset\\.P0\\.Position\\.(P[0-9]+)\\.Name";
-    String dataPatternRe = "tilt=([0-9.-]+):focus=([0-9.]+):pan=([0-9.-]+):iris=([0-9.-]+):zoom=([0-9.-]+)$";
 
     Pattern presetPattern = Pattern.compile(presetPatternRe);
-    Pattern dataPattern = Pattern.compile(dataPatternRe);
 
     for (String presetInfo : result.keySet()) {
       if (presetInfo.endsWith(".Name")) {
@@ -1064,11 +1067,16 @@ public class VAPIXCameraImpl implements PTZCamera {
           String presetNumber = matcher.group(1);
           String dataPrefix = "root.PTZ.Preset.P0.Position." + presetNumber+ ".Data";
           String dataLine = result.get(dataPrefix);
-          Matcher dataMatcher = dataPattern.matcher(dataLine);
-          if (dataMatcher.matches()) {
-            int x = Math.round(this.map(Float.parseFloat(dataMatcher.group(3)), range_pan.min, scale_pan_rev, lim_pan.min)) * (inverted ? -1 : 1);
-            int y = Math.round(this.map(Float.valueOf(dataMatcher.group(1)), range_tilt.min, scale_tilt_rev, lim_tilt.min)) * (inverted ? -1 : 1);
-            int z = Math.round(this.map(Float.valueOf(dataMatcher.group(5)), range_zoom.min, scale_zoom_rev, lim_zoom.min));
+
+          Map<String,String> ptzMap = Pattern.compile(":")
+           .splitAsStream(dataLine)
+           .map(s -> s.split("=", 2))
+           .collect(Collectors.toMap(a -> a[0], a -> a[1]));
+
+          if (ptzMap.containsKey("pan") && ptzMap.containsKey("tilt") && ptzMap.containsKey("zoom")) {
+            int x = Math.round(this.map(Float.valueOf(ptzMap.get("pan")), range_pan.min, scale_pan_rev, lim_pan.min)) * (inverted ? -1 : 1);
+            int y = Math.round(this.map(Float.valueOf(ptzMap.get("tilt")), range_tilt.min, scale_tilt_rev, lim_tilt.min)) * (inverted ? -1 : 1);
+            int z = Math.round(this.map(Float.valueOf(ptzMap.get("zoom")), range_zoom.min, scale_zoom_rev, lim_zoom.min));
             Preset p = new Preset(presetName, x, y, z);
             Logger.debug("Camera has preset {}", p);
             presetList.add(p);
