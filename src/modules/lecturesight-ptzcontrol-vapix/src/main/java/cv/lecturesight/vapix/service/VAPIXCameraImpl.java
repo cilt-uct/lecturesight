@@ -163,9 +163,10 @@ public class VAPIXCameraImpl implements PTZCamera {
         Logger.info("Vapix: " + this.brand + " " + this.model_name);
 
         // Get camera orientation ie inverted or not
-        Hashtable<String, String>  sensor = processCommand("/axis-cgi/param.cgi?action=list&usergroup=admin&group=ImageSource.I0.Sensor");
+        Hashtable<String, String> camConfig = processCommand("/axis-cgi/param.cgi?action=list&usergroup=admin");
 
-        if ("180".equals(sensor.getOrDefault("root.ImageSource.I0.Sensor.VideoRotation", "0"))) {
+        if ("180".equals(camConfig.getOrDefault("root.ImageSource.I0.Sensor.VideoRotation", "0"))
+            || "180".equals(camConfig.getOrDefault("root.Image.I0.Appearance.Rotation", "0"))) {
           inverted = true;
           Logger.debug("camera is inverted");
         }
