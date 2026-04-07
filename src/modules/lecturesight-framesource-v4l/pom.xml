@@ -32,9 +32,9 @@
       <artifactId>org.osgi.compendium</artifactId>
     </dependency>
     <dependency>
-      <groupId>au.edu.jcu</groupId>
+      <groupId>com.github.sarxos</groupId>
       <artifactId>v4l4j</artifactId>
-      <version>0.9.1</version>
+      <version>0.9.1-r507</version>
     </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>
