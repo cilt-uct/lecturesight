@@ -480,36 +480,6 @@
   
   <!--____________________________ Repositories _____________________________-->
   <repositories>
-    
-    <repository>
-      <id>sonatype</id>
-      <name>Sonatype OSS Snapshots Repository</name>
-      <url>https://oss.sonatype.org/content/groups/public</url>
-    </repository>
-    
-    <!-- for JavaCL -->
-    <repository>
-      <id>nativelibs4java-repo</id>
-      <url>http://nativelibs4java.sourceforge.net/maven</url>
-      <releases>
-        <enabled>true</enabled>
-        <updatePolicy>daily</updatePolicy>
-      </releases>
-    </repository>
-    
-    <!-- Opencast Community repo -->
-    <repository>
-      <id>opencast</id>
-      <name>Opencast Repo</name>
-      <url>http://nexus.opencast.org/nexus/content/groups/public</url>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-    </repository>
-    
   </repositories>
 
   <!--_____________________________ Developers ______________________________-->
