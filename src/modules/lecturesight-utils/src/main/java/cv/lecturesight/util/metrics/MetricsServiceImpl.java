@@ -33,7 +33,6 @@ import com.codahale.metrics.json.MetricsModule;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-
 import org.osgi.service.component.ComponentContext;
 import org.pmw.tinylog.Logger;
 import org.slf4j.LoggerFactory;

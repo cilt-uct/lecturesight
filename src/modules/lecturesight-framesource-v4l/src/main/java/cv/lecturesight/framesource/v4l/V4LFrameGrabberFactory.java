@@ -30,7 +30,6 @@ import au.edu.jcu.v4l4j.V4L4JConstants;
 import au.edu.jcu.v4l4j.VideoDevice;
 import au.edu.jcu.v4l4j.exceptions.ControlException;
 import au.edu.jcu.v4l4j.exceptions.V4L4JException;
-
 import lombok.Setter;
 import org.osgi.service.component.ComponentContext;
 import org.pmw.tinylog.Logger;

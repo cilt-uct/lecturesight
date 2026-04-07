@@ -25,7 +25,6 @@ import cv.lecturesight.opencl.OpenCLService;
 import cv.lecturesight.util.conf.Configuration;
 
 import com.nativelibs4java.opencl.CLImage2D;
-
 import lombok.Setter;
 import org.osgi.service.component.ComponentContext;
 import org.pmw.tinylog.Logger;

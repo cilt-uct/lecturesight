@@ -27,7 +27,6 @@ import au.edu.jcu.v4l4j.ResolutionInfo;
 import au.edu.jcu.v4l4j.VideoDevice;
 import au.edu.jcu.v4l4j.VideoFrame;
 import au.edu.jcu.v4l4j.exceptions.V4L4JException;
-
 import org.pmw.tinylog.Logger;
 
 import java.nio.Buffer;

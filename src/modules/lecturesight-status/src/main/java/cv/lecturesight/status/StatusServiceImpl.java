@@ -35,7 +35,6 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-
 import org.osgi.service.component.ComponentContext;
 import org.pmw.tinylog.Logger;
 

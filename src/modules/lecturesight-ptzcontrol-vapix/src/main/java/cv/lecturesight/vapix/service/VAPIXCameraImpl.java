@@ -334,9 +334,9 @@ public class VAPIXCameraImpl implements PTZCamera {
 
       String result = response.toString();
       return result.length() == 0 ? "ok" : result;
-    } else if ((responseCode == HttpURLConnection.HTTP_CREATED) || // 201
-               (responseCode == HttpURLConnection.HTTP_ACCEPTED) || // 202
-               (responseCode == HttpURLConnection.HTTP_NO_CONTENT)) // 204
+    } else if ((responseCode == HttpURLConnection.HTTP_CREATED) // 201
+               || (responseCode == HttpURLConnection.HTTP_ACCEPTED) // 202
+               || (responseCode == HttpURLConnection.HTTP_NO_CONTENT)) // 204
     {
       return "ok";
     } else {

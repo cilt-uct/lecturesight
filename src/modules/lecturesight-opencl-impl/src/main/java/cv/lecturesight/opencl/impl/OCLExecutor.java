@@ -21,7 +21,6 @@ import cv.lecturesight.opencl.api.ComputationRun;
 
 import com.nativelibs4java.opencl.CLEvent;
 import com.nativelibs4java.opencl.CLQueue;
-
 import org.pmw.tinylog.Logger;
 
 import java.util.concurrent.ArrayBlockingQueue;

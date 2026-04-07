@@ -29,7 +29,6 @@ import com.nativelibs4java.opencl.CLImageFormat;
 import com.nativelibs4java.opencl.CLKernel;
 import com.nativelibs4java.opencl.CLMem.Usage;
 import com.nativelibs4java.opencl.CLQueue;
-
 import org.pmw.tinylog.Logger;
 
 import java.awt.image.BufferedImage;

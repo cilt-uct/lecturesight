@@ -23,7 +23,6 @@ import cv.lecturesight.framesource.FrameSourceException;
 import cv.lecturesight.opencl.api.OCLSignal;
 
 import com.nativelibs4java.opencl.CLImage2D;
-
 import org.pmw.tinylog.Logger;
 
 import java.awt.image.BufferedImage;

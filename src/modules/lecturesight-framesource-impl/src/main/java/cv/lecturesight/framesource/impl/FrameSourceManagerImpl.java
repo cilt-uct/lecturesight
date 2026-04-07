@@ -32,7 +32,6 @@ import cv.lecturesight.profile.api.Zone;
 import cv.lecturesight.util.conf.Configuration;
 
 import com.nativelibs4java.opencl.CLImage2D;
-
 import lombok.Setter;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.component.ComponentContext;
