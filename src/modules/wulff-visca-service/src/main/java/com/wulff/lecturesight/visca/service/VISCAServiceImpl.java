@@ -270,7 +270,7 @@ public class VISCAServiceImpl implements VISCAService, SerialPortEventListener {
   void send_CamInfo(int adr) {
     Logger.info("Send camera info inquiry command to #" + adr);
     Message msg = VISCA.INQ_CAM_VERSION.clone();
-    msg.getBytes()[0] += adr;
+    msg.getBytes()[0] = (byte)(msg.getBytes()[0] + adr);
     send(msg.getBytes());
   }
 
@@ -288,8 +288,8 @@ public class VISCAServiceImpl implements VISCAService, SerialPortEventListener {
         if (m != null && m.getMessageType() == MessageType.MOVEMENT) {
           Message cancel = VISCA.NET_COMMAND_CANCEL.clone();
           byte[] pkg = cancel.getBytes();
-          pkg[0] += camera.address;
-          pkg[1] += i;
+          pkg[0] = (byte)(pkg[0] + camera.address);
+          pkg[1] = (byte)(pkg[1] + i);
           send(pkg);
         }
       }
@@ -299,7 +299,7 @@ public class VISCAServiceImpl implements VISCAService, SerialPortEventListener {
   void clearInterface(int adr) {
     Logger.debug("Clear interface");
     Message msg = VISCA.NET_IF_CLEAR.clone();
-    msg.getBytes()[0] += adr;
+    msg.getBytes()[0] = (byte)(msg.getBytes()[0] + adr);
     send(msg.getBytes());
   }
   

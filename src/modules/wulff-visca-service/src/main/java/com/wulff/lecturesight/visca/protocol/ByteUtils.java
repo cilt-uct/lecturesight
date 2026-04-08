@@ -42,14 +42,14 @@ public class ByteUtils {
 
   public static byte high(byte b) {
     byte out = (byte)(b >> 4);
-    out &= (byte)0x0F;
+    out = (byte)(out & 0x0F);
     return out;
   }
 
   public static byte compose(byte hi, byte lo) {
     byte b = hi;
-    b <<= 4;
-    b += lo;
+    b = (byte)(b << 4);
+    b = (byte)(b + lo);
     return b;
   }
 

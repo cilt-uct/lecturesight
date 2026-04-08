@@ -574,11 +574,11 @@ public class VideoAnalysisTemplateMatching implements ObjectTracker, Configurati
         double vxfactor = 2.5;
         double vyfactor = 1.5;
 
-        if (t.vx < 0) t.searchbox.x += vxfactor*t.vx;
-        if (t.vx > 0) t.searchbox.max_x += vxfactor*t.vx;
+        if (t.vx < 0) t.searchbox.x = (int)(t.searchbox.x + vxfactor*t.vx);
+        if (t.vx > 0) t.searchbox.max_x = (int)(t.searchbox.max_x + vxfactor*t.vx);
 
-        if (t.vy < 0) t.searchbox.y += vyfactor*t.vy;
-        if (t.vy > 0) t.searchbox.max_y += vyfactor*t.vy;
+        if (t.vy < 0) t.searchbox.y = (int)(t.searchbox.y + vyfactor*t.vy);
+        if (t.vy > 0) t.searchbox.max_y = (int)(t.searchbox.max_y + vyfactor*t.vy);
 
         updateTrackerObject(t);
 

@@ -117,7 +117,7 @@ public class VISCACameraImpl implements PTZCamera {
     byte[] pkg = msg.getBytes();
 
     // set address
-    pkg[0] += this.address;
+    pkg[0] = (byte)(pkg[0] + this.address);
 
     // set zoom target
     byte[] a = ByteUtils.s2b((short)zoom);
@@ -138,7 +138,7 @@ public class VISCACameraImpl implements PTZCamera {
     byte[] pkg = msg.getBytes();
 
     // set address
-    pkg[0] += this.address;
+    pkg[0] = (byte)(pkg[0] + this.address);
 
     // set zoom target
     byte[] a = ByteUtils.s2b((short)focus);
@@ -179,7 +179,7 @@ public class VISCACameraImpl implements PTZCamera {
 
     // set address
     byte[] pkg = msg.getBytes();
-    pkg[0] += this.address;
+    pkg[0] = (byte)(pkg[0] + this.address);
 
     pendingMsg.add(msg);
 
@@ -208,7 +208,7 @@ public class VISCACameraImpl implements PTZCamera {
     byte[] pkg = msg.getBytes();
 
     // set address
-    pkg[0] += this.address;
+    pkg[0] = (byte)(pkg[0] + this.address);
 
     // set pan/tilt speed
     pkg[4] = (byte)VISCA.DEFAULT_SPEED;
@@ -225,7 +225,7 @@ public class VISCACameraImpl implements PTZCamera {
     byte[] pkg = msg.getBytes();
 
     // set address
-    pkg[0] += this.address;    
+    pkg[0] = (byte)(pkg[0] + this.address);    
     pendingMsg.add(msg);
   }
 
@@ -250,7 +250,7 @@ public class VISCACameraImpl implements PTZCamera {
     byte[] pkg = msg.getBytes();
 
     // set address
-    pkg[0] += this.address;
+    pkg[0] = (byte)(pkg[0] + this.address);
 
     // set preset
     pkg[5] = (byte) preset;
@@ -267,7 +267,7 @@ public class VISCACameraImpl implements PTZCamera {
     byte[] pkg = msg.getBytes();
 
     // set address
-    pkg[0] += this.address;
+    pkg[0] = (byte)(pkg[0] + this.address);
 
     // set pan/tilt speed
     pkg[4] = (byte)VISCA.DEFAULT_SPEED;
@@ -284,7 +284,7 @@ public class VISCACameraImpl implements PTZCamera {
     byte[] pkg = msg.getBytes();
 
     // set address
-    pkg[0] += this.address;
+    pkg[0] = (byte)(pkg[0] + this.address);
 
     // set pan/tilt speed
     pkg[4] = (byte)VISCA.DEFAULT_SPEED;
@@ -301,7 +301,7 @@ public class VISCACameraImpl implements PTZCamera {
     byte[] pkg = msg.getBytes();
 
     // set address
-    pkg[0] += this.address;
+    pkg[0] = (byte)(pkg[0] + this.address);
 
     // set pan/tilt speed
     pkg[4] = (byte)panSpeed;
@@ -318,7 +318,7 @@ public class VISCACameraImpl implements PTZCamera {
     byte[] pkg = msg.getBytes();
 
     // set address
-    pkg[0] += this.address;
+    pkg[0] = (byte)(pkg[0] + this.address);
 
     // set pan/tilt speed
     pkg[4] = (byte)panSpeed;
@@ -335,7 +335,7 @@ public class VISCACameraImpl implements PTZCamera {
     byte[] pkg = msg.getBytes();
 
     // set address
-    pkg[0] += this.address;
+    pkg[0] = (byte)(pkg[0] + this.address);
 
     // set pan/tilt speed
     pkg[4] = (byte)panSpeed;
@@ -352,7 +352,7 @@ public class VISCACameraImpl implements PTZCamera {
     byte[] pkg = msg.getBytes();
 
     // set address
-    pkg[0] += this.address;
+    pkg[0] = (byte)(pkg[0] + this.address);
 
     // set pan/tilt speed
     pkg[4] = (byte)panSpeed;
@@ -369,7 +369,7 @@ public class VISCACameraImpl implements PTZCamera {
     byte[] pkg = msg.getBytes();
 
     // set address
-    pkg[0] += this.address;
+    pkg[0] = (byte)(pkg[0] + this.address);
 
     // set pan/tilt speed
     pkg[4] = (byte)panSpeed;
@@ -386,7 +386,7 @@ public class VISCACameraImpl implements PTZCamera {
     byte[] pkg = msg.getBytes();
 
     // set address
-    pkg[0] += this.address;
+    pkg[0] = (byte)(pkg[0] + this.address);
 
     // set pan/tilt speed
     pkg[4] = (byte)panSpeed;
@@ -408,7 +408,7 @@ public class VISCACameraImpl implements PTZCamera {
     byte[] pkg = msg.getBytes();
 
     // set address
-    pkg[0] += this.address;
+    pkg[0] = (byte)(pkg[0] + this.address);
 
     // set pan/tilt speed
     pkg[4] = (byte)panSpeed;
@@ -445,7 +445,7 @@ public class VISCACameraImpl implements PTZCamera {
     byte[] pkg = msg.getBytes();
 
     // set address
-    pkg[0] += this.address;
+    pkg[0] = (byte)(pkg[0] + this.address);
 
     // set pan/tilt speed
     pkg[4] = (byte)panSpeed;
@@ -480,13 +480,13 @@ public class VISCACameraImpl implements PTZCamera {
     // clear down-left limit
     Message msg_dl = VISCA.CMD_LIMIT_CLEAR.clone();
     byte[] pkg = msg_dl.getBytes();
-    pkg[0] += this.address;
+    pkg[0] = (byte)(pkg[0] + this.address);
     pendingMsg.add(msg_dl);
     
     // clear down-left limit
     Message msg_ur = VISCA.CMD_LIMIT_CLEAR.clone();
     pkg = msg_ur.getBytes();
-    pkg[0] += this.address;
+    pkg[0] = (byte)(pkg[0] + this.address);
     pkg[5] = 1;
     pendingMsg.add(msg_ur);
   }
@@ -500,7 +500,7 @@ public class VISCACameraImpl implements PTZCamera {
     byte[] pkg = msg.getBytes();
 
     // set address
-    pkg[0] += this.address;
+    pkg[0] = (byte)(pkg[0] + this.address);
 
     // set direction
     pkg[5] = 1;
@@ -533,7 +533,7 @@ public class VISCACameraImpl implements PTZCamera {
     byte[] pkg = msg.getBytes();
 
     // set address
-    pkg[0] += this.address;
+    pkg[0] = (byte)(pkg[0] + this.address);
 
     // set direction
     pkg[5] = 0;

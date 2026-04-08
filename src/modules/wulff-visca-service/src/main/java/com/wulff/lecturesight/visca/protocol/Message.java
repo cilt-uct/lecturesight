@@ -41,7 +41,7 @@ public class Message implements Cloneable {
   }
 
   public void setAddress(int adr) {
-    data[0] += adr;
+    data[0] = (byte)(data[0] + adr);
   }
 
   @Override

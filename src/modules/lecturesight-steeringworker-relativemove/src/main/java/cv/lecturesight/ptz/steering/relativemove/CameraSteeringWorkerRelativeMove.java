@@ -191,7 +191,7 @@ public class CameraSteeringWorkerRelativeMove implements CameraSteeringWorker, C
           if (dx_abs < alpha_x) {
             ps = (int) (((float) dx_abs / (float) alpha_x) * speed_pan);
             if (ps > 1) {
-              ps *= damp_pan;
+              ps = (int)(ps * damp_pan);
             } else if (ps == 0) {
               dx = 0;
             }
@@ -210,7 +210,7 @@ public class CameraSteeringWorkerRelativeMove implements CameraSteeringWorker, C
           if (dy_abs < alpha_y) {
             ts = (int) (((float) dy_abs / (float) alpha_y) * speed_tilt);
             if (ts > 1) {
-              ts *= damp_tilt;
+              ts = (int)(ts * damp_tilt);
             }
             ts = (ts == 0) ? 1 : ts;
           } else {

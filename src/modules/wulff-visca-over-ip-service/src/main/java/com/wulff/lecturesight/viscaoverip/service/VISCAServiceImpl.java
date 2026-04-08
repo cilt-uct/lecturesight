@@ -238,7 +238,7 @@ public class VISCAServiceImpl implements VISCAService {
   void send_CamInfoInquiry(InetAddress adr) {
     Logger.info("Sending camera info inquiry command to " + adr.getHostAddress());
     Message msg = VISCA.INQ_CAM_VERSION.clone();
-    msg.getBytes()[0] += 1;
+    msg.getBytes()[0] = (byte)(msg.getBytes()[0] + 1);
     send(msg, adr);
   }
 
@@ -254,8 +254,8 @@ public class VISCAServiceImpl implements VISCAService {
             if (m != null && m.getMessageType() == MessageType.MOVEMENT) {
                 Message cancel = VISCA.NET_COMMAND_CANCEL.clone();
                 byte[] pkg = cancel.getBytes();
-                pkg[0] += 1;
-                pkg[1] += i;
+                pkg[0] = (byte)(pkg[0] + 1);
+                pkg[1] = (byte)(pkg[1] + i);
                 send(cancel, camera.address);
             }
         }
@@ -264,7 +264,7 @@ public class VISCAServiceImpl implements VISCAService {
   void clearInterface(InetAddress adr) {
     Logger.debug("Clear interface");
     Message msg = VISCA.NET_IF_CLEAR.clone();
-    msg.getBytes()[0] += 1;
+    msg.getBytes()[0] = (byte)(msg.getBytes()[0] + 1);
     send(msg, adr);
   }
   

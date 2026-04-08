@@ -120,7 +120,7 @@ public class CameraSteeringWorkerAbsoluteMove implements CameraSteeringWorker {
         if (dx_abs < alpha_x) {
           ps = (int) (((float) dx_abs / (float) alpha_x) * maxspeed_pan);
           if (ps > 1) {
-            ps *= damp_pan;
+            ps = (int)(ps * damp_pan);
           }
           ps = ps == 0 ? 1 : ps;
         } else {
@@ -132,7 +132,7 @@ public class CameraSteeringWorkerAbsoluteMove implements CameraSteeringWorker {
         if (dy_abs < alpha_y) {
           ts = (int) (((float) dy_abs / (float) alpha_y) * maxspeed_tilt);
           if (ts > 1) {
-            ts *= damp_tilt;
+            ts = (int)(ts * damp_tilt);
           }
           ts = ts == 0 ? 1 : ts;
         } else {
