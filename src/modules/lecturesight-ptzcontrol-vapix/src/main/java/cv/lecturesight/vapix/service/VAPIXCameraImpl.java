@@ -553,9 +553,10 @@ public class VAPIXCameraImpl implements PTZCamera {
         String key = entry.getKey();
         String value = entry.getValue();
 
-        if (key.indexOf("presetposno") >= 0)
+        if (key.indexOf("presetposno") >= 0) {
           result[preset++] = value;
           Logger.trace("Camera preset {}: {}", key, value);
+        }
       }
     }
 
