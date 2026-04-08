@@ -2,6 +2,8 @@
 
 LectureSight is an open source OSGI application that uses OpenCL to analyze a video stream in real-time and track the presenter by controlling a PTZ camera.
 
+While the upstream project is no longer maintained, this fork is maintained and used by the University of Cape Town.
+
 ## Quick Start
 
 1. Check the requirements for a [Linux server with GPU](hardware/server), [overview camera](hardware/overview-camera) such as a webcam, and [PTZ camera](hardware/ptz-camera) supporting VISCA or VAPIX.
