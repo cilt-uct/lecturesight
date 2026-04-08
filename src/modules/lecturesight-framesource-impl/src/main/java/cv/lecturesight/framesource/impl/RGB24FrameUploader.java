@@ -168,7 +168,7 @@ public class RGB24FrameUploader implements FrameUploader {
   public void setMask(BufferedImage mask) {
     CLImage2D old_mask = this.mask;
     this.maskImage = mask;
-    this.mask = ocl.context().createImage2D(Usage.InputOutput, maskImage, false);   // FIXME instable - can cuase seg fault
+    this.mask = ocl.context().createImage2D(Usage.InputOutput, maskImage, false);   // FIXME instable - can cause seg fault
     if (old_mask != null) {
       old_mask.release();
     }
