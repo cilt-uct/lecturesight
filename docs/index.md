@@ -23,7 +23,3 @@ Join the LectureSight community to ask for help, provide feedback or give sugges
 Email [lecturesight@googlegroups.com](mailto:lecturesight@googlegroups.com)
 
 Subscribe by sending a mail to: [lecturesight+subscribe@googlegroups.com](mailto:lecturesight+subscribe@googlegroups.com](mailto:))
-
-## Issues
-
-Report bugs or file feature requests on the LectureSight [JIRA Issue Tracker](http://opencast.jira.com/browse/LS)
