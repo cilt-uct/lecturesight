@@ -7,9 +7,11 @@ theme:
   logo: 'images/lecturesight.png'
   favicon: 'images/favicon.png'
   features:
-    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
     - navigation.top
     - search.highlight
+    - search.suggest
 
 markdown_extensions:
   - admonition
