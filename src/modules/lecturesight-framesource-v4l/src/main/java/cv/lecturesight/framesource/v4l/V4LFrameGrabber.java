@@ -131,11 +131,11 @@ public class V4LFrameGrabber implements cv.lecturesight.framesource.FrameGrabber
       try {
         grabber.startCapture();
       } catch (V4L4JException ex) {
-        Logger.error("Could restart not frame grabber on" + device.getDevicefile() + ": ", ex);
+        Logger.error("Could not restart frame grabber on " + device.getDevicefile() + ": ", ex);
       }
     } else {
       // Hopeless
-      Logger.info("Frame grabber failed on " + device.getDevicefile() + Integer.toString(MAX_EXCEPTIONS) + " times ... giving up.");
+      Logger.info("Frame grabber failed on " + device.getDevicefile() + " " + Integer.toString(MAX_EXCEPTIONS) + " times ... giving up.");
       shutdown();
     }
   }

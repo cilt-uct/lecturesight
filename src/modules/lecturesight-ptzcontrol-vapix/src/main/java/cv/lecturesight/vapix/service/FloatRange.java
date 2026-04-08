@@ -55,7 +55,7 @@ public class FloatRange {
     this.max = value;
   }
 
-  public String toStrin() {
+  public String toString() {
     return "(("+ min +" -> "+ max+"))";
   }
 }
