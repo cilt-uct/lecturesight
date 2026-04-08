@@ -19,7 +19,7 @@ tinylog.writer1.level = info
 tinylog.writer2 = file
 tinylog.writer2.filename = log/ls.log
 tinylog.writer2.level = DEBUG
-tinylog.writer2.format = {date:yyyy-MM-dd HH:mm:ss.SSS} {{level}|min-size=7} {thread} {class_name}.{method}() : {message}
+tinylog.writer2.format = {date:yyyy-MM-dd HH:mm:ss.SSS} {level|min-size=7} {thread} {class_name}.{method}() : {message}
 ```
 
 Available configuration options are described in [TinyLog Configuration](http://www.tinylog.org/configuration).
