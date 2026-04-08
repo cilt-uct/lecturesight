@@ -3,7 +3,7 @@ name: Deploy docs to GitHub Pages
 on:
   push:
     branches:
-      - master
+      - 0.3-uct
     paths:
       - 'docs/**'
       - 'mkdocs.yml'
