@@ -18,6 +18,9 @@ markdown_extensions:
   - pymdownx.details
   - pymdownx.superfences
 
+plugins:
+  - search
+
 extra:
   social:
     - icon: fontawesome/brands/github
