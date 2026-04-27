@@ -149,8 +149,8 @@ public class CameraPositionModel {
       minCameraPresetX = Math.min(minCameraPresetX, cameraPreset.get(i).getX());
       minCameraPresetY = Math.min(minCameraPresetY, cameraPreset.get(i).getY());
 
-      xMap.put(new Double(sceneMarker.get(i).getX()), cameraPreset.get(i).getX());
-      yMap.put(new Double(sceneMarker.get(i).getY()), cameraPreset.get(i).getY());
+      xMap.put(Double.valueOf(sceneMarker.get(i).getX()), cameraPreset.get(i).getX());
+      yMap.put(Double.valueOf(sceneMarker.get(i).getY()), cameraPreset.get(i).getY());
 
       Logger.debug("Adding calibration point {0.0000},{0.0000} = {},{}",
         sceneMarker.get(i).getX(), sceneMarker.get(i).getY(), cameraPreset.get(i).getX(), cameraPreset.get(i).getY());
