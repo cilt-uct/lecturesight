@@ -124,17 +124,15 @@ public final class Activator implements BundleActivator {
 
     // try to get default config dir
     path = "conf";
-    if (path != null) {
-      File dir = new File(path);
-      if (dir.exists() && dir.isDirectory()) {
-        Logger.debug("Using default config directory: " + dir.getAbsolutePath());
-        return dir;
-      } else {
-        Logger.warn("Default config directory does not exist: " + dir.getAbsolutePath());
-      }
+    File dir = new File(path);
+    if (dir.exists() && dir.isDirectory()) {
+      Logger.debug("Using default config directory: " + dir.getAbsolutePath());
+      return dir;
+    } else {
+      Logger.warn("Default config directory does not exist: " + dir.getAbsolutePath());
     }
 
-    File dir = new File(".");
+    dir = new File(".");
     Logger.debug("Using working directory as config directory: " + dir.getAbsolutePath());
     return dir;
   }
