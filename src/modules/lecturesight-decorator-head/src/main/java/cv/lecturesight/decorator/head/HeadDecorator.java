@@ -163,7 +163,7 @@ public class HeadDecorator implements ObjectDecorator {
         object.setProperty(OBJ_PROPKEY_HEAD_BBOX, new BoundingBox(
                 new Position((int) boundaries[0].getX(), (int) boundaries[0].getY()),
                 new Position((int) boundaries[1].getX(), (int) boundaries[1].getY())));
-        object.setProperty(OBJ_PROPKEY_HEAD_RADIUS, new Double(clusters[optimal].radius()));
+        object.setProperty(OBJ_PROPKEY_HEAD_RADIUS, Double.valueOf(clusters[optimal].radius()));
         object.setProperty(OBJ_PROPKEY_HEAD_CLUSTERS, clusters);
       }
     } catch (Exception e) {
