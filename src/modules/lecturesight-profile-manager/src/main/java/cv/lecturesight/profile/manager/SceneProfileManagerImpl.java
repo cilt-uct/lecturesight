@@ -275,15 +275,13 @@ public class SceneProfileManagerImpl implements SceneProfileManager, ArtifactIns
       try (FileInputStream in = new FileInputStream(file)) {
         profile = SceneProfileSerializer.deserialize(in);
       }
-        SceneProfile profile = SceneProfileSerializer.deserialize(in);
-        profiles.putWithFilename(filename, profile);
-        Logger.info("Installed scene profile \"" + profile.name + "\" from " + filename);
-        notifySubscribersInstalled(profile);
+      profiles.putWithFilename(filename, profile);
+      Logger.info("Installed scene profile \"" + profile.name + "\" from " + filename);
+      notifySubscribersInstalled(profile);
 
-        // test if the installed artifact contains the active profile, activate it if so
-        if (configuredProfile.equals(profile.name)) {
-          setActiveProfile(profile);
-        }
+      // test if the installed artifact contains the active profile, activate it if so
+      if (configuredProfile.equals(profile.name)) {
+        setActiveProfile(profile);
       }
     } catch (Exception e) {
       Logger.warn("Ignoring invalid scene profile in " + filename + ": " + e.getMessage());
