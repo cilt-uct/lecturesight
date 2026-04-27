@@ -33,10 +33,10 @@ import java.util.TreeMap;
 public class CameraPositionModel {
 
   // scene limits for normalization
-  private int pan_min;
-  private int pan_max;
-  private int tilt_min;
-  private int tilt_max;
+  private int panMin;
+  private int panMax;
+  private int tiltMin;
+  private int tiltMax;
 
   // target position
   private boolean targetSet = false;
