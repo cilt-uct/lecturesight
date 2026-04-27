@@ -9,8 +9,11 @@ cp -R $LS/lsuct/runtime/* $LS/deploy/
 # Remove the lecturesight.properties to avoid overwriting local version
 rm $LS/deploy/conf/lecturesight.properties
 
+# JDK 8
+export JAVA_HOME=/usr/lib/jvm/java-8
+
 echo "Building UCT Lecturesight\n"
-java -version
+$JAVA_HOME/bin/java -version
 echo
 
 cd $LS/lsuct

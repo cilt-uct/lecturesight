@@ -1,6 +1,7 @@
 site_name: LectureSight
 repo_url: https://github.com/cilt-uct/lecturesight
 repo_name: cilt-uct/lecturesight
+edit_uri: ./edit/0.3-uct/docs
 
 theme:
   name: material
@@ -15,8 +16,6 @@ theme:
 
 markdown_extensions:
   - admonition
-  - pymdownx.details
-  - pymdownx.superfences
 
 plugins:
   - search
