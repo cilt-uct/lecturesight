@@ -182,9 +182,6 @@ public class CameraPositionModelTest {
 
     model.update(-17000, 17000, -9000, 2000);
 
-    NormalizedPosition upperRightN = new NormalizedPosition(0.1f, 0.1f);
-    NormalizedPosition lowerLeftN = new NormalizedPosition(-0.1f, -0.1f);
-
     List<NormalizedPosition> sceneMarkers = new ArrayList<>();
     List<Position> cameraPresets = new ArrayList<>();
 

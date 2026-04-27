@@ -1,8 +1,6 @@
 package com.wulff.lecturesight.viscaoverip.service;
 
 import com.wulff.lecturesight.visca.api.VISCAService;
-import com.wulff.lecturesight.viscaoverip.protocol.Message;
-import com.wulff.lecturesight.viscaoverip.protocol.VISCA;
 import cv.lecturesight.util.DummyInterface;
 import lombok.Setter;
 

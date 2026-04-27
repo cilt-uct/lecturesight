@@ -39,7 +39,6 @@ import cv.lecturesight.opencl.api.OCLSignalBarrier;
 import java.awt.image.BufferedImage;
 import org.osgi.service.component.ComponentContext;
 import cv.lecturesight.util.conf.Configuration;
-import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.EnumMap;
 import lombok.Setter;
@@ -280,7 +279,6 @@ public class ForegroundServiceImpl implements ForegroundService {
     CLKernel fgDecayK = ocl.programs().getKernel("fg", "refresh_decay");            // kernel that refrshes/ages blobs
     CLImage2D bgUpdateMask = bgmodel.getUpdateMap();
     IntBuffer activityH;
-    FloatBuffer ratiosH;
 
     {
       resetBuffer.setArgs(activity, 0);     // parameters for reset kernel can be set once

@@ -32,13 +32,11 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import javax.swing.JPanel;
 
 public class ObjectTrackerUIPanel extends JPanel implements CustomRenderer {
 
   static final String OBJ_PROPKEY_COLOR = "obj.color";
-  private Display display;
   private DisplayPanel displayPanel;
   private ObjectTracker oTracker;
   private RegionTracker rTracker;
@@ -46,7 +44,6 @@ public class ObjectTrackerUIPanel extends JPanel implements CustomRenderer {
   private Font smallfont = new Font("Monospaced", Font.PLAIN, 8);
 
   public ObjectTrackerUIPanel(Display display, RegionTracker rTracker, ObjectTracker oTracker) {
-    this.display = display;
     this.rTracker = rTracker;
     this.oTracker = oTracker;
     initComponents();
@@ -75,7 +72,6 @@ public class ObjectTrackerUIPanel extends JPanel implements CustomRenderer {
     
     // draw ObjectTracker data
     List<TrackerObject> objects = oTracker.getCurrentlyTracked();
-    Map<Integer, TrackerObject> all_o = oTracker.getAllObjects();
     for (TrackerObject object : objects) {
       //g.setColor((Color) object.getProperty(OBJ_PROPKEY_COLOR));
       g.setColor(Color.white);

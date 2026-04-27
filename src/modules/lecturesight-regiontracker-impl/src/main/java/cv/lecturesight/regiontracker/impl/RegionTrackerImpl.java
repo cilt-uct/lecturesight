@@ -372,7 +372,6 @@ public class RegionTrackerImpl implements RegionTracker {
 
   private Region findMatchingRegion(int matcheeId, Set<Region> regions, float maxErr) {
     Region out = null;
-    float winErr = Float.MAX_VALUE;
 //    for (Iterator<TrackerObject> it = regions.iterator(); it.hasNext();) {
 //    }
     return out;

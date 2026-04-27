@@ -312,7 +312,6 @@ public class CameraSteeringWorkerAbsoluteMove implements CameraSteeringWorker {
     setSteering(false);
 
     model.setTargetPositionNorm(pos);
-    Position target_pos = model.getTargetPosition();
 
     camera.movePreset(presetName);
 

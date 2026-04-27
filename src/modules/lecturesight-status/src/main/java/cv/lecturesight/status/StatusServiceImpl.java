@@ -64,9 +64,6 @@ public class StatusServiceImpl implements StatusService, ConfigurationListener {
   @Setter
   private FrameSourceManager frameSourceManager;
 
-  // The active profile
-  private SceneProfile activeProfile;
-
   public static final String PROPKEY_ENABLE = "enable";
   public static final String PROPKEY_URL = "url";
   public static final String PROPKEY_NAME = "name";

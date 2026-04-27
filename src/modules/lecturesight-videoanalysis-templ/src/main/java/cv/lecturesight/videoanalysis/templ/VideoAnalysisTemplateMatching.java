@@ -25,7 +25,6 @@ import com.nativelibs4java.opencl.CLMem;
 import com.nativelibs4java.opencl.CLQueue;
 
 import lombok.Setter;
-import lombok.Setter;
 import org.osgi.service.component.ComponentContext;
 import org.pmw.tinylog.Logger;
 
@@ -282,7 +281,7 @@ public class VideoAnalysisTemplateMatching implements ObjectTracker, Configurati
           } else if (updated.isEmpty()) {
             if (changeBox.width() > TARGET_SIZE / 2 && changeBox.height() > TARGET_SIZE / 2) {
               Target new_t = new Target(changeBox.x + changeBox.width() / 2, changeBox.y + TARGET_SIZE / 2);
-              int idx = addTarget(new_t);
+              addTarget(new_t);
             }
           }
         }

@@ -26,7 +26,6 @@ import cv.lecturesight.util.conf.ConfigurationServiceImpl;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceException;
-import org.osgi.framework.ServiceRegistration;
 import org.pmw.tinylog.Logger;
 
 import java.io.File;
@@ -41,7 +40,6 @@ public final class Activator implements BundleActivator {
   final static String CONFIG_NAME = "lecturesight.properties";
   final static String BUILD_CONFIG_NAME = "build.properties";
   final static String CONFIG_PATH_PROPERTY = "cv.lecturesight.config.path";
-  private ServiceRegistration confFactoryReg;
   private File configFile;
   private Properties defaultProperties = new Properties();
   private Properties systemProperties = new Properties(defaultProperties);
@@ -79,7 +77,7 @@ public final class Activator implements BundleActivator {
 
     // register config factory
     ConfigurationFactory confFactory = new ConfigurationFactory(systemProperties, defaultProperties, (ConfigurationServiceImpl)confService);
-    confFactoryReg = context.registerService(Configuration.class.getName(), confFactory, null);
+    context.registerService(Configuration.class.getName(), confFactory, null);
 
     // register config commands
     ConfigCommands commandImpl = new ConfigCommands((ConfigurationServiceImpl)confService);

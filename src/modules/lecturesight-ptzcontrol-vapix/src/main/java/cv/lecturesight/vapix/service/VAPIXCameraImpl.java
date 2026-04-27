@@ -837,7 +837,7 @@ public class VAPIXCameraImpl implements PTZCamera {
     speed_zoom = new Limits(0, config.getInt(Constants.PROFKEY_ZOOM_MAXSPEED));
 
     try {
-      String result = doCommand("/axis-cgi/com/ptz.cgi?speed=100");
+      doCommand("/axis-cgi/com/ptz.cgi?speed=100");
       Logger.trace("clearLimits: speed=100");
     } catch (IOException e) {
       Logger.error("moveRelative: " + e.getMessage());
@@ -1182,18 +1182,6 @@ public class VAPIXCameraImpl implements PTZCamera {
                 + this.can_move_continuous + " (" + a + ")");
   }
 
-  /**
-   * Display error message for a move that is not supported
-   *
-   * @param a
-   *            Value of input
-   * @param b
-   *            Value of input
-   */
-  private void moveNotSupported(int a, int b) {
-    Logger.warn("Move not supported:" + this.can_move_absolute + ":" + this.can_move_relative + ":"
-                + this.can_move_continuous + " (" + a + "," + b + ")");
-  }
 
   /**
    * Display error message for a move that is not supported
@@ -1232,7 +1220,6 @@ public class VAPIXCameraImpl implements PTZCamera {
       Logger.trace(hostname);
       InetAddress ipaddr = getRequestingSite();
       Logger.trace(ipaddr);
-      int port = getRequestingPort();
 
       return new PasswordAuthentication(user, password.toCharArray());
     }

@@ -17,7 +17,6 @@
  */
 package cv.lecturesight.framesource.v4l;
 
-import cv.lecturesight.framesource.FrameGrabber.PixelFormat;
 import cv.lecturesight.framesource.FrameSourceException;
 
 import au.edu.jcu.v4l4j.CaptureCallback;

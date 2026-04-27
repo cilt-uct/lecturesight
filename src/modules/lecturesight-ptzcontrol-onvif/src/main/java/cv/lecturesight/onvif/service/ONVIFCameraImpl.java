@@ -16,7 +16,6 @@ import java.net.ConnectException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Properties;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -318,30 +317,6 @@ public class ONVIFCameraImpl implements PTZCamera {
 		}
 	}
 
-	/**
-	 * Move the camera to a set preset in the preset list using the index of the
-	 * preset
-	 * 
-	 * @param preset_index
-	 *            The number of the preset in the preset list to move camera to
-	 */
-	private void movePreset(int preset_index) {
-
-		if (this.presets != null && !this.presets.isEmpty() && (this.presets.size() < preset_index)
-				&& (preset_index >= 0)) {
-
-			PTZPreset current = this.presets.get(preset_index);
-			Vector2D pan_tilt = current.getPTZPosition().getPanTilt();
-			Vector1D zoom = current.getPTZPosition().getZoom();
-
-			try {
-				Logger.trace("Move preset index [" + preset_index + "]");
-				this.ptz_device.absoluteMove(this.profile_token, pan_tilt.getX(), pan_tilt.getY(), zoom.getX());
-			} catch (SOAPException e) {
-				Logger.error("movePreset: " + e.getMessage());
-			}
-		}
-	}
 
 	/**
 	 * Move the camera to a set preset using the name of that preset
