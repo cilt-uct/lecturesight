@@ -239,7 +239,7 @@ public class V4LFrameGrabberFactory implements FrameGrabberFactory {
             break;
           }
           case V4L4JConstants.CTRL_TYPE_LONG :{
-            long val = Long.getLong(conf.get(confItem));
+            long val = Long.parseLong(conf.get(confItem));
             try {
               cont.setLongValue(val);
             } catch (ControlException ex) {
