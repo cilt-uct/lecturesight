@@ -47,10 +47,10 @@ public class CameraPositionModel {
   // target position in camera coordinates
   private Position target_pos = new Position(0, 0);
 
-  // camera position in normalized coordinates
+  // target position in normalized coordinates
   private NormalizedPosition target_posn = new NormalizedPosition(0.0f, 0.0f);
 
-  // target position in normalized coordinates
+  // camera position in normalized coordinates
   private NormalizedPosition camera_posn = new NormalizedPosition(0.0f, 0.0f);
 
   // Interpolation functions
@@ -256,7 +256,7 @@ public class CameraPositionModel {
     for (int x = -100; x < 100; x++) {
       xNormRange[x + 100] = x / 100f;
       yNormRange[x + 100] = x / 100f;
-      Position xyCalc = toCameraCoordinates(new NormalizedPosition(x / 100f, x/100f));
+      Position xyCalc = toCameraCoordinates(new NormalizedPosition(x / 100f, x / 100f));
       xCameraCalc[x + 100] = xyCalc.getX();
       yCameraCalc[x + 100] = xyCalc.getY();
     }
@@ -318,7 +318,7 @@ public class CameraPositionModel {
       Logger.trace("xNorm:xCam {0.0000} {} inverse {0.0000}", nPos.getX(), cameraPos.getX(), nPosInv.getX());
     }
 
-    Logger.trace("Y Axis Overview:Mapping, interpolated from {} to {}", minNormY, maxNormY);
+    Logger.trace("Y Axis Overview: Mapping, interpolated from {} to {}", minNormY, maxNormY);
     for (int y = -100; y <= 100; y += 5) {
       NormalizedPosition nPos = new NormalizedPosition(0, y / 100f);
       Position cameraPos = toCameraCoordinates(nPos);
