@@ -36,6 +36,9 @@ public class FloatRange {
    *
    */
   public void setMin(float value) {
+    if (value > this.max) {
+      throw new IllegalArgumentException("min must be <= max");
+    }
     this.min = value;
   }
 
