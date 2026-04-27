@@ -69,7 +69,7 @@ public class ConnectedComponentLabelerImpl implements ConnectedComponentLabeler 
     makeSignals();
     imageDim = new int[]{(int) input.getWidth(), (int) input.getHeight()};
     bufferDim = new int[]{imageDim[0] + 2, imageDim[1] + 2};
-    bufferSize = bufferDim[0] * bufferDim[1];
+    bufferSize = ((long) bufferDim[0]) * bufferDim[1];
     this.minSize = minSize;
     this.maxSize = maxSize;
     this.maxBlobs = maxBlobs;
