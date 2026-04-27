@@ -78,7 +78,7 @@ public class BoundingBoxFinderImpl implements BoundingBoxFinder {
   public BoundingBox[] getAllBoxes() {
     BoundingBox[] out = new BoundingBox[ccli.numBlobs];
     for (int i = 1; i <= ccli.numBlobs; i++) {
-      out[i] = getBox(i);
+      out[i-1] = getBox(i);
     }
     return out;
   }
