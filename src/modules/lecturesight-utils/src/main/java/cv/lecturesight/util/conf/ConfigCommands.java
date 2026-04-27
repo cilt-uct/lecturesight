@@ -77,7 +77,9 @@ public class ConfigCommands {
       try {
         File file = new File(filename);
         filename = file.getAbsolutePath();
-        config.loadSystemConfiguration(new FileInputStream(file));
+        try (FileInputStream fis = new FileInputStream(file)) {
+          config.loadSystemConfiguration(fis);
+        }
       } catch (Exception e) {
         println("Unable to load configuration from " + filename);
         String msg = e.getMessage();
@@ -93,8 +95,8 @@ public class ConfigCommands {
   public void save(String[] args) {
     if (args.length == 1) {
       String filename = args[0];
-      try {
-        config.saveSystemConfiguration(new FileOutputStream(new File(filename)));
+      try (FileOutputStream fos = new FileOutputStream(new File(filename))) {
+        config.saveSystemConfiguration(fos);
       } catch (Exception e) {
         println("Unable to save configuration." + e.getMessage());
       }
