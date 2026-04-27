@@ -57,7 +57,7 @@ public class SceneProfileEditorPanel extends javax.swing.JPanel implements Custo
   private SceneProfileUI parent;
   private Display cameraDisplay;
   private DisplayPanel cameraDisplayPanel;
-  SceneProfile profile;
+  private SceneProfile profile;
   private ObjectSelection selection = null;
   private EditorMouseHandler mouseHandler;
   private Dimension imageDim;
