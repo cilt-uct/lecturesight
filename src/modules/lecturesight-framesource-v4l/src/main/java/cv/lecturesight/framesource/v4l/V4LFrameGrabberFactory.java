@@ -253,7 +253,7 @@ public class V4LFrameGrabberFactory implements FrameGrabberFactory {
             break;
           }
           case V4L4JConstants.CTRL_TYPE_BITMASK :{
-            int val = Integer.getInteger(conf.get(confItem));
+            int val = Integer.parseInt(conf.get(confItem));
             try {
               cont.setValue(val);
             } catch (ControlException ex) {
