@@ -52,8 +52,13 @@ public class CentroidFinderImpl implements CentroidFinder {
     signals.put(Signal.DONE, ocl.getSignal(SIGNAME_DONE + "-" + UUID.randomUUID().toString()));
     workDim = ccli.imageDim;
     this.maxCount = ccli.getMaxBlobs();
-    centroids = ocl.context().createIntBuffer(Usage.InputOutput, maxCount * 2);
-    centroids_out = new int[maxCount * 2];
+    long centroidCapacityLong = 2L * maxCount;
+    if (centroidCapacityLong > Integer.MAX_VALUE) {
+      throw new IllegalArgumentException("Maximum blob count too large: " + maxCount);
+    }
+    int centroidCapacity = (int) centroidCapacityLong;
+    centroids = ocl.context().createIntBuffer(Usage.InputOutput, centroidCapacity);
+    centroids_out = new int[centroidCapacity];
     ocl.registerLaunch(ccli.getSignal(ConnectedComponentLabeler.Signal.DONE), new FindCentroidsRun());
   }
 

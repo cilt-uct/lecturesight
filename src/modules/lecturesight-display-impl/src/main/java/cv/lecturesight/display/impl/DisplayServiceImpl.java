@@ -38,7 +38,6 @@ public class DisplayServiceImpl implements DisplayService {
 
   private OpenCLService ocl;
   private DisplayServiceFactory parent;
-  private Set<DisplayRegistration> myRegs = new HashSet<DisplayRegistration>();
   private Set<DisplayRegistrationListener> listeners = new HashSet<DisplayRegistrationListener>();
 
   public DisplayServiceImpl(OpenCLService ocl, DisplayServiceFactory parent) {
@@ -50,7 +49,6 @@ public class DisplayServiceImpl implements DisplayService {
   public DisplayRegistration registerDisplay(String id, CLImage2D image, OCLSignal trigger) {
     DisplayImpl display = new DisplayImpl(ocl, trigger, image);
     DisplayRegistrationImpl reg = new DisplayRegistrationImpl(id);
-    myRegs.add(reg);
     parent.displays.put(reg, display);
     notifyObservers(EventType.ADDED, reg);
 

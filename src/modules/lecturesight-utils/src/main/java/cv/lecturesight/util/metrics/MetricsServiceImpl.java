@@ -100,7 +100,9 @@ public class MetricsServiceImpl implements MetricsService, ConfigurationListener
     if (!metricsDir.exists()) {
       Logger.info("Creating new metrics directory at: " + metricsDir.getAbsolutePath());
       try {
-        metricsDir.mkdir();
+        if (!metricsDir.mkdir()) {
+          Logger.error("Failed to create metrics directory at: " + metricsDir.getAbsolutePath());
+        }
       } catch (Exception e) {
         Logger.error("Failed to create metrics directory", e);
       }
@@ -201,7 +203,7 @@ public class MetricsServiceImpl implements MetricsService, ConfigurationListener
                       new Gauge<Long>() {
                         @Override
                         public Long getValue() {
-                          return new Long(System.currentTimeMillis() - last_reset);
+                          return System.currentTimeMillis() - last_reset;
                         }
                       });
 
@@ -301,16 +303,10 @@ public class MetricsServiceImpl implements MetricsService, ConfigurationListener
 
     Logger.info("Saving metrics data to " + metricsJson.getAbsolutePath());
 
-    FileOutputStream os = null;
-    try {
-      os = new FileOutputStream(metricsJson);
+    try (FileOutputStream os = new FileOutputStream(metricsJson)) {
       objectMapper.writer().writeValue(os, registry);
     } catch (Exception e) {
       Logger.error(e, "Unable to write JSON metrics data to file");
-    } finally {
-      if (os != null) {
-        try { os.close(); } catch (Exception ef) { }
-      }
     }
   }
 

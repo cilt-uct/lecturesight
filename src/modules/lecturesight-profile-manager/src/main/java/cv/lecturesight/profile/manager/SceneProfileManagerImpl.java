@@ -58,14 +58,13 @@ public class SceneProfileManagerImpl implements SceneProfileManager, ArtifactIns
   private boolean active = true;
 
   protected void activate(ComponentContext cc) throws Exception {
-    // make sure profile directory existis
+    // make sure profile directory exists
     File profileDir = new File(System.getProperty("user.dir") + File.separator + "profiles");
     if (!profileDir.exists()) {
       Logger.info("Profile directory not existing. Attempting to create " + profileDir.getAbsolutePath());
-      try {
-        profileDir.mkdir();
-      } catch (Exception e) {
-        Logger.error("Failed to create profile directory. ", e);
+      if (!profileDir.mkdirs() && !profileDir.exists()) {
+        Logger.error("Failed to create profile directory: " + profileDir.getAbsolutePath());
+        throw new IllegalStateException("Failed to create profile directory: " + profileDir.getAbsolutePath());
       }
     }
 
@@ -272,7 +271,10 @@ public class SceneProfileManagerImpl implements SceneProfileManager, ArtifactIns
 
     String filename = file.getAbsolutePath();
     try {
-      SceneProfile profile = SceneProfileSerializer.deserialize(new FileInputStream(file));
+      SceneProfile profile;
+      try (FileInputStream in = new FileInputStream(file)) {
+        profile = SceneProfileSerializer.deserialize(in);
+      }
       profiles.putWithFilename(filename, profile);
       Logger.info("Installed scene profile \"" + profile.name + "\" from " + filename);
       notifySubscribersInstalled(profile);
@@ -289,16 +291,17 @@ public class SceneProfileManagerImpl implements SceneProfileManager, ArtifactIns
   @Override
   public void update(File file) throws Exception {
     if (!active) return;
-
     String filename = file.getAbsolutePath();
-    SceneProfile profile = SceneProfileSerializer.deserialize(new FileInputStream(file));
-    profiles.putWithFilename(filename, profile);
-    Logger.info("Updated scene profile \"" + profile.name + "\" from " + filename);
-    notifySubscribersUpdated(profile);
+    try (FileInputStream in = new FileInputStream(file)) {
+      SceneProfile profile = SceneProfileSerializer.deserialize(in);
+      profiles.putWithFilename(filename, profile);
+      Logger.info("Updated scene profile \"" + profile.name + "\" from " + filename);
+      notifySubscribersUpdated(profile);
 
-    // test if active profile was updated
-    if (activeProfile.equals(profile)) {
-      setActiveProfile(profile);
+      // test if active profile was updated
+      if (activeProfile.equals(profile)) {
+        setActiveProfile(profile);
+      }
     }
   }
 

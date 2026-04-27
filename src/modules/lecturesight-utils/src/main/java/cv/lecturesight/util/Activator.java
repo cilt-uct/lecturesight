@@ -55,8 +55,8 @@ public final class Activator implements BundleActivator {
     ensureFile(configFile);
 
     // load properties
-    try {
-      systemProperties.load(new FileInputStream(configFile));
+    try (FileInputStream configInput = new FileInputStream(configFile)) {
+      systemProperties.load(configInput);
       Logger.debug("Loaded config properties from " + configFile.getAbsolutePath());
     } catch (IOException e) {
       Logger.warn("Failed to load config from " + configFile.getAbsolutePath());
@@ -64,8 +64,8 @@ public final class Activator implements BundleActivator {
 
     // load build properties
     File buildConfigFile = new File(configPath.getAbsolutePath() + File.separator + BUILD_CONFIG_NAME);
-    try {
-      systemProperties.load(new FileInputStream(buildConfigFile));
+    try (FileInputStream buildConfigInput = new FileInputStream(buildConfigFile)) {
+      systemProperties.load(buildConfigInput);
       Logger.debug("Loaded build config properties from " + buildConfigFile.getAbsolutePath());
     } catch (IOException e) {
       Logger.debug("Failed to load build config from " + buildConfigFile.getAbsolutePath());
@@ -124,17 +124,15 @@ public final class Activator implements BundleActivator {
 
     // try to get default config dir
     path = "conf";
-    if (path != null) {
-      File dir = new File(path);
-      if (dir.exists() && dir.isDirectory()) {
-        Logger.debug("Using default config directory: " + dir.getAbsolutePath());
-        return dir;
-      } else {
-        Logger.warn("Default config directory does not exist: " + dir.getAbsolutePath());
-      }
+    File dir = new File(path);
+    if (dir.exists() && dir.isDirectory()) {
+      Logger.debug("Using default config directory: " + dir.getAbsolutePath());
+      return dir;
+    } else {
+      Logger.warn("Default config directory does not exist: " + dir.getAbsolutePath());
     }
 
-    File dir = new File(".");
+    dir = new File(".");
     Logger.debug("Using working directory as config directory: " + dir.getAbsolutePath());
     return dir;
   }
@@ -143,7 +141,10 @@ public final class Activator implements BundleActivator {
     if (!file.exists()) {
       Logger.warn("Config file does not exist, creating " + file.getAbsolutePath());
       try {
-        file.createNewFile();
+        boolean created = file.createNewFile();
+        if (!created && !file.exists()) {
+          throw new ServiceException("Failed to create config file: " + file.getAbsolutePath());
+        }
       } catch (IOException ex) {
         throw new ServiceException("Failed to create config file: " + file.getAbsolutePath(), ex);
       }

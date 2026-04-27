@@ -19,8 +19,8 @@ public class FloatRange {
   }
 
   public FloatRange(float _min, float _max) {
-    min = _min;
-    max = _max;
+    min = Math.min(_min, _max);
+    max = Math.max(_min, _max);
   }
 
   /**
@@ -36,6 +36,9 @@ public class FloatRange {
    *
    */
   public void setMin(float value) {
+    if (value > this.max) {
+      throw new IllegalArgumentException("min must be <= max");
+    }
     this.min = value;
   }
 
@@ -52,10 +55,19 @@ public class FloatRange {
    *
    */
   public void setMax(float value) {
+    if (value < this.min) {
+      throw new IllegalArgumentException("max must be >= min");
+    }
     this.max = value;
   }
 
   public String toString() {
-    return "(("+ min +" -> "+ max+"))";
+    return new StringBuilder()
+        .append("[")
+        .append(min)
+        .append(", ")
+        .append(max)
+        .append("]")
+        .toString();
   }
 }

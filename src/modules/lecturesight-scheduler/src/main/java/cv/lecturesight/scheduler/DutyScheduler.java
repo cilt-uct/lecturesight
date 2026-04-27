@@ -120,44 +120,46 @@ public class DutyScheduler implements ArtifactInstaller, DummyInterface {
     synchronized (events) {
       try {
         List<Event> newEvents = new LinkedList<Event>();
-        List<VEvent> eventList = ICalendar.parseVEvents(new FileInputStream(file));
+        try (FileInputStream inputStream = new FileInputStream(file)) {
+          List<VEvent> eventList = ICalendar.parseVEvents(inputStream);
 
-        for (VEvent vevent : eventList) {
-          String location = vevent.getLocation();
-          if (agentName.isEmpty() || (location != null && location.equals(agentName))) {
+          for (VEvent vevent : eventList) {
+            String location = vevent.getLocation();
+            if (agentName.isEmpty() || (location != null && location.equals(agentName))) {
 
-            Date startDate = new Date(vevent.getStart().getTime() + timeZoneOffset);
-            Date stopDate = new Date(vevent.getEnd().getTime() + timeZoneOffset);
+              Date startDate = new Date(vevent.getStart().getTime() + timeZoneOffset);
+              Date stopDate = new Date(vevent.getEnd().getTime() + timeZoneOffset);
 
-            // create start events, apply configured time zone offset to UTC dates from iCal
-            Event startTracker = new Event(startDate.getTime(), Event.Action.START_TRACKING, vevent.getUID());
-            Event startOperator = new Event(startDate.getTime() + trackerLeadTime, Event.Action.START_OPERATOR, vevent.getUID());
+              // create start events, apply configured time zone offset to UTC dates from iCal
+              Event startTracker = new Event(startDate.getTime(), Event.Action.START_TRACKING, vevent.getUID());
+              Event startOperator = new Event(startDate.getTime() + trackerLeadTime, Event.Action.START_OPERATOR, vevent.getUID());
 
-            // Is this event in progress?
-            if (now.after(startDate) && now.before(stopDate)) {
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(stopDate);
-                cal.add(Calendar.SECOND, -10);
-              if (now.before(cal.getTime())) {
-                Logger.info("Immediate start for event in progress: Start: {} End: {}  UID: {}", startDate, stopDate, vevent.getUID());
-                fireEvent(startTracker);
-                fireEvent(startOperator);
+              // Is this event in progress?
+              if (now.after(startDate) && now.before(stopDate)) {
+                  Calendar cal = Calendar.getInstance();
+                  cal.setTime(stopDate);
+                  cal.add(Calendar.SECOND, -10);
+                if (now.before(cal.getTime())) {
+                  Logger.info("Immediate start for event in progress: Start: {} End: {}  UID: {}", startDate, stopDate, vevent.getUID());
+                  fireEvent(startTracker);
+                  fireEvent(startOperator);
+                } else {
+                  Logger.info("Ingoring event in progress which finishes within 10s: Start: {} End: {}  UID: {}", startDate, stopDate, vevent.getUID());
+                }
               } else {
-                Logger.info("Ingoring event in progress which finishes within 10s: Start: {} End: {}  UID: {}", startDate, stopDate, vevent.getUID());
+                Logger.info("Created recording event: Start: {} End: {}  UID: {}", startDate, stopDate, vevent.getUID());
+                newEvents.add(startTracker);
+                newEvents.add(startOperator);
               }
-            } else {
+
+              // create stop events, apply configured time zone offset to UTC dates from iCal
+              Event stopTracker = new Event(stopDate.getTime(), Event.Action.STOP_TRACKING, vevent.getUID());
+              newEvents.add(stopTracker);
+              Event stopOperator = new Event(stopDate.getTime() - 1, Event.Action.STOP_OPERATOR, vevent.getUID());
+              newEvents.add(stopOperator);
+
               Logger.info("Created recording event: Start: {} End: {}  UID: {}", startDate, stopDate, vevent.getUID());
-              newEvents.add(startTracker);
-              newEvents.add(startOperator);
             }
-
-            // create stop events, apply configured time zone offset to UTC dates from iCal
-            Event stopTracker = new Event(stopDate.getTime(), Event.Action.STOP_TRACKING, vevent.getUID());
-            newEvents.add(stopTracker);
-            Event stopOperator = new Event(stopDate.getTime() - 1, Event.Action.STOP_OPERATOR, vevent.getUID());
-            newEvents.add(stopOperator);
-
-            Logger.info("Created recording event: Start: {} End: {}  UID: {}", startDate, stopDate, vevent.getUID());
           }
         }
         events.clear();                             // clear schedule

@@ -186,6 +186,7 @@ public class StatusServiceImpl implements StatusService, ConfigurationListener {
 
       String metricsJson = metrics.json();
 
+      FileInputStream snapshotStream = null;
       try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
 
         HttpPost uploadFile = new HttpPost(url);
@@ -198,7 +199,7 @@ public class StatusServiceImpl implements StatusService, ConfigurationListener {
         String status = (heart.isRunning() && operator.isRunning()) ? "active" : "idle";
         builder.addTextBody("status", status, ContentType.TEXT_PLAIN);
 
-        // Metrics 
+        // Metrics
         builder.addTextBody("metrics", metricsJson, ContentType.APPLICATION_JSON);
 
         // Active scene profile
@@ -207,23 +208,33 @@ public class StatusServiceImpl implements StatusService, ConfigurationListener {
         builder.addTextBody("profile", profile, ContentType.TEXT_PLAIN);
 
         // Overview image snapshot
-        String snFile =  frameSourceManager.getOverviewSnapshotFile();
+        String snFile = frameSourceManager.getOverviewSnapshotFile();
         if (snFile != null && !snFile.isEmpty()) {
           File f = new File(snFile);
           if (f.isFile()) {
-            builder.addBinaryBody("overview-image", new FileInputStream(f),
+            snapshotStream = new FileInputStream(f);
+            builder.addBinaryBody("overview-image", snapshotStream,
               ContentType.APPLICATION_OCTET_STREAM, f.getName());
           }
         }
 
         HttpEntity multipart = builder.build();
         uploadFile.setEntity(multipart);
-        CloseableHttpResponse response = httpClient.execute(uploadFile);
-        Logger.debug("Status update returned code {}: {}",
-          response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase());
+        try (CloseableHttpResponse response = httpClient.execute(uploadFile)) {
+          Logger.debug("Status update returned code {}: {}",
+            response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase());
+        }
       } catch (Exception e) {
         // catch java.net.UnknownHostException | org.apache.http.conn.HttpHostConnectException
         Logger.error(e, "Status update failed");
+      } finally {
+        if (snapshotStream != null) {
+          try {
+            snapshotStream.close();
+          } catch (Exception e) {
+            Logger.warn(e, "Failed to close overview snapshot stream");
+          }
+        }
       }
     }
   }

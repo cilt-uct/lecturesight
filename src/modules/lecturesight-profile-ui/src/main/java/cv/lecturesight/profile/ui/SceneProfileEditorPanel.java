@@ -789,7 +789,7 @@ public class SceneProfileEditorPanel extends javax.swing.JPanel implements Custo
         toolBar.add(jSeparator1);
 
         propertiesButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/property.png"))); // NOI18N
-        propertiesButton.setToolTipText("Edit profile properties (disbaled, not stale yet)");
+        propertiesButton.setToolTipText("Edit profile properties (disabled, not stable yet)");
         propertiesButton.setEnabled(false);
         propertiesButton.setFocusable(false);
         propertiesButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -1028,7 +1028,12 @@ public class SceneProfileEditorPanel extends javax.swing.JPanel implements Custo
     }
 
     if (!profileDir.exists()) {
-      profileDir.mkdir();
+      if (!profileDir.mkdir()) {
+        String msg = "Error while creating profile directory: " + profileDir.getAbsolutePath();
+        Logger.error(msg);
+        showErrorDialog(msg);
+        return;
+      }
     }
 
     File file = new File(profileDir.getAbsolutePath() + File.separator + filename);
@@ -1040,7 +1045,7 @@ public class SceneProfileEditorPanel extends javax.swing.JPanel implements Custo
       }
     }
 
-    Logger.info("Attemptig to save scene profile to " + file.getAbsolutePath());
+    Logger.info("Attempting to save scene profile to " + file.getAbsolutePath());
 
     try {
       FileOutputStream os = new FileOutputStream(file);

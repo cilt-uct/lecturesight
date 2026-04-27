@@ -194,8 +194,8 @@ public class ConfigEditorPanel extends javax.swing.JPanel implements Configurati
     JFileChooser chooser = new JFileChooser(configFile.getAbsolutePath());
     if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
       File file = chooser.getSelectedFile();
-      try {
-        config.loadSystemConfiguration(new FileInputStream(file));
+      try (FileInputStream in = new FileInputStream(file)) {
+        config.loadSystemConfiguration(in);
         update();
       } catch (Exception e) {
         JOptionPane.showMessageDialog(this, "Failed to load system configuration:\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -213,8 +213,8 @@ public class ConfigEditorPanel extends javax.swing.JPanel implements Configurati
                                                                                   "Replace file", JOptionPane.YES_NO_OPTION)) {
         return;
       }
-      try {
-        config.saveSystemConfiguration(new FileOutputStream(file));
+      try (FileOutputStream out = new FileOutputStream(file)) {
+        config.saveSystemConfiguration(out);
       } catch (Exception e) {
         JOptionPane.showMessageDialog(this, "Failed to save system configuration:\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
       }

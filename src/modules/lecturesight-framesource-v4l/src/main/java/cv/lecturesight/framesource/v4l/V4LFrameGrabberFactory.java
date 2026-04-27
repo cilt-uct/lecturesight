@@ -34,8 +34,8 @@ import lombok.Setter;
 import org.osgi.service.component.ComponentContext;
 import org.pmw.tinylog.Logger;
 
+import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 /** Implementation of Service API
  *
@@ -60,7 +60,7 @@ public class V4LFrameGrabberFactory implements FrameGrabberFactory {
     VideoDevice device = initVideoDevice(input);
     Logger.info(generateDeviceInfo(device));
     ControlList controlList = device.getControlList();
-    Vector<Control> controls = (Vector <Control>) controlList.getList();
+    List<Control> controls = controlList.getList();
 
     Logger.info("provided Controls:");
 
@@ -188,7 +188,6 @@ public class V4LFrameGrabberFactory implements FrameGrabberFactory {
             int val = Integer.parseInt(conf.get(confItem));
             int min = cont.getMinValue();
             int max = cont.getMaxValue();
-            int incr = cont.getStepValue();
             if ((val >= min) && (val <= max)) {
               try {
                 cont.setValue(val);
@@ -240,7 +239,7 @@ public class V4LFrameGrabberFactory implements FrameGrabberFactory {
             break;
           }
           case V4L4JConstants.CTRL_TYPE_LONG :{
-            long val = Long.getLong(conf.get(confItem));
+            long val = Long.parseLong(conf.get(confItem));
             try {
               cont.setLongValue(val);
             } catch (ControlException ex) {
@@ -254,7 +253,7 @@ public class V4LFrameGrabberFactory implements FrameGrabberFactory {
             break;
           }
           case V4L4JConstants.CTRL_TYPE_BITMASK :{
-            int val = Integer.getInteger(conf.get(confItem));
+            int val = Integer.parseInt(conf.get(confItem));
             try {
               cont.setValue(val);
             } catch (ControlException ex) {
@@ -287,9 +286,6 @@ public class V4LFrameGrabberFactory implements FrameGrabberFactory {
         Logger.info("Opening capture device " + name);
         VideoDevice device = new VideoDevice(name);
         Logger.info("Device name: " + device.getDeviceInfo().getName());
-        if (device == null) {
-          throw new FrameSourceException("Could not open capture device: " + name);
-        }
         return device;
       } catch (V4L4JException ex) {
         Logger.warn("Unable to open capture device {}", name);

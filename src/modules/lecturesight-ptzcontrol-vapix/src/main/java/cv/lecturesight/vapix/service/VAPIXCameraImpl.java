@@ -377,7 +377,7 @@ public class VAPIXCameraImpl implements PTZCamera {
         String[] parts = line.split("=", 2);
 
         if (parts.length > 1) {
-          processed.put(parts[0], (parts.length >= 2 ? parts[1] : ""));
+          processed.put(parts[0], parts[1]);
         }
       }
     }

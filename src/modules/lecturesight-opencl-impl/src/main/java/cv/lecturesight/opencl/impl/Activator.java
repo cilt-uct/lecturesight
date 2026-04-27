@@ -203,6 +203,10 @@ public final class Activator implements BundleActivator, ServiceFactory {
       }
     }
 
+    if (ctx == null) {
+      throw new IllegalStateException("OpenCL context initialization failed: context is null.");
+    }
+
     // testing if context is working by getting platform information
     try {
       CLPlatform platform = ctx.getPlatform();
