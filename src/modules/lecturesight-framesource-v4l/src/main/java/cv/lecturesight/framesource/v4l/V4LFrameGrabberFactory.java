@@ -34,8 +34,8 @@ import lombok.Setter;
 import org.osgi.service.component.ComponentContext;
 import org.pmw.tinylog.Logger;
 
+import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 /** Implementation of Service API
  *
@@ -60,7 +60,7 @@ public class V4LFrameGrabberFactory implements FrameGrabberFactory {
     VideoDevice device = initVideoDevice(input);
     Logger.info(generateDeviceInfo(device));
     ControlList controlList = device.getControlList();
-    Vector<Control> controls = (Vector <Control>) controlList.getList();
+    List<Control> controls = controlList.getList();
 
     Logger.info("provided Controls:");
 
@@ -188,7 +188,6 @@ public class V4LFrameGrabberFactory implements FrameGrabberFactory {
             int val = Integer.parseInt(conf.get(confItem));
             int min = cont.getMinValue();
             int max = cont.getMaxValue();
-            int incr = cont.getStepValue();
             if ((val >= min) && (val <= max)) {
               try {
                 cont.setValue(val);

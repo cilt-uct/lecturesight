@@ -18,7 +18,8 @@ public class ShutdownOSGI {
 	int timeout = Integer.parseInt(args[2]);
 
 	long start_time = System.currentTimeMillis();
-	long end_time = start_time + timeout * 1000;
+	long timeoutMillis = timeout * 1000L;
+	long end_time = start_time + timeoutMillis;
 
         System.out.println("Shutting down OSGI on " + host + ":" + port + " (timeout " + timeout + "s)");
 
@@ -28,7 +29,7 @@ public class ShutdownOSGI {
 	   try (Socket socket=new Socket(host, port)) {
 
 		// Timeout in case we get nothing back
-		socket.setSoTimeout(timeout * 1000);
+		socket.setSoTimeout((int) Math.min(timeoutMillis, Integer.MAX_VALUE));
 
 		OutputStream out = socket.getOutputStream();
 		InputStream in = socket.getInputStream();
