@@ -1021,7 +1021,11 @@ public class SceneProfileEditorPanel extends javax.swing.JPanel implements Custo
     if (name.trim().isEmpty()) {
       return;
     }
-    String filename = sanitizeFilename(JOptionPane.showInputDialog(this, "Enter a file name for new profile: ", "Create Profile", 1));
+    String filenameInput = JOptionPane.showInputDialog(this, "Enter a file name for new profile: ", "Create Profile", 1);
+    if (filenameInput == null) {
+      return;
+    }
+    String filename = sanitizeFilename(filenameInput);
 
     if (".scn".equals(filename)) {
       return;
