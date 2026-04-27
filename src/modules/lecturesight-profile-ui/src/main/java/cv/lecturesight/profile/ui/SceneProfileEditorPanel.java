@@ -416,7 +416,7 @@ public class SceneProfileEditorPanel extends javax.swing.JPanel implements Custo
       }
 
       // or was a zone selected?
-      // test for trigger zones first since they are most likely inside tacking zones
+      // test for trigger zones first since they are most likely inside tracking zones
       for (Zone z : profile.zones) {
         if (z.getType().equals(Zone.Type.TRIGGER)
                 && isInside(pos, z.x, z.y, z.width, z.height)) {
