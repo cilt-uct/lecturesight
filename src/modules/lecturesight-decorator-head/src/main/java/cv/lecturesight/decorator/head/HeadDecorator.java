@@ -54,7 +54,7 @@ public class HeadDecorator implements ObjectDecorator {
   protected void activate(ComponentContext cc) throws Exception {
     PARAM_K = config.getInt(PROPKEY_K);
     MAX_ITER = config.getInt(PROPKEY_MAXITER);
-    Logger.info("BrainzzZ!");
+    Logger.info("Head decorator activated");
   }
 
   protected void deactivate(ComponentContext cc) throws Exception {
