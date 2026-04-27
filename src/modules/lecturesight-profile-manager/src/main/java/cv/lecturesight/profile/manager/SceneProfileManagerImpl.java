@@ -293,10 +293,6 @@ public class SceneProfileManagerImpl implements SceneProfileManager, ArtifactIns
   @Override
   public void update(File file) throws Exception {
     if (!active) return;
-    SceneProfile profile;
-    try (FileInputStream in = new FileInputStream(file)) {
-      profile = SceneProfileSerializer.deserialize(in);
-    }
     String filename = file.getAbsolutePath();
     try (FileInputStream in = new FileInputStream(file)) {
       SceneProfile profile = SceneProfileSerializer.deserialize(in);
