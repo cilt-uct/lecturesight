@@ -1045,7 +1045,7 @@ public class SceneProfileEditorPanel extends javax.swing.JPanel implements Custo
       }
     }
 
-    Logger.info("Attemptig to save scene profile to " + file.getAbsolutePath());
+    Logger.info("Attempting to save scene profile to " + file.getAbsolutePath());
 
     try {
       FileOutputStream os = new FileOutputStream(file);
