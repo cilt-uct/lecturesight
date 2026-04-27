@@ -272,14 +272,16 @@ public class SceneProfileManagerImpl implements SceneProfileManager, ArtifactIns
 
     String filename = file.getAbsolutePath();
     try {
-      SceneProfile profile = SceneProfileSerializer.deserialize(new FileInputStream(file));
-      profiles.putWithFilename(filename, profile);
-      Logger.info("Installed scene profile \"" + profile.name + "\" from " + filename);
-      notifySubscribersInstalled(profile);
+      try (FileInputStream in = new FileInputStream(file)) {
+        SceneProfile profile = SceneProfileSerializer.deserialize(in);
+        profiles.putWithFilename(filename, profile);
+        Logger.info("Installed scene profile \"" + profile.name + "\" from " + filename);
+        notifySubscribersInstalled(profile);
 
-      // test if the installed artifact contains the active profile, activate it if so
-      if (configuredProfile.equals(profile.name)) {
-        setActiveProfile(profile);
+        // test if the installed artifact contains the active profile, activate it if so
+        if (configuredProfile.equals(profile.name)) {
+          setActiveProfile(profile);
+        }
       }
     } catch (Exception e) {
       Logger.warn("Ignoring invalid scene profile in " + filename + ": " + e.getMessage());
@@ -291,14 +293,16 @@ public class SceneProfileManagerImpl implements SceneProfileManager, ArtifactIns
     if (!active) return;
 
     String filename = file.getAbsolutePath();
-    SceneProfile profile = SceneProfileSerializer.deserialize(new FileInputStream(file));
-    profiles.putWithFilename(filename, profile);
-    Logger.info("Updated scene profile \"" + profile.name + "\" from " + filename);
-    notifySubscribersUpdated(profile);
+    try (FileInputStream in = new FileInputStream(file)) {
+      SceneProfile profile = SceneProfileSerializer.deserialize(in);
+      profiles.putWithFilename(filename, profile);
+      Logger.info("Updated scene profile \"" + profile.name + "\" from " + filename);
+      notifySubscribersUpdated(profile);
 
-    // test if active profile was updated
-    if (activeProfile.equals(profile)) {
-      setActiveProfile(profile);
+      // test if active profile was updated
+      if (activeProfile.equals(profile)) {
+        setActiveProfile(profile);
+      }
     }
   }
 
