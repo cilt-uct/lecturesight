@@ -318,7 +318,7 @@ public class CameraPositionModel {
       Logger.trace("xNorm:xCam {0.0000} {} inverse {0.0000}", nPos.getX(), cameraPos.getX(), nPosInv.getX());
     }
 
-    Logger.trace("Y Axis Overview:Mapping, interpolated from {} to {}", minNormY, maxNormY);
+    Logger.trace("Y Axis Overview: Mapping, interpolated from {} to {}", minNormY, maxNormY);
     for (int y = -100; y <= 100; y += 5) {
       NormalizedPosition nPos = new NormalizedPosition(0, y / 100f);
       Position cameraPos = toCameraCoordinates(nPos);
