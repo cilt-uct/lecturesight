@@ -58,7 +58,7 @@ public class SceneProfileManagerImpl implements SceneProfileManager, ArtifactIns
   private boolean active = true;
 
   protected void activate(ComponentContext cc) throws Exception {
-    // make sure profile directory existis
+    // make sure profile directory exists
     File profileDir = new File(System.getProperty("user.dir") + File.separator + "profiles");
     if (!profileDir.exists()) {
       Logger.info("Profile directory not existing. Attempting to create " + profileDir.getAbsolutePath());
@@ -275,15 +275,13 @@ public class SceneProfileManagerImpl implements SceneProfileManager, ArtifactIns
       try (FileInputStream in = new FileInputStream(file)) {
         profile = SceneProfileSerializer.deserialize(in);
       }
-        SceneProfile profile = SceneProfileSerializer.deserialize(in);
-        profiles.putWithFilename(filename, profile);
-        Logger.info("Installed scene profile \"" + profile.name + "\" from " + filename);
-        notifySubscribersInstalled(profile);
+      profiles.putWithFilename(filename, profile);
+      Logger.info("Installed scene profile \"" + profile.name + "\" from " + filename);
+      notifySubscribersInstalled(profile);
 
-        // test if the installed artifact contains the active profile, activate it if so
-        if (configuredProfile.equals(profile.name)) {
-          setActiveProfile(profile);
-        }
+      // test if the installed artifact contains the active profile, activate it if so
+      if (configuredProfile.equals(profile.name)) {
+        setActiveProfile(profile);
       }
     } catch (Exception e) {
       Logger.warn("Ignoring invalid scene profile in " + filename + ": " + e.getMessage());
@@ -293,10 +291,6 @@ public class SceneProfileManagerImpl implements SceneProfileManager, ArtifactIns
   @Override
   public void update(File file) throws Exception {
     if (!active) return;
-    SceneProfile profile;
-    try (FileInputStream in = new FileInputStream(file)) {
-      profile = SceneProfileSerializer.deserialize(in);
-    }
     String filename = file.getAbsolutePath();
     try (FileInputStream in = new FileInputStream(file)) {
       SceneProfile profile = SceneProfileSerializer.deserialize(in);
