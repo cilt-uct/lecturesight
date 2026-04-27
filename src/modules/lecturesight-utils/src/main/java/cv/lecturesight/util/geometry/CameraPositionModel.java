@@ -39,7 +39,7 @@ public class CameraPositionModel {
   private int tilt_max;
 
   // target position
-  private boolean target_set = false;
+  private boolean targetSet = false;
 
   // camera position in camera coordinates
   private Position camera_pos = new Position(0, 0);
