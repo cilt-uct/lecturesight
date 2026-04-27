@@ -14,8 +14,17 @@ public class ShutdownOSGI {
 	}
 
 	String host = args[0];
-	int port = Integer.parseInt(args[1]);
-	int timeout = Integer.parseInt(args[2]);
+	int port;
+	int timeout;
+	try {
+		port = Integer.parseInt(args[1]);
+		timeout = Integer.parseInt(args[2]);
+	} catch (NumberFormatException e) {
+		System.out.println("Error: <port> and <timeout-in-seconds> must be valid integers.");
+		System.out.println("Syntax: java ShutdownOSGI <host> <port> <timeout-in-seconds>\n");
+		System.exit(1);
+		return;
+	}
 
 	long start_time = System.currentTimeMillis();
 	long timeoutMillis = timeout * 1000L;
