@@ -100,7 +100,9 @@ public class MetricsServiceImpl implements MetricsService, ConfigurationListener
     if (!metricsDir.exists()) {
       Logger.info("Creating new metrics directory at: " + metricsDir.getAbsolutePath());
       try {
-        metricsDir.mkdir();
+        if (!metricsDir.mkdir()) {
+          Logger.error("Failed to create metrics directory at: " + metricsDir.getAbsolutePath());
+        }
       } catch (Exception e) {
         Logger.error("Failed to create metrics directory", e);
       }

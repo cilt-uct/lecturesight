@@ -141,7 +141,10 @@ public final class Activator implements BundleActivator {
     if (!file.exists()) {
       Logger.warn("Config file does not exist, creating " + file.getAbsolutePath());
       try {
-        file.createNewFile();
+        boolean created = file.createNewFile();
+        if (!created && !file.exists()) {
+          throw new ServiceException("Failed to create config file: " + file.getAbsolutePath());
+        }
       } catch (IOException ex) {
         throw new ServiceException("Failed to create config file: " + file.getAbsolutePath(), ex);
       }

@@ -62,10 +62,9 @@ public class SceneProfileManagerImpl implements SceneProfileManager, ArtifactIns
     File profileDir = new File(System.getProperty("user.dir") + File.separator + "profiles");
     if (!profileDir.exists()) {
       Logger.info("Profile directory not existing. Attempting to create " + profileDir.getAbsolutePath());
-      try {
-        profileDir.mkdir();
-      } catch (Exception e) {
-        Logger.error("Failed to create profile directory. ", e);
+      if (!profileDir.mkdirs() && !profileDir.exists()) {
+        Logger.error("Failed to create profile directory: " + profileDir.getAbsolutePath());
+        throw new IllegalStateException("Failed to create profile directory: " + profileDir.getAbsolutePath());
       }
     }
 

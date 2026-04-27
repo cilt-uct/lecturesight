@@ -1028,7 +1028,12 @@ public class SceneProfileEditorPanel extends javax.swing.JPanel implements Custo
     }
 
     if (!profileDir.exists()) {
-      profileDir.mkdir();
+      if (!profileDir.mkdir()) {
+        String msg = "Error while creating profile directory: " + profileDir.getAbsolutePath();
+        Logger.error(msg);
+        showErrorDialog(msg);
+        return;
+      }
     }
 
     File file = new File(profileDir.getAbsolutePath() + File.separator + filename);
