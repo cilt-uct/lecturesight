@@ -201,7 +201,7 @@ public class MetricsServiceImpl implements MetricsService, ConfigurationListener
                       new Gauge<Long>() {
                         @Override
                         public Long getValue() {
-                          return new Long(System.currentTimeMillis() - last_reset);
+                          return Long.valueOf(System.currentTimeMillis() - last_reset);
                         }
                       });
 
