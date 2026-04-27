@@ -18,7 +18,7 @@ tinylog.writer1.level = info
 # DEBUG/INFO/ERROR logging to file
 tinylog.writer2 = file
 tinylog.writer2.filename = log/ls.log
-tinylog.writer2.level = DEBUG
+tinylog.writer2.level = debug
 tinylog.writer2.format = {date:yyyy-MM-dd HH:mm:ss.SSS} {level|min-size=7} {thread} {class_name}.{method}() : {message}
 ```
 
