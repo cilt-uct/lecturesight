@@ -303,16 +303,10 @@ public class MetricsServiceImpl implements MetricsService, ConfigurationListener
 
     Logger.info("Saving metrics data to " + metricsJson.getAbsolutePath());
 
-    FileOutputStream os = null;
-    try {
-      os = new FileOutputStream(metricsJson);
+    try (FileOutputStream os = new FileOutputStream(metricsJson)) {
       objectMapper.writer().writeValue(os, registry);
     } catch (Exception e) {
       Logger.error(e, "Unable to write JSON metrics data to file");
-    } finally {
-      if (os != null) {
-        try { os.close(); } catch (Exception ef) { }
-      }
     }
   }
 
