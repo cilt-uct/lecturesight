@@ -789,7 +789,7 @@ public class SceneProfileEditorPanel extends javax.swing.JPanel implements Custo
         toolBar.add(jSeparator1);
 
         propertiesButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/property.png"))); // NOI18N
-        propertiesButton.setToolTipText("Edit profile properties (disbaled, not stale yet)");
+        propertiesButton.setToolTipText("Edit profile properties (disabled, not stable yet)");
         propertiesButton.setEnabled(false);
         propertiesButton.setFocusable(false);
         propertiesButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
