@@ -51,7 +51,7 @@ public class IntensityFrameUploader implements FrameUploader {
     sig_newframe = ocl.getSignal(FrameUploader.SIG_NEWFRAME);
 
     // set up gpu buffers
-    bufferSize = grabber.getWidth() * grabber.getHeight() * 3;
+    bufferSize = (long) grabber.getWidth() * grabber.getHeight() * 3L;
     gpuRawBuffer = ocl.context().createByteBuffer(CLMem.Usage.InputOutput, bufferSize);
     gpuBuffer = ocl.context().createImage2D(CLMem.Usage.InputOutput,
                                             new CLImageFormat(CLImageFormat.ChannelOrder.BGRA, CLImageFormat.ChannelDataType.UnsignedInt8),
