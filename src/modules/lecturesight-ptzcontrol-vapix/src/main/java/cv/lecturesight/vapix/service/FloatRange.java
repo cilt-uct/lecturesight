@@ -19,8 +19,8 @@ public class FloatRange {
   }
 
   public FloatRange(float _min, float _max) {
-    min = _min;
-    max = _max;
+    min = Math.min(_min, _max);
+    max = Math.max(_min, _max);
   }
 
   /**
