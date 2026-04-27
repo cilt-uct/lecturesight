@@ -44,7 +44,7 @@ public class ShutdownOSGI {
 		}
 	   }
 	} catch (Exception e) {
-		System.out.println("Exception: " + e.getMessage());
+		System.out.println("Exception: " + e.toString());
 	}
     }
 }
