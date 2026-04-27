@@ -60,11 +60,11 @@ public class FloatRange {
 
   public String toString() {
     return new StringBuilder()
-        .append("((")
+        .append("[")
         .append(min)
-        .append(" -> ")
+        .append(", ")
         .append(max)
-        .append("))")
+        .append("]")
         .toString();
   }
 }
