@@ -745,8 +745,6 @@ public class ObjectTrackerImpl implements ObjectTracker, ConfigurationListener {
     private DoubleTuple meanDistance(List<Region> regions, 
             Region winner_region, TrackerObject winner) {
       
-      List<Region> candidates = new LinkedList<Region>();
-      
       Position centroid = winner_region.getCentroid();
       Position centroid2 = (Position) winner.getProperty(OBJ_PROPKEY_CENTROID);
                 
