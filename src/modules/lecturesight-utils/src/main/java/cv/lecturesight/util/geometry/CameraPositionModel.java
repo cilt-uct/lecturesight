@@ -47,10 +47,10 @@ public class CameraPositionModel {
   // target position in camera coordinates
   private Position target_pos = new Position(0, 0);
 
-  // camera position in normalized coordinates
+  // target position in normalized coordinates
   private NormalizedPosition target_posn = new NormalizedPosition(0.0f, 0.0f);
 
-  // target position in normalized coordinates
+  // camera position in normalized coordinates
   private NormalizedPosition camera_posn = new NormalizedPosition(0.0f, 0.0f);
 
   // Interpolation functions
