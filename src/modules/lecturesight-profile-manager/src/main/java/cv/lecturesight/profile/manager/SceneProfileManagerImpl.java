@@ -58,7 +58,7 @@ public class SceneProfileManagerImpl implements SceneProfileManager, ArtifactIns
   private boolean active = true;
 
   protected void activate(ComponentContext cc) throws Exception {
-    // make sure profile directory existis
+    // make sure profile directory exists
     File profileDir = new File(System.getProperty("user.dir") + File.separator + "profiles");
     if (!profileDir.exists()) {
       Logger.info("Profile directory not existing. Attempting to create " + profileDir.getAbsolutePath());
