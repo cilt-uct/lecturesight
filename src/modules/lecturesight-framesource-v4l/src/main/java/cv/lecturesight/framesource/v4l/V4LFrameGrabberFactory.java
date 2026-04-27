@@ -286,9 +286,6 @@ public class V4LFrameGrabberFactory implements FrameGrabberFactory {
         Logger.info("Opening capture device " + name);
         VideoDevice device = new VideoDevice(name);
         Logger.info("Device name: " + device.getDeviceInfo().getName());
-        if (device == null) {
-          throw new FrameSourceException("Could not open capture device: " + name);
-        }
         return device;
       } catch (V4L4JException ex) {
         Logger.warn("Unable to open capture device {}", name);
