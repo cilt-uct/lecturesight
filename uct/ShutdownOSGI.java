@@ -40,16 +40,17 @@ public class ShutdownOSGI {
 		// Timeout in case we get nothing back
 		socket.setSoTimeout((int) Math.min(timeoutMillis, Integer.MAX_VALUE));
 
-		OutputStream out = socket.getOutputStream();
-		InputStream in = socket.getInputStream();
-		out.write(command.getBytes(Charset.defaultCharset()));
+		try (OutputStream out = socket.getOutputStream();
+		     BufferedReader reader = new BufferedReader(
+			     new InputStreamReader(socket.getInputStream(), Charset.defaultCharset()))) {
+			out.write(command.getBytes(Charset.defaultCharset()));
 
-		// Read output, but don't keep reading for longer than timeout
-		BufferedReader reader = new BufferedReader(new InputStreamReader(in, Charset.defaultCharset()));
-		String line = reader.readLine();
-		while ((line != null) && (System.currentTimeMillis() < end_time)) {
-			System.out.println(line);
-			line = reader.readLine();
+			// Read output, but don't keep reading for longer than timeout
+			String line = reader.readLine();
+			while ((line != null) && (System.currentTimeMillis() < end_time)) {
+				System.out.println(line);
+				line = reader.readLine();
+			}
 		}
 	   }
 	} catch (Exception e) {
