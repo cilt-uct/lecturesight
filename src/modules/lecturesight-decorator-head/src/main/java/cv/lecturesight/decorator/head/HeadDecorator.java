@@ -167,7 +167,7 @@ public class HeadDecorator implements ObjectDecorator {
         object.setProperty(OBJ_PROPKEY_HEAD_CLUSTERS, clusters);
       }
     } catch (Exception e) {
-      Logger.error("Error in head finder!", e.getCause());
+      Logger.error("Error in head finder!", e);
     }
   }
 }
