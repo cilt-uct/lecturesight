@@ -36,6 +36,9 @@ public class FloatRange {
    *
    */
   public void setMin(float value) {
+    if (value > this.max) {
+      throw new IllegalArgumentException("min must be <= max");
+    }
     this.min = value;
   }
 
@@ -60,11 +63,11 @@ public class FloatRange {
 
   public String toString() {
     return new StringBuilder()
-        .append("((")
+        .append("[")
         .append(min)
-        .append(" -> ")
+        .append(", ")
         .append(max)
-        .append("))")
+        .append("]")
         .toString();
   }
 }
