@@ -173,27 +173,12 @@ public class SceneProfile {
 
   @Override
   public synchronized boolean equals(Object other) {
-    SceneProfile otherProfile;
-
-    // test if other is even a SceneProfile, cast to if so
-    //    if (other instanceof SceneProfile) {
-    //      otherProfile = (SceneProfile) other;
-    //    } else {
-    //      return false;
-    //    }
-
-    // test if both have same number of zones
-    //    if (this.zones.size() != otherProfile.zones.size()) {
-    //      return false;
-    //    }
-
-    // test if zones in both profiles are the same
-    //    for (Zone zone : otherProfile.zones) {
-    //      if (!this.containsZone(zone)) {
-    //        return false;
-    //      }
-    //    }
-
+    if (other == null) {
+      return false;
+    }
+    if (!(other instanceof SceneProfile)) {
+      return false;
+    }
     return this.name.equals(((SceneProfile)other).name);
   }
 

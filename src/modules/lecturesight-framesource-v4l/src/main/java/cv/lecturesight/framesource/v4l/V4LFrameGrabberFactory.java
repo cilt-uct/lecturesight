@@ -203,7 +203,6 @@ public class V4LFrameGrabberFactory implements FrameGrabberFactory {
             break;
           }
           case V4L4JConstants.CTRL_TYPE_BUTTON : {
-            String val = conf.get(confItem);
             try {
               cont.setValue(1);
             } catch (ControlException ex) {
