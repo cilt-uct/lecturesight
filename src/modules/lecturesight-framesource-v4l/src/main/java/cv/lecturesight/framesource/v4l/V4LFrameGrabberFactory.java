@@ -188,7 +188,6 @@ public class V4LFrameGrabberFactory implements FrameGrabberFactory {
             int val = Integer.parseInt(conf.get(confItem));
             int min = cont.getMinValue();
             int max = cont.getMaxValue();
-            int incr = cont.getStepValue();
             if ((val >= min) && (val <= max)) {
               try {
                 cont.setValue(val);
