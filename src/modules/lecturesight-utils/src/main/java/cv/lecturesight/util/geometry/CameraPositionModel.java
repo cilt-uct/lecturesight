@@ -256,7 +256,7 @@ public class CameraPositionModel {
     for (int x = -100; x < 100; x++) {
       xNormRange[x + 100] = x / 100f;
       yNormRange[x + 100] = x / 100f;
-      Position xyCalc = toCameraCoordinates(new NormalizedPosition(x / 100f, x/100f));
+      Position xyCalc = toCameraCoordinates(new NormalizedPosition(x / 100f, x / 100f));
       xCameraCalc[x + 100] = xyCalc.getX();
       yCameraCalc[x + 100] = xyCalc.getY();
     }
