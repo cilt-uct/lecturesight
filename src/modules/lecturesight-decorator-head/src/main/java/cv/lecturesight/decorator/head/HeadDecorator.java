@@ -54,7 +54,7 @@ public class HeadDecorator implements ObjectDecorator {
   protected void activate(ComponentContext cc) throws Exception {
     PARAM_K = config.getInt(PROPKEY_K);
     MAX_ITER = config.getInt(PROPKEY_MAXITER);
-    Logger.info("BrainzzZ!");
+    Logger.info("Head decorator activated");
   }
 
   protected void deactivate(ComponentContext cc) throws Exception {
@@ -167,7 +167,7 @@ public class HeadDecorator implements ObjectDecorator {
         object.setProperty(OBJ_PROPKEY_HEAD_CLUSTERS, clusters);
       }
     } catch (Exception e) {
-      Logger.error("Error in head finder!", e.getCause());
+      Logger.error("Error in head finder!", e);
     }
   }
 }
