@@ -103,7 +103,7 @@ public class ForegroundServiceImpl implements ForegroundService {
   /** Activation method of this service. Sets up data structures, components
    *  and signals.
    *
-   * @param ComponentContext
+   * @param cc
    * @throws Exception
    */
   protected void activate(ComponentContext cc) throws Exception {

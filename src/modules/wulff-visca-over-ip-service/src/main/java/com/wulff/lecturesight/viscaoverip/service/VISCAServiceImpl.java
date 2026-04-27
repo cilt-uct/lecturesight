@@ -196,7 +196,8 @@ public class VISCAServiceImpl implements VISCAService {
    * Sends the content of <code>b</code> over the serial port. Method is
    * synchronized so that competing calls are enqueued.
    *
-   * @param a
+   * @param m
+   * @param adr
    */
   synchronized void send(Message m, InetAddress adr) {
     int packet_len = m.getBytes().length+8;
@@ -322,7 +323,7 @@ public class VISCAServiceImpl implements VISCAService {
   /**
    * Called when a UDP message was received. Parses the message and acts accordingly.
    *
-   * @param arg0
+   * @param packet
    */
   public void packetReceived(DatagramPacket packet) {
     

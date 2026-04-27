@@ -37,7 +37,7 @@ public class ScriptWorker implements Runnable {
   /**
    * Constructor, prepares the script for function invocation.
    *
-   * @param source File holding the script's source code
+   * @param name File holding the script's source code
    * @throws Exception
    */
   public ScriptWorker(String name) throws Exception {

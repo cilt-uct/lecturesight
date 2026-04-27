@@ -143,7 +143,7 @@ public class ColorHistogram {
   /**
    * Computes the Bhattacharya-Distance between the actual Color-Histogram and
    * a given one
-   * @param ch1 ColorHistogram
+   * @param colorhistogram ColorHistogram
    * @return float Bhattacharya-Distance
    * @throws Exception
    */

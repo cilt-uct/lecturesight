@@ -240,8 +240,8 @@ public class ObjectTrackerImpl implements ObjectTracker, ConfigurationListener {
 
    /**
     * Recursively assigns a list of TrackerObjects to a List of Regions
-    * @param List<TrackerObject> trackerObjects
-    * @param List<Region> candidates
+    * @param trackerObjects
+    * @param candidates
     * @return new list with assigned and updated TrackerObjects
     */
     private List<TrackerObject> assign_new(List<TrackerObject> trackerObjects, List<Region> candidates) {
@@ -700,8 +700,8 @@ public class ObjectTrackerImpl implements ObjectTracker, ConfigurationListener {
     /**
      * Measures the hypothetic distance between a region and a trackerObject
      *
-     * @param TrackerObject obj
-     * @param Region r
+     * @param object
+     * @param r
      *
      * @return returns distance measure.
      **/

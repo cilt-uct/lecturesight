@@ -38,7 +38,7 @@ public interface ForegroundService {
 
   /** Returns the <code>OCLSignal<code> for the provided signal name
    * 
-   * @param Signal name
+   * @param signal name
    * @return OCLSignal for given name
    */
   OCLSignal getSignal(Signal signal);

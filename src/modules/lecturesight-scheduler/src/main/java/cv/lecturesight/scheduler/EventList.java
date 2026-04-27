@@ -103,7 +103,7 @@ public class EventList {
   /**
    * Add an event to the list.
    *
-   * @param event to be added to this list
+   * @param e to be added to this list
    */
   synchronized void add(Event e) {
     events.add(e);

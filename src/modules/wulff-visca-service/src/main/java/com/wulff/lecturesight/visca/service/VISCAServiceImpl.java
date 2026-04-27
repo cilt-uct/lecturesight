@@ -227,10 +227,10 @@ public class VISCAServiceImpl implements VISCAService, SerialPortEventListener {
   }
 
   /**
-   * Sends the content of <code>a</code> over the serial port. Method is
+   * Sends the content of <code>b</code> over the serial port. Method is
    * synchronized so that competing calls are enqueued.
    *
-   * @param a
+   * @param b
    */
   synchronized void send(byte[] b) {
     Logger.trace(" >>" + ByteUtils.byteArrayToHex(b, -1));
