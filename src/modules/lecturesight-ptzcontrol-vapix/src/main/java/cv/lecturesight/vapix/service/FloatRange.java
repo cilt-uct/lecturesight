@@ -56,6 +56,12 @@ public class FloatRange {
   }
 
   public String toString() {
-    return "(("+ min +" -> "+ max+"))";
+    return new StringBuilder()
+        .append("((")
+        .append(min)
+        .append(" -> ")
+        .append(max)
+        .append("))")
+        .toString();
   }
 }
