@@ -68,7 +68,7 @@ public class RGB24FrameUploader implements FrameUploader {
     sig_newframe = ocl.getSignal(FrameUploader.SIG_NEWFRAME);
 
     // set up gpu buffers
-    bufferSize = grabber.getWidth() * grabber.getHeight() * 3;
+    bufferSize = ((long) grabber.getWidth()) * grabber.getHeight() * 3L;
     gpuRawBuffer = ocl.context().createByteBuffer(Usage.InputOutput, bufferSize);
     gpuBuffer = ocl.context().createImage2D(Usage.InputOutput,
                                             new CLImageFormat(CLImageFormat.ChannelOrder.RGBA, CLImageFormat.ChannelDataType.UnsignedInt8),
