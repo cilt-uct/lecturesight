@@ -41,7 +41,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class PanTiltZoomCameraOperator implements CameraOperator, ConfigurationListener {
+public class PanTiltZoomCameraOperator implements Constants, CameraOperator, ConfigurationListener {
 
   @Setter
   Configuration config;
@@ -101,24 +101,24 @@ public class PanTiltZoomCameraOperator implements CameraOperator, ConfigurationL
    ** Set configuration values
    */
   private void setConfiguration() {
-    target_timeout = config.getInt(Constants.PROPKEY_TARGET_TIMEOUT);
-    tracking_timeout = config.getInt(Constants.PROPKEY_TRACKING_TIMEOUT);
+    target_timeout = config.getInt(PROPKEY_TARGET_TIMEOUT);
+    tracking_timeout = config.getInt(PROPKEY_TRACKING_TIMEOUT);
     idle_preset = config.get(Constants.PROPKEY_IDLE_PRESET);
     start_preset = config.get(Constants.PROPKEY_START_PRESET);
-    start_pan = config.getFloat(Constants.PROPKEY_PAN);
-    start_tilt = config.getFloat(Constants.PROPKEY_TILT);
-    start_zoom = config.getFloat(Constants.PROPKEY_ZOOM);
-    tilt_lock = config.getBoolean(Constants.PROPKEY_TILT_LOCK);
+    start_pan = config.getFloat(PROPKEY_PAN);
+    start_tilt = config.getFloat(PROPKEY_TILT);
+    start_zoom = config.getFloat(PROPKEY_ZOOM);
+    tilt_lock = config.getBoolean(PROPKEY_TILT_LOCK);
     if(tilt_lock) {
       tilt_offset = 0;
     } else {
-      tilt_offset = config.getFloat(Constants.PROPKEY_TILT_OFFSET);
+      tilt_offset = config.getFloat(PROPKEY_TILT_OFFSET);
     }
-    frame_width = config.getFloat(Constants.PROPKEY_FRAME_WIDTH);
-    frame_height = config.getFloat(Constants.PROPKEY_FRAME_HEIGHT);
-    frame_trigger_width = limitRange(config.getFloat(Constants.PROPKEY_FRAME_TRIGGER_WIDTH), 0, 1);
-    frame_trigger_height = limitRange(config.getFloat(Constants.PROPKEY_FRAME_TRIGGER_HEIGHT), 0, 1);
-    target_limit = config.getInt(Constants.PROPKEY_TARGET_LIMIT);
+    frame_width = config.getFloat(PROPKEY_FRAME_WIDTH);
+    frame_height = config.getFloat(PROPKEY_FRAME_HEIGHT);
+    frame_trigger_width = limitRange(config.getFloat(PROPKEY_FRAME_TRIGGER_WIDTH), 0, 1);
+    frame_trigger_height = limitRange(config.getFloat(PROPKEY_FRAME_TRIGGER_HEIGHT), 0, 1);
+    target_limit = config.getInt(PROPKEY_TARGET_LIMIT);
 
     steerer.setFrameWidth(frame_width);
     steerer.setFrameHeight(frame_height);
