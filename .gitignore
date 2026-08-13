@@ -25,6 +25,9 @@ nb-configuration.xml
 *.iml
 base/
 
+# Ignore vscode
+.vscode/
+
 # Class Files #
 *.class
 
