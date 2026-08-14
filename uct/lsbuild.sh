@@ -11,6 +11,7 @@ rm $LS/deploy/conf/lecturesight.properties
 
 # JDK 8
 export JAVA_HOME=/usr/lib/jvm/java-8
+export JAVAC=/usr/lib/jvm/java-8-openjdk-amd64/bin/javac
 
 echo "Building UCT Lecturesight\n"
 $JAVA_HOME/bin/java -version
@@ -31,7 +32,7 @@ mvn clean install -DdeployTo=$LS/deploy/bundles/application
 
 # Shutdown util
 cd $LS/lsuct/uct
-javac ShutdownOSGI.java -d $LS/deploy/bin/
+$JAVAC ShutdownOSGI.java -d $LS/deploy/bin/
 
 cd $LS/deploy
 
