@@ -222,14 +222,13 @@ public class StatusServiceImpl implements StatusService, ConfigurationListener {
             response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase());
         }
       } catch (Exception e) {
-        // catch java.net.UnknownHostException | org.apache.http.conn.HttpHostConnectException
-        Logger.error(e, "Status update failed");
+        Logger.error("Status update to {} failed: {}", url, e.getMessage());
       } finally {
         if (snapshotStream != null) {
           try {
             snapshotStream.close();
           } catch (Exception e) {
-            Logger.warn(e, "Failed to close overview snapshot stream");
+            Logger.warn("Failed to close overview snapshot stream: " + e.getMessage());
           }
         }
       }
